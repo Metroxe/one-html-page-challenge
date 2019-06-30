@@ -1,4 +1,4 @@
-# One HTML Page Challenge
+![One HTML Page Challenge](/logo/one-html-page-longo.png?raw=true "One HTML Page Challenge")
 
 The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. **How creative can you be with such restrictions?**
 
