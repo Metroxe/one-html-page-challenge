@@ -6,7 +6,7 @@ The goal is to create anything you want within 1 single html file. Practice your
 
 ## Rules
  - You must write all of your code in 1 single HTML file.
- - Your file must be less than 10kb (measured by the file size on github).
+ - Your file must be less than 1mb (measured by the file size on github).
  - You cannot import any external files (this will be checked by looking at the network tab in chrome).
  
 ## How to Submit
