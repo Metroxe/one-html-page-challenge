@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>One HTML Page Challenge</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .jumbotron {
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 70%;
+        }
+
+        body {
+            background: repeating-linear-gradient(
+                    45deg,
+                    #000000,
+                    #1e1e1e 10px,
+                    #15191d 10px,
+                    #15191d 20px
+            );
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <br/>
+
+    <div class="card">
+    <div class="card-body">
+        <div class="jumbotron">
+            <img src="logo/one-html-page-logo.png" alt="One Html Page Challenge" class="logo"/>
+            <hr class="my-4">
+            <p>The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. <b>How creative can you be with such restrictions?</b></p>
+            <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge/blob/master/README.md#how-to-submit" role="button">Submit an Entry</a>
+            <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge" role="button">Github</a>
+        </div>
+        <div class="input-group flex-nowrap">
+            <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="addon-wrapping" id="search" oninput="searchOnInput()">
+            <div class="input-group-append">
+                <span class="input-group-text" id="addon-wrapping">🔍</span>
+            </div>
+        </div>
+        <div id="list"></div>
+    </div>
+
+</div>
+</div>
+<br/>
+
+<script src="entries.js"></script>
+<script>
+
+    // sort based on title
+    const sortedEntries = entries.sort((a,b) => (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0));
+
+    // create initial list
+    searchOnInput();
+
+	function searchOnInput() {
+
+		//get elements
+		const filter = document.getElementById("search").value;
+		const list = document.getElementById("list");
+
+		// remove children
+		while (list.firstChild) {
+			list.removeChild(list.firstChild);
+		}
+
+		// filter list
+		const filteredEntries = sortedEntries.filter((entry) => {
+			let key;
+			for (key in entry) {
+				if (entry.hasOwnProperty(key)) {
+					const prop = entry[key];
+					if (typeof prop === "string" && prop.includes(filter)) {
+						return true;
+                    }
+                }
+            }
+            return false;
+		});
+
+        // create list
+        filteredEntries.forEach(({title, description, filename, github, author}) => {
+			// horizontal rule
+			const hr = document.createElement("hr");
+			list.appendChild(hr);
+
+			const card = document.createElement("div");
+			card.className = "card";
+
+			const body = document.createElement("div");
+			body.className = "card-body";
+            card.appendChild(body);
+
+            // title
+            const cardTitle = document.createElement("h5");
+			const cardTitleNode = document.createTextNode(title);
+			cardTitle.className = "card-title";
+			cardTitle.appendChild(cardTitleNode);
+			body.appendChild(cardTitle);
+
+			// author
+			if (author) {
+				const authorSubtitle = document.createElement("h6");
+				const authorSubtitleNode = document.createTextNode(author);
+				authorSubtitle.className = "card-subtitle mb-2 text-muted";
+				authorSubtitle.appendChild(authorSubtitleNode);
+				body.appendChild(authorSubtitle);
+			}
+
+			// description
+			if (description) {
+				const cardDescription = document.createElement("p");
+				const cardDescriptionNode = document.createTextNode(description);
+				cardDescription.className = "card-text";
+				cardDescription.appendChild(cardDescriptionNode);
+				body.appendChild(cardDescription);
+			}
+
+			// toolbar
+			const toolbar = document.createElement("div");
+			const group1 = document.createElement("div");
+			const group2 = document.createElement("div");
+			toolbar.className = "btn-toolbar";
+			group1.className = "btn-group mr-2";
+			group2.className = "btn-group mr-2";
+			toolbar.appendChild(group1);
+			toolbar.appendChild(group2);
+            body.appendChild(toolbar);
+
+			// HTML Link
+            const linkButton = document.createElement("a");
+			const linkButtonNode = document.createTextNode(filename);
+			linkButton.className = "btn btn-primary btn-md";
+			linkButton.href = `/entries/${filename}`;
+			linkButton.appendChild(linkButtonNode);
+			group1.appendChild(linkButton);
+
+			// github button
+			if (github) {
+				const githubButton = document.createElement("a");
+				const githubButtonNode = document.createTextNode("Github");
+				githubButton.className = "btn btn-primary btn-md";
+				githubButton.href = `https://github.com/${github}`;
+				githubButton.appendChild(githubButtonNode);
+				group2.appendChild(githubButton);
+			}
+
+			list.appendChild(card);
+		})
+    }
+</script>
+</body>
+</html>
