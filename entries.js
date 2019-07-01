@@ -26,5 +26,12 @@ const entries = [
 		description: "Simulation of an ant colony creating a never ending underground colony.",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
+	},
+	{
+		title: "Strange Insults",
+		filename: "strange_insults.html",
+		description: "An insult generator.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
 	}
 ];
