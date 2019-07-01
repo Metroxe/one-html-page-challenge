@@ -19,5 +19,12 @@ const entries = [
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
+	},
+	{
+		title: "Ant Colony",
+		filename: "ant_colony.html",
+		description: "Simulation of an ant colony creating a never ending underground colony.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
 	}
 ];
