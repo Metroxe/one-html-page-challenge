@@ -33,5 +33,12 @@ const entries = [
 		description: "An insult generator.",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
+	},
+	{
+		title: "Building Price Estimate",
+		filename: "building.html",
+		description: "Drag the top right corner on the building. Price increases as building gets bigger.",
+		author: "Richard Hung (Richard1320)",
+		github: "richard1320",
 	}
 ];
