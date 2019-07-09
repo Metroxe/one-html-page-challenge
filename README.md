@@ -26,3 +26,6 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [JSCompress: Compile Multiple JS Files Into a Single Script Tag](https://jscompress.com/)
  - [Cookie Clicker](https://orteil.dashnet.org/cookieclicker/)
  - [List of Javascript Game Frameworks](https://github.com/collections/javascript-game-engines)
+ - [How to render images in HTML with base64 strings](https://stackoverflow.com/a/41057998)
+ - [Convert images to base64](https://www.browserling.com/tools/image-to-base64)
+
