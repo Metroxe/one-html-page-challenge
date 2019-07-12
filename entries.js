@@ -68,5 +68,12 @@ const entries = [
 		description: "simple car racing game, collecting energys on road, speeds up as many energy consumed, slow down if miss energy on road. driving is unlimited",
 		author: "irakli kvirikashvili",
 		github: "zghnachvi",
-	}
+	},
+	{
+      title: "Moon and stars blinking.",
+      filename: "moon_and_stars_colorchange",
+      description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
+      author: "Yousuf Uyghur",
+      github: "Alfen16"
+ * }
 ];
