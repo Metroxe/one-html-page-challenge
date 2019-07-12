@@ -68,5 +68,12 @@ const entries = [
 		description: "simple car racing game, collecting energys on road, speeds up as many energy consumed, slow down if miss energy on road. driving is unlimited",
 		author: "irakli kvirikashvili",
 		github: "zghnachvi",
-	}
+	},
+	{
+     		title: "Color Clock",
+     		filename: "colorclock.html",
+		description: "Shows you the time with a lovely background generated from the current time.",
+    		author: "mechamech",
+      		github: "mechamech",
+ 	}
 ];
