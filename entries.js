@@ -48,11 +48,25 @@ const entries = [
 		author: "Chen Hui Jing (huijing)",
 		github: "huijing",
 	},
-    {
-        title: "Pure CSS Still Life - Water and Lemons",
-        filename: "pure-css-still-life-water-lemon.html",
-        description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
-        author: "Ben Evans",
-        github: "ivorjetski"
-    }
+  {
+      title: "Pure CSS Still Life - Water and Lemons",
+      filename: "pure-css-still-life-water-lemon.html",
+      description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
+      author: "Ben Evans",
+      github: "ivorjetski"
+  },
+  {
+    title: "Calculate Worked Hours",
+		filename: "calculate_hours_worked.html",
+		description: "Calculates the amount of hours worked based on the start and end time of the work shifts and break times if there is any.",
+		author: "Jacky Ly (lyjacky11)",
+		github: "lyjacky11",
+  },
+	{
+		title: "Car Game",
+		filename: "mini_car_game.html",
+		description: "simple car racing game, collecting energys on road, speeds up as many energy consumed, slow down if miss energy on road. driving is unlimited",
+		author: "irakli kvirikashvili",
+		github: "zghnachvi",
+	}
 ];
