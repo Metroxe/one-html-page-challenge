@@ -40,5 +40,12 @@ const entries = [
 		description: "Drag the top right corner on the building. Price increases as building gets bigger.",
 		author: "Richard Hung (Richard1320)",
 		github: "richard1320",
+	},
+	{
+		title: "Fool's Mate",
+		filename: "fools-mate.html",
+		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This can be achieved only by Black, who can deliver checkmate on move 2 with the queen. Fool's Mate received its name because it can only occur if White commits an extraordinary blunder. Even among rank beginners, the mate almost never occurs in practice.",
+		author: "Chen Hui Jing (huijing)",
+		github: "huijing",
 	}
 ];
