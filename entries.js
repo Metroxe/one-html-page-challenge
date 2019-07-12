@@ -23,7 +23,7 @@ const entries = [
 	{
 		title: "Ant Colony",
 		filename: "ant_colony.html",
-		description: "Simulation of an ant colony creating a never ending underground colony.",
+		description: "Simulation of an ant colony creating a never ending underground colony. The 'Q' represents a queen that can giver birth to ants 'A'. Food sources are represented by the numbers 9 - 1. (Currently only works in desktop Chrome)",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
 	},
