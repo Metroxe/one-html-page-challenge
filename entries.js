@@ -71,7 +71,7 @@ const entries = [
 	},
 	{
       title: "Moon and stars blinking.",
-      filename: "moon_and_stars_colorchange",
+      filename: "moon_and_stars_colorchange.html",
       description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
       author: "Yousuf Uyghur",
       github: "Alfen16"
