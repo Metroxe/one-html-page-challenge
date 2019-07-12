@@ -47,5 +47,12 @@ const entries = [
 		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This can be achieved only by Black, who can deliver checkmate on move 2 with the queen. Fool's Mate received its name because it can only occur if White commits an extraordinary blunder. Even among rank beginners, the mate almost never occurs in practice.",
 		author: "Chen Hui Jing (huijing)",
 		github: "huijing",
-	}
+	},
+    {
+        title: "Pure CSS Still Life - Water and Lemons",
+        filename: "pure-css-still-life-water-lemon.html",
+        description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
+        author: "Ben Evans",
+        github: "ivorjetski"
+    }
 ];
