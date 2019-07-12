@@ -48,6 +48,13 @@ const entries = [
 		author: "Chen Hui Jing (huijing)",
 		github: "huijing",
 	},
+  {
+    title: "Calculate Worked Hours",
+		filename: "calculate_hours_worked.html",
+		description: "Calculates the amount of hours worked based on the start and end time of the work shifts and break times if there is any.",
+		author: "Jacky Ly (lyjacky11)",
+		github: "lyjacky11",
+  },
 	{
 		title: "Car Game",
 		filename: "mini_car_game.html",
