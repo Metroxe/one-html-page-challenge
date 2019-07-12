@@ -49,6 +49,13 @@ const entries = [
 		github: "huijing",
 	},
   {
+      title: "Pure CSS Still Life - Water and Lemons",
+      filename: "pure-css-still-life-water-lemon.html",
+      description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
+      author: "Ben Evans",
+      github: "ivorjetski"
+  },
+  {
     title: "Calculate Worked Hours",
 		filename: "calculate_hours_worked.html",
 		description: "Calculates the amount of hours worked based on the start and end time of the work shifts and break times if there is any.",
