@@ -9,6 +9,7 @@
  *     description?: string // description that will be listed with your entry
  *     author?: string // your name/tag that will be listed
  *     github?: string // username on github that will display a link to your profile
+ * 		 compatibleBrowsers?: array // browsers that this page is compatible with
  * }
  */
 
@@ -44,16 +45,17 @@ const entries = [
 	{
 		title: "Fool's Mate",
 		filename: "fools-mate.html",
-		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This can be achieved only by Black, who can deliver checkmate on move 2 with the queen. Fool's Mate received its name because it can only occur if White commits an extraordinary blunder. Even among rank beginners, the mate almost never occurs in practice.",
+		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This play is created by animating grid rows and columns.",
 		author: "Chen Hui Jing (huijing)",
 		github: "huijing",
+		compatibleBrowsers: ["Firefox 66+"],
 	},
   {
-      title: "Pure CSS Still Life - Water and Lemons",
-      filename: "pure-css-still-life-water-lemon.html",
-      description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
-      author: "Ben Evans",
-      github: "ivorjetski"
+		title: "Pure CSS Still Life - Water and Lemons",
+		filename: "pure-css-still-life-water-lemon.html",
+		description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
+		author: "Ben Evans",
+		github: "ivorjetski"
   },
   {
     title: "Calculate Worked Hours",
@@ -70,10 +72,10 @@ const entries = [
 		github: "zghnachvi",
 	},
 	{
-     		title: "Color Clock",
-     		filename: "colorclock.html",
+		title: "Color Clock",
+		filename: "colorclock.html",
 		description: "Shows you the time with a lovely background generated from the current time.",
-    		author: "mechamech",
-      		github: "mechamech",
+		author: "mechamech",
+		github: "mechamech",
  	}
 ];
