@@ -85,5 +85,12 @@ const entries = [
 		description: "A little quiz about the named colors. You try and guess what the color displayed is called.",
 		author: "Andrea Kaminski (Kazeheki)",
 		github: "kazeheki"
+	},
+	{
+		title: "KNFL",
+		filename: "knfl.html",
+		description: "A one-throw-kniffel-like game.",
+		author: "Pascal Claisse",
+		github: "pclaisse"
 	}
 ];
