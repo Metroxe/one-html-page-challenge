@@ -155,7 +155,7 @@
 
             let _preDiceNumber = null;
 
-            let fullhouseCount = 1;
+            let fullhouseCount = 0;
             let streetDiceCount = 1;
             let isLilStreet = false;
             let isBigStreet = false;
@@ -182,11 +182,6 @@
                     {
                         if ( _preDiceNumber !== currentDiceNumber )
                         {
-                            if( currentDiceCount === 3 || currentDiceCount === 4 )
-                            {
-                                fullhouseCount++;
-                            }
-
                             isKNFL = false;
 
                             if ( (currentDiceNumber - 1) !== _preDiceNumber )
@@ -213,6 +208,23 @@
                 }
             );
 
+            let diceNumberTarget = null;
+            let diceNumberPoints = 0;
+
+            for( let n in dicePoints )
+            {
+                if( dicePoints[n] >= 2 )
+                {
+                    fullhouseCount += dicePoints[n];
+                }
+
+                if( (n*dicePoints[n]) > diceNumberPoints )
+                {
+                    diceNumberTarget = n;
+                    diceNumberPoints = (n*dicePoints[n]);
+                }
+            }
+
             let winText = '-';
             let winPoints = 0;
 
@@ -228,25 +240,13 @@
                 winText = ( isBigStreet ? 'Big street' : 'Lil\' street' );
                 winPoints = ( isBigStreet ? 40 : 30 );
             }
-            else if( fullhouseCount === 2 )
+            else if( fullhouseCount === 5 )
             {
                 winText = 'Fullhouse';
                 winPoints = 25;
             }
             else
             {
-                let diceNumberTarget = null;
-                let diceNumberPoints = 0;
-
-                for( let n in dicePoints )
-                {
-                    if( (n*dicePoints[n]) > diceNumberPoints )
-                    {
-                        diceNumberTarget = n;
-                        diceNumberPoints = (n*dicePoints[n]);
-                    }
-                }
-
                 winText = 'Stack (' + dicePoints[diceNumberTarget] + ') of ' + diceNumberTarget;
                 winPoints = diceNumberPoints;
             }
