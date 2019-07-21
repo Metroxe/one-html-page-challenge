@@ -92,5 +92,12 @@ const entries = [
 		description: "A one-throw-kniffel-like game.",
 		author: "Pascal Claisse",
 		github: "pclaisse"
-	}
+	},
+	{
+		title: "Hangman",
+		filename: "hangman.html",
+		description: "A hangman game with words about web development.",
+		author: "Sandro Roth",
+		github: "rothsandro",
+	},
 ];
