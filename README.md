@@ -20,7 +20,7 @@ The goal is to create anything you want within 1 single html file. Practice your
  _* You may submit as many entries as you'd like._
  
  ## Useful Links
- - [Fun Timess with CSS Pixel Art](https://css-tricks.com/fun-times-css-pixel-art/)
+ - [Fun Times with CSS Pixel Art](https://css-tricks.com/fun-times-css-pixel-art/)
  - [Pixel Art to CSS](https://www.pixelartcss.com/)
  - [How to make a simple HTML5 Canvas Game](http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/)
  - [JSCompress: Compile Multiple JS Files Into a Single Script Tag](https://jscompress.com/)
