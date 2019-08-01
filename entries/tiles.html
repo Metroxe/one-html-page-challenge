@@ -118,20 +118,11 @@
 <body>
   <h1>Tile game</h1>
   <div id="root"></div>
-  <div class="instructions">Instructions: Put in numerical order (from left to right, then top to bottom), with the blank in the lower-right corner. Not all configurations are solvable!</div>
+  <div class="instructions">Instructions: Put in numerical order (from left to right, then top to bottom), with the blank in the lower-right corner.</div>
   <script>
     const SHUFFLE = "SHUFFLE";
     const AUTOMOVETILE = "AUTOMOVETILE";
     const CHANGEDIMENSIONS = "CHANGEDIMENSIONS";
-
-    const shuffleArray = array => {
-      let shuffled = array.slice();
-      for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      return shuffled;
-    }
 
     const getRowAndCol = (index,dimensions) => {
       let row = Math.floor(index/dimensions[1]);
@@ -143,7 +134,6 @@
       let firstelements = elements.slice(0,elements.length-1);
       return !firstelements.some((element,i) => element.id!==`${i+1}`);
     }
-
 
     const autoMoveTile = ({dimensions,elements},tileid) => {
       let cloned = elements.slice();
@@ -170,11 +160,34 @@
       return cloned;
     }
 
-    const generateElements = dimensions => shuffleArray(Array.from({length:dimensions[0]*dimensions[1]}).map((_,i,arr) => {
-      return {
-        id: i<arr.length-1?`${i+1}`:null
+    const generateElements = dimensions => {
+      let elements = Array.from({length:dimensions[0]*dimensions[1]}).map((_,i,arr) => {
+        return {
+          id: i<arr.length-1?`${i+1}`:null
+        }
+      });
+      console.log(elements);
+      let lastelement = null;
+      for(let i=0;i<(dimensions[0]*dimensions[1])**2;i++) {
+        let nullidx = elements.findIndex(d => d.id===null);
+        let [nullrow,nullcol] = getRowAndCol(nullidx,dimensions);
+        let candidates = [
+          [nullrow-1,nullcol],
+          [nullrow+1,nullcol],
+          [nullrow,nullcol-1],
+          [nullrow,nullcol+1]
+        ].filter(d => d[0]>=0 && d[0]< dimensions[0] && d[1]>=0 && d[1]<dimensions[1])
+          .map(d => elements[d[0]*dimensions[1]+d[1]])
+          .filter(el => el!==lastelement);
+
+        let winner = candidates[Math.floor(Math.random()*candidates.length)];
+        let winneridx = elements.indexOf(winner);
+        elements[winneridx] = elements[nullidx];
+        elements[nullidx] = winner;
+        lastelement = winner;
       }
-    }));
+      return elements;
+    };
     
     const defaultDimensions = [5,5];
     const defaultState = {
@@ -187,7 +200,7 @@
         case SHUFFLE:
           return {
             ...state,
-            elements: shuffleArray(state.elements)
+            elements: generateElements(state.dimensions)
           }
         case AUTOMOVETILE:
           return {
