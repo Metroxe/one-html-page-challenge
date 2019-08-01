@@ -100,4 +100,11 @@ const entries = [
 		author: "Sandro Roth",
 		github: "rothsandro",
 	},
+	{
+		title: "Tile game",
+		filename: "tiles.html",
+		description: "Tile ordering game.",
+		author: "Marc Lajoie",
+		github: "quickhand",
+  	}
 ];

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Puzzle</title>
+  <style>
+    html,body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+    }
+    
+    h1 {
+      padding: 0;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 20px;
+      margin-top: 10px;
+    }
+    .frame {
+      display: block;
+      width: 100%;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+      box-sizing: border-box;
+    }
+    .board {
+      
+      grid-gap: 10px;
+      
+    }
+    .board.winning::after {
+      content: "YOU WON";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding:10px;
+      background-color: rgba(0,0,0,0.7);
+      display: block;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .tile {
+      width: 100%;
+      height: 0;
+      padding-bottom: 100%;
+      position: relative;
+      background-color:cadetblue;
+      color: white;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .tile-inner {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .tile:hover {
+      background-color:lightseagreen;
+    }
+
+    .controls {
+      margin-top:40px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    input[type='range'] {
+      background: #0c0;
+      height:10px;
+    }     
+
+    .spinner-label {
+      margin-right: 10px;
+    }
+
+    .down-button, .up-button, .shuffle-button {
+      font-size: 12px;
+      width: 60px;
+      font-weight: 700;
+      background-color: lightgray;
+      cursor: pointer;
+    }
+    .shuffle-button {
+      margin-left: 10px;
+    }
+    
+    .value-display {
+      border: 1px solid gray;
+      padding: 0 10px;
+      margin: 0 2px;
+    }
+
+    .instructions {
+      max-width: 600px;
+      width: 100%;
+      padding: 0 20px;
+      margin-top: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tile game</h1>
+  <div id="root"></div>
+  <div class="instructions">Instructions: Put in numerical order (from left to right, then top to bottom), with the blank in the lower-right corner.</div>
+  <script>
+    const SHUFFLE = "SHUFFLE";
+    const AUTOMOVETILE = "AUTOMOVETILE";
+    const CHANGEDIMENSIONS = "CHANGEDIMENSIONS";
+
+    const getRowAndCol = (index,dimensions) => {
+      let row = Math.floor(index/dimensions[1]);
+      let col = index - row * dimensions[0];
+      return [row,col]
+    }
+
+    const checkWinningConditions = (elements) => {
+      let firstelements = elements.slice(0,elements.length-1);
+      return !firstelements.some((element,i) => element.id!==`${i+1}`);
+    }
+
+    const autoMoveTile = ({dimensions,elements},tileid) => {
+      let cloned = elements.slice();
+      let curidx = cloned.findIndex(d => d.id ===tileid);
+      let [currow,curcol] = getRowAndCol(curidx,dimensions);
+      let nullidx = cloned.findIndex(d => d.id ===null);
+      let [nullrow,nullcol] = getRowAndCol(nullidx,dimensions);
+      let swap = false;
+      if(currow === nullrow) {
+        if(curcol+1===nullcol || curcol-1===nullcol) {
+          swap = true;
+        }
+      } else if(curcol === nullcol) {
+        if(currow+1===nullrow || currow-1===nullrow) {
+          swap = true;
+        }
+      }
+
+      if(swap) {
+        let temp = cloned[curidx];
+        cloned[curidx] = cloned[nullidx];
+        cloned[nullidx] = temp;
+      }
+      return cloned;
+    }
+
+    const generateElements = dimensions => {
+      let elements = Array.from({length:dimensions[0]*dimensions[1]}).map((_,i,arr) => {
+        return {
+          id: i<arr.length-1?`${i+1}`:null
+        }
+      });
+      console.log(elements);
+      let lastelement = null;
+      for(let i=0;i<(dimensions[0]*dimensions[1])**2;i++) {
+        let nullidx = elements.findIndex(d => d.id===null);
+        let [nullrow,nullcol] = getRowAndCol(nullidx,dimensions);
+        let candidates = [
+          [nullrow-1,nullcol],
+          [nullrow+1,nullcol],
+          [nullrow,nullcol-1],
+          [nullrow,nullcol+1]
+        ].filter(d => d[0]>=0 && d[0]< dimensions[0] && d[1]>=0 && d[1]<dimensions[1])
+          .map(d => elements[d[0]*dimensions[1]+d[1]])
+          .filter(el => el!==lastelement);
+
+        let winner = candidates[Math.floor(Math.random()*candidates.length)];
+        let winneridx = elements.indexOf(winner);
+        elements[winneridx] = elements[nullidx];
+        elements[nullidx] = winner;
+        lastelement = winner;
+      }
+      return elements;
+    };
+    
+    const defaultDimensions = [5,5];
+    const defaultState = {
+      dimensions: defaultDimensions,
+      elements: generateElements(defaultDimensions)
+    }
+
+    function reducer(state = defaultState,action = {}) {
+      switch(action.type) {
+        case SHUFFLE:
+          return {
+            ...state,
+            elements: generateElements(state.dimensions)
+          }
+        case AUTOMOVETILE:
+          return {
+            ...state,
+            elements: autoMoveTile(state,action.tileid)
+          }
+        case CHANGEDIMENSIONS:
+          return {
+            ...state,
+            dimensions: action.dimensions,
+            elements: generateElements(action.dimensions)
+          }
+        default:
+          return state;
+      }
+    }
+
+    
+    const store = {
+      _listeners: [],
+      state: defaultState,
+      registerListener(callback) {
+        this._listeners.push(callback);
+      },
+      unregisterListener(callback) {
+        this._listeners = this._listeners.filter(listener !== callback);
+      },
+      dispatch(action) {
+        this.state = reducer(this.state,action);
+        this._listeners.forEach(listener => listener.call(null,this.state));
+      }
+    };
+    
+    function generateTiles(dimensions,elements) {
+      return elements.filter(element => element.id !== null).map(element => {
+        let newel = document.createElement("div");
+        newel.dataset.tileid = element.id;
+        newel.classList.add("tile");
+        let innerel = document.createElement("div");
+        innerel.classList.add("tile-inner");
+        let textel = document.createElement("div");
+        textel.innerText = element.id;
+        innerel.appendChild(textel);
+        newel.appendChild(innerel);
+        newel.onclick = () => {
+          store.dispatch({
+            type: AUTOMOVETILE,
+            tileid: element.id
+          });
+        }
+        return newel;
+      })
+    }
+
+    function createBoard(dimensions) {
+      let retel = document.createElement("div");
+      retel.classList.add("board");
+      retel.style.display = "grid";
+      retel.style.gridTemplateColumns = `repeat(${dimensions[1]}, 1fr)`;
+      retel.style.gridTemplateRows = `repeat(${dimensions[0]}, 1fr)`;
+      return retel;
+    }
+
+    function createForm(value) {
+      let retel = document.createElement("div");
+      retel.classList.add("controls");
+      
+      let label = document.createElement("div");
+      label.innerText = "Board size: ";
+      label.classList.add("spinner-label");
+
+      let downButton = document.createElement("button");
+      downButton.innerText = "-";
+      downButton.onclick = evt => {
+        if(value>3) {
+          store.dispatch({
+            type: CHANGEDIMENSIONS,
+            dimensions: [value-1,value-1]
+          }); 
+        }
+      }
+      downButton.classList.add("down-button");
+      
+      let valueDisplay = document.createElement("div");
+      valueDisplay.innerText = `${store.state.dimensions[0]}`
+      valueDisplay.classList.add("value-display");
+
+      let upButton = document.createElement("button");
+      upButton.innerText = "+";
+      upButton.onclick = evt => {
+        if(value<10) {
+          store.dispatch({
+            type: CHANGEDIMENSIONS,
+            dimensions: [value+1,value+1]
+          }); 
+        }
+      }
+      upButton.classList.add("up-button");
+
+      let shuffleButton = document.createElement("button");
+      shuffleButton.innerText = "Shuffle";
+      shuffleButton.onclick = evt => {
+        store.dispatch({
+          type: SHUFFLE
+        }); 
+      }
+      shuffleButton.classList.add("shuffle-button");
+
+
+      
+
+      
+      retel.appendChild(label);
+      retel.appendChild(downButton);
+      retel.appendChild(valueDisplay);
+      retel.appendChild(upButton);
+      retel.appendChild(shuffleButton);
+      return retel;
+    }
+
+    let htmlElements;
+    let frame;
+    let controls;
+    let board;
+    let lastDimensions;
+    let winningel;
+    
+    function render(root, state, first=false) {
+      if(first || lastDimensions[0]!==state.dimensions[0] || lastDimensions[1]!==state.dimensions[1]) {
+        frame = document.createElement("div");
+        frame.classList.add("frame");        
+        controls = createForm(state.dimensions[0]);
+        board = createBoard(state.dimensions);
+        lastDimensions = state.dimensions;
+        htmlElements = generateTiles(state.dimensions,state.elements);
+        root.innerHTML = "";
+        htmlElements.forEach(htmlel => board.appendChild(htmlel));
+        
+        frame.appendChild(board);
+        root.appendChild(frame);
+        frame.appendChild(controls);
+      }
+      if(htmlElements) {
+        state.elements.forEach((el,i,arr) => {
+          if(el.id===null) {return;}
+          let curel = htmlElements.find(htmlel => htmlel.dataset.tileid === el.id);
+          let [row,col] = getRowAndCol(i,state.dimensions);
+          curel.style.gridRow = `${row+1}`;
+          curel.style.gridColumn = `${col+1}`;
+        })
+        if(checkWinningConditions(state.elements)) {
+          board.classList.add("winning");
+        } else {
+          board.classList.remove("winning");
+        }
+      }
+      
+    }
+    let approot = document.querySelector("#root")
+    render(approot,store.state,true);
+    store.registerListener(state => render(approot,state));
+  </script>
+</body>
+</html>
