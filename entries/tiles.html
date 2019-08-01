@@ -87,12 +87,15 @@
       margin-right: 10px;
     }
 
-    .down-button, .up-button {
+    .down-button, .up-button, .shuffle-button {
       font-size: 12px;
       width: 60px;
       font-weight: 700;
       background-color: lightgray;
       cursor: pointer;
+    }
+    .shuffle-button {
+      margin-left: 10px;
     }
     
     .value-display {
@@ -284,11 +287,24 @@
       }
       upButton.classList.add("up-button");
 
+      let shuffleButton = document.createElement("button");
+      shuffleButton.innerText = "Shuffle";
+      shuffleButton.onclick = evt => {
+        store.dispatch({
+          type: SHUFFLE
+        }); 
+      }
+      shuffleButton.classList.add("shuffle-button");
+
+
+      
+
       
       retel.appendChild(label);
       retel.appendChild(downButton);
       retel.appendChild(valueDisplay);
       retel.appendChild(upButton);
+      retel.appendChild(shuffleButton);
       return retel;
     }
 
