@@ -33,20 +33,49 @@
       grid-gap: 10px;
       
     }
-    .board.winning::after {
-      content: "YOU WON";
+    .popup {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%,-50%);
       padding:10px;
       background-color: rgba(0,0,0,0.7);
-      display: block;
       color: white;
       font-size: 20px;
       font-weight: 600;
+      display: none;
+      text-align:center;
+    }
+    .popup.winning {
+      display: block;
+    }
+    .popup .title {
+      font-size: 26px;
+    }
+    .reset-button {
+      -webkit-appearance: none;
+      width: 100%;
+      padding: 5px;
+      font-size: 14px;
+      background-color: blanchedalmond;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    
+    
+    .popup .best {
+      color: gold;
     }
 
+    .popup .record {
+      font-weight: 300;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .popup .moves, .popup .best {
+      font-weight: 400;
+    }
     .tile {
       width: 100%;
       height: 0;
@@ -72,12 +101,21 @@
     }
 
     .controls {
-      margin-top:40px;
+      margin-top: 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
     }
 
+    .status {
+      text-align: right;
+      margin-top: 8px;
+      margin-bottom: 0;
+      line-height: 1;
+      font-weight: 400;
+      color: #999;
+      font-size: 14px;
+    }
     input[type='range'] {
       background: #0c0;
       height:10px;
@@ -156,8 +194,9 @@
         let temp = cloned[curidx];
         cloned[curidx] = cloned[nullidx];
         cloned[nullidx] = temp;
+        return cloned;
       }
-      return cloned;
+      return null;
     }
 
     const generateElements = dimensions => {
@@ -166,7 +205,6 @@
           id: i<arr.length-1?`${i+1}`:null
         }
       });
-      console.log(elements);
       let lastelement = null;
       for(let i=0;i<(dimensions[0]*dimensions[1])**2;i++) {
         let nullidx = elements.findIndex(d => d.id===null);
@@ -192,7 +230,8 @@
     const defaultDimensions = [5,5];
     const defaultState = {
       dimensions: defaultDimensions,
-      elements: generateElements(defaultDimensions)
+      elements: generateElements(defaultDimensions),
+      moveCounter: 0
     }
 
     function reducer(state = defaultState,action = {}) {
@@ -200,18 +239,26 @@
         case SHUFFLE:
           return {
             ...state,
-            elements: generateElements(state.dimensions)
+            elements: generateElements(state.dimensions),
+            moveCounter: 0
           }
         case AUTOMOVETILE:
-          return {
-            ...state,
-            elements: autoMoveTile(state,action.tileid)
+          let newels = autoMoveTile(state,action.tileid);
+          if(newels !== null) {
+            return {
+              ...state,
+              elements: newels,
+              moveCounter: state.moveCounter+1
+            }
+          } else {
+            return state;
           }
         case CHANGEDIMENSIONS:
           return {
             ...state,
             dimensions: action.dimensions,
-            elements: generateElements(action.dimensions)
+            elements: generateElements(action.dimensions),
+            moveCounter: 0
           }
         default:
           return state;
@@ -321,12 +368,32 @@
       return retel;
     }
 
+    const getPopupInner = ({moves=0, best=false, bestMoves=0}) => {
+      let inner = document.createElement("div");
+      inner.innerHTML = `<div class="title">You won!!!</div><div class="moves">Moves: ${moves}</div>${best?`<div class="best">🏆A personal best! 🏆</div>`:`<div class="record">Your record: ${bestMoves}</div>`}`;
+      let resetButton = document.createElement("button");
+      resetButton.classList.add("reset-button");
+      resetButton.innerText = "New game"
+      resetButton.onclick = () => {
+        store.dispatch({
+          type: SHUFFLE
+        }); 
+      }
+      inner.appendChild(resetButton);
+      return inner;
+    };
+    
+
+    
+
     let htmlElements;
     let frame;
     let controls;
     let board;
     let lastDimensions;
     let winningel;
+    let popup;
+    let status;
     
     function render(root, state, first=false) {
       if(first || lastDimensions[0]!==state.dimensions[0] || lastDimensions[1]!==state.dimensions[1]) {
@@ -336,12 +403,19 @@
         board = createBoard(state.dimensions);
         lastDimensions = state.dimensions;
         htmlElements = generateTiles(state.dimensions,state.elements);
+        popup = document.createElement("div");
+        popup.classList.add("popup");
+
+        status = document.createElement("div");
+        status.classList.add("status");
         root.innerHTML = "";
         htmlElements.forEach(htmlel => board.appendChild(htmlel));
         
         frame.appendChild(board);
-        root.appendChild(frame);
+        frame.appendChild(status)
         frame.appendChild(controls);
+        root.appendChild(frame);
+        root.appendChild(popup)
       }
       if(htmlElements) {
         state.elements.forEach((el,i,arr) => {
@@ -351,10 +425,21 @@
           curel.style.gridRow = `${row+1}`;
           curel.style.gridColumn = `${col+1}`;
         })
+        status.innerText = `Moves: ${state.moveCounter}`
         if(checkWinningConditions(state.elements)) {
-          board.classList.add("winning");
+          let bestmoves = localStorage.getItem("bestMoves_"+state.dimensions.join("x"));
+
+          if(bestmoves === null || state.moveCounter < bestmoves ) {
+            popup.innerHTML = "";
+            popup.appendChild(getPopupInner({moves: state.moveCounter, best: true}));
+            localStorage.setItem("bestMoves_"+state.dimensions.join("x"),state.moveCounter);
+          } else {
+            popup.innerHTML = "";
+            popup.appendChild(getPopupInner({moves: state.moveCounter, best: false, bestMoves: bestmoves}));
+          }
+          popup.classList.add("winning");
         } else {
-          board.classList.remove("winning");
+          popup.classList.remove("winning");
         }
       }
       
