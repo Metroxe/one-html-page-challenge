@@ -106,5 +106,12 @@ const entries = [
 		description: "Tile ordering game.",
 		author: "Marc Lajoie",
 		github: "quickhand",
-  	}
+	},
+	{
+		title: "Bits Rain",
+		filename: "bits-rain.html",
+		description: "It's raining bits.",
+		author: "Alexandre Nicolas (Kornflexx)",
+		github: "Kornflexx",
+	}
 ];
