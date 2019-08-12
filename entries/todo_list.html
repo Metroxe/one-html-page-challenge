@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Todo list</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Lexend+Exa&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --dark-grey: #1c1c1c;
+      --ff-lexend-exa: 'Lexend Exa', sans-serif;
+      --primary: #326ada;
+      --danger: #ff0055;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      box-sizing: border-box;
+      background-color: tomato;
+      color: var(--dark-grey);
+      font-family: var(--ff-lexend-exa);
+    }
+
+    .container {
+      padding: 2rem;
+      box-sizing: border-box;
+      border-radius: 10px;
+      box-shadow: 0 0 10px 0 #00000020;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: white;
+      animation: slideInTop .3s ease;
+    }
+
+    .heading {
+      margin: 0 0 2rem;
+    }
+
+    .input {
+      font-size: 1rem;
+      color: var(--dark-grey);
+      font-family: var(--ff-lexend-exa);
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #00000020;
+      margin-right: 10px;
+      width: 100%;
+    }
+    .button {
+      font-size: 1rem;
+      color: var(--dark-grey);
+      font-family: var(--ff-lexend-exa);
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 4px;
+      color: white;
+      background-color: var(--primary);
+      border: 0;
+    }
+
+    .form-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .todos {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    .todo {
+      margin-top: 1rem;
+      animation: slideInLeft .3s ease;
+      transition: transform .3s ease, opacity .3s ease;
+    }
+    .todo--delete {
+      opacity: 0;
+      transform: translate3d(-100px, 0, 0);
+    }
+    .todo__title {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .todo__title--done {
+      text-decoration: line-through;
+      color: grey;
+    }
+    .todo__buttons-wrapper {
+      display: flex;
+    }
+    .todo__button--edit {
+      margin-right: 10px;
+    }
+    .todo__button--delete {
+      background-color: var(--danger);
+    }
+
+    @media screen and (min-width: 500px) {
+      .container {
+        padding: 2rem;
+      }
+      .todo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .todo__title {
+        margin-bottom: 0;
+      }
+    }
+
+    @keyframes slideInTop {
+      from { opacity: 0; transform: translate3d(0, -100px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translate3d(-100px, 0, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="heading">
+      <span>Todo list</span>
+      <span aria-hidden="true" aria-label="A white piece of paper with text written on it by a yellow pencil">📝</span>
+    </h1>
+    <form id="add-todo-form">
+      <div class="form-group">
+        <input id="new-todo-input" type="text" class="input" placeholder="Anything to do today?">
+        <button class="button form-group__submit">Add</button>
+      </div>
+    </form>
+    <ul id="todos" class="todos"></ul>
+  </div>
+
+  <script>
+    (() => {
+      const $addTodoForm = document.querySelector('#add-todo-form');
+      const $newTodoInput = document.querySelector('#new-todo-input');
+      const $todos = document.querySelector('#todos');
+
+      const handleTodoEditClick = event => {
+        event.stopPropagation();
+
+        const $editButton = event.currentTarget;
+        const $todo = $editButton.parentElement.parentElement;
+        let $todoTitle = $todo.querySelector('.todo__title');
+        let $todoInput = $todo.querySelector('.todo__input');
+
+        if ($todoTitle) {
+          $todoInput = document.createElement('input');
+          $todoInput.classList.add('input', 'todo__input');
+          $todoInput.value = $todoTitle.textContent;
+
+          $todo.removeChild($todoTitle);
+          $todo.prepend($todoInput);
+        } else {
+          $todoTitle = document.createElement('span');
+          $todoTitle.classList.add('todo__title');
+          const title = $todoInput.value.trim();
+
+          if (title) {
+            $todoTitle.textContent = $todoInput.value;
+            $todo.removeChild($todoInput);
+            $todo.prepend($todoTitle);
+          }
+        }
+      };
+
+      const handleTodoDeleteClick = event => {
+        event.stopPropagation();
+
+        const $deleteButton = event.currentTarget;
+        const $todo = $deleteButton.parentElement.parentElement;
+        $todo.classList.add('todo--delete');
+
+        setTimeout(() => {
+          $todos.removeChild($todo);
+        }, 300);
+      };
+
+      const handleTodoTitleClick = event => {
+        const $todo = event.currentTarget;
+        $todo.classList.toggle('todo__title--done');
+      };
+
+      function createTodo(value) {
+        const $todoTitle = document.createElement('span');
+        $todoTitle.classList.add('todo__title');
+        $todoTitle.textContent = value;
+        $todoTitle.addEventListener('click', handleTodoTitleClick);
+
+        const $item = document.createElement('li');
+        $item.classList.add('todo');
+
+        const $editButton = document.createElement('button');
+        $editButton.classList.add('button', 'todo__button', 'todo__button--edit');
+        $editButton.textContent = 'Edit';
+        $editButton.addEventListener('click', handleTodoEditClick);
+
+        const $deleteButton = document.createElement('button');
+        $deleteButton.classList.add('button', 'todo__button', 'todo__button--delete');
+        $deleteButton.textContent = 'Delete';
+        $deleteButton.addEventListener('click', handleTodoDeleteClick);
+
+        const $buttonsWrapper = document.createElement('div');
+        $buttonsWrapper.classList.add('todo__buttons-wrapper');
+        $buttonsWrapper.append($editButton);
+        $buttonsWrapper.append($deleteButton);
+
+        $item.appendChild($todoTitle);
+        $item.appendChild($buttonsWrapper);
+
+        return $item;
+      }
+
+      const handleFormSubmit = event => {
+        event.preventDefault();
+
+        const task = $newTodoInput.value.trim();
+
+        if (!task.length) return;
+
+        const $todo = createTodo(task);
+        $todos.appendChild($todo);
+
+        $newTodoInput.value = '';
+      };
+
+      $addTodoForm.addEventListener('submit', handleFormSubmit);
+    })();
+  </script>
+</body>
+
+</html>
