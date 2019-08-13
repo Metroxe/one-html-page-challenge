@@ -1,8 +1,8 @@
-[![One HTML Page Challenge](./meta/one-html-page-logo.png?raw=true "One HTML Page Challenge")](https://metroxe.github.io/one-html-page-challenge/)
+[![One HTML Page Challenge](./meta/one-html-page-logo.png?raw=true "One HTML Page Challenge")](https://onehtmlpagechallenge.com/)
 
 The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. **How creative can you be with such restrictions?**
 
-### [View Submissions](https://metroxe.github.io/one-html-page-challenge/)
+### [View Submissions](https://onehtmlpagechallenge.com)
 
 ## Rules
  - You must write all of your code in 1 single HTML file.
