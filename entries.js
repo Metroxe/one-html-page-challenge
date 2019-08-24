@@ -121,4 +121,11 @@ const entries = [
 		author: "Rafał Goławski",
 		github: "rago4",
 	},
+	{
+		title: "Bronchalia: The Windy City",
+		filename: "bronchalia.htm",
+		description: "Battle pathogens as the human immune system.",
+		author: "quicksilv3rflash (instructables, reddit)",
+		github: "quicksilv3rflash",
+	},
 ];
