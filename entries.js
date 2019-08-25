@@ -121,4 +121,11 @@ const entries = [
 		author: "Rafał Goławski",
 		github: "rago4",
 	},
+	{
+		title: "Just HTML. Mostly.",
+		filename: "just_html.html",
+		description: "Nothing to see here. This was an HTML challenge, so I tried to do just HTML.",
+		author: "Shawn Oden",
+		github: "shawnoden",
+	},
 ];
