@@ -121,4 +121,10 @@ const entries = [
 		author: "Rafał Goławski",
 		github: "rago4",
 	},
+	{
+		title: "Meat on the Move",
+		filename: "meat-on-the-move.html",
+		description: "It's meat on the move!",
+		author: "Jeff Phillips",
+	},
 ];
