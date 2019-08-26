@@ -5,34 +5,114 @@
     <title>Ant Colony</title>
     <style>
         body {
-            overflow: scroll;
             font-family: monospace;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        #window {
+            overflow: scroll;
             position: absolute;
             top: 50%;
             left: 50%;
+            height: 90vh;
+            width: 90vw;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
             transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #ui {
+            position: absolute;
+            min-height: 250px;
+            min-width: 180px;
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+            bottom: 15px;
+            left: 15px;
+            padding: 10px;
+            background-color: white;
         }
     </style>
 </head>
-<body id="root"></body>
+<body>
+<div id="window">
+    <div id="root"></div>
+</div>
+<div id="ui">
+    <h1>Colony</h1>
+    <br/>
+    <span class="label">Queen(s): </span><span id="queens"></span>
+    <br/>
+    <span class="label">Ant(s): </span><span id="ants"></span>
+    <br/>
+    <span class="label">Food: </span><span id="food"></span>
+    <br/>
+    <span class="label">Tiles Explored: </span><span id="tiles"></span>
+    <br/>
+    <span class="label">Time: </span><span id="ticks"></span><span> ticks</span>
+    <br/>
+    <br/>
+    <h1>Stats</h1>
+    <br/>
+    <span class="label">Food Drop Chance: </span><span id="foodDrop"></span><span>%</span>
+    <br/>
+    <span class="label">Queen Birth Chance: </span><span id="queenBirth"></span><span>%</span>
+    <br/>
+    <span class="label">Time Until Birth: </span><span id="timeUntilBirth"></span><span> ticks</span>
+
+</div>
+</body>
 <script>
-	const root       = document.getElementById("root");
-	const drawTime   = 50;
-	const tickTime   = 50;
-	let minX         = 0;
-	let maxX         = 0;
-	let minY         = 0;
-	let maxY         = 0;
-	let idIncrement  = 0;
-	const foodChance = 0.05;
-	const queenChance = 0.1;
-	const grid       = {}; // true = dug out |  false = full
-	const objects    = {}; // holds all classes
-	const ObjectType = { // enum for object types
+	// elements
+	const root              = document.getElementById("root");
+	const queensEle         = document.getElementById("queens");
+	const antsEle           = document.getElementById("ants");
+	const foodEle           = document.getElementById("food");
+	const tilesEle          = document.getElementById("tiles");
+	const timeEle           = document.getElementById("ticks");
+	const foodDropEle       = document.getElementById("foodDrop");
+	const queenBirthEle     = document.getElementById("queenBirth");
+	const timeUntilBirthEle = document.getElementById("timeUntilBirth");
+
+	// static variables
+	const drawTime    = 50;
+	const tickTime    = 50;
+	const foodChance  = 0.03;
+	const queenChance = 0.02;
+	const birthTime   = 30;
+	const ObjectType  = { // enum for object types
 		WALL: 0,
 		ANT: 1,
 		FOOD: 2
 	};
+
+	// maps
+	const grid    = {}; // true = dug out |  false = full
+	const objects = {}; // holds all classes
+
+	// variables
+	let queenCount    = 0;
+	let antCount      = 0;
+	let tickCount     = 0;
+	let foodCount     = 0;
+	let minX          = 0;
+	let maxX          = 0;
+	let minY          = 0;
+	let maxY          = 0;
+	let idIncrement   = 0;
 
 	/**
 	 * Default Class for all Objects in the world
@@ -48,36 +128,39 @@
 		id;
 
 		constructor(x, y) {
-			this.id     = idIncrement;
-			this.x      = x;
-			this.y      = y;
 			idIncrement++;
-			const newCoord = coord(x,y);
-			objects[newCoord] = {
-				...objects[coord(x, y)],
-				[this.id]: this
-			};
-			grid[newCoord] = true;
+			this.id           = idIncrement;
+			this.x            = x;
+			this.y            = y;
+			const newCoord    = coord(x, y);
+			objects[newCoord] = {...objects[coord(x, y)], [this.id]: this};
+			grid[newCoord]    = true;
 		}
 
 		die() {
 			delete objects[coord(this.x, this.y)][this.id];
 		}
-    }
+	}
 
-    class Food extends WorldObject {
-		letter = "9";
+	class Food extends WorldObject {
 		objectType = ObjectType.FOOD;
-		foodLeft = 9;
+		foodLeft   = 3;
+		letter     = this.foodLeft.toString();
 
-        eat() {
+		constructor(x, y) {
+			super(x, y);
+			foodCount += this.foodLeft;
+		}
+
+		eat() {
+			foodCount--;
 			this.foodLeft--;
 			if (this.foodLeft <= 0) {
 				this.die();
-            }
-            this.letter = this.foodLeft.toString(10);
-        }
-    }
+			}
+			this.letter = this.foodLeft.toString(10);
+		}
+	}
 
 	/**
 	 * The Bug Class that has the ability to take basic actions
@@ -153,10 +236,10 @@
 					}
 					break;
 			}
-			const newCoord    = coord(this.x, this.y);
+			const newCoord = coord(this.x, this.y);
 			if (!grid[newCoord] && Math.random() < foodChance) {
 				new Food(this.x, this.y);
-            }
+			}
 			grid[newCoord]    = true;
 			objects[newCoord] = {
 				...objects[newCoord],
@@ -177,8 +260,14 @@
 
 		constructor(x, y) {
 			super(x, y);
+			antCount++;
 			this.hunger = this.hungerMax;
 		}
+
+		die() {
+			super.die();
+			antCount--;
+        }
 
 		takeTurn(action = () => {}) {
 			super.takeTurn(() => {
@@ -192,36 +281,47 @@
 				this.move(direction);
 
 				// eat if necessary
-                if (this.hunger < (this.hungerMax - (this.hungerRate * 10))) {
-                	const checkCoord = coord(this.x, this.y);
-                    let _objects = Object.values(objects[checkCoord]);
-                    _objects = _objects.filter(o => o.objectType === ObjectType.FOOD);
-                    if (_objects.length > 0) {
-                    	_objects[0].eat();
-                    	this.hunger = this.hungerMax;
-                    }
-                }
+				if (this.hunger < (this.hungerMax - (this.hungerRate * 10))) {
+					const checkCoord = coord(this.x, this.y);
+					let _objects     = Object.values(objects[checkCoord]);
+					_objects         = _objects.filter(o => o.objectType === ObjectType.FOOD);
+					if (_objects.length > 0) {
+						_objects[0].eat();
+						this.hunger = this.hungerMax;
+					}
+				}
 
-                action();
-            });
+				action();
+			});
 		}
 
 		getPriorities() {
 			const priorities = [ObjectType.WALL];
 			if ((this.hunger / this.hungerMax) < 0.5) {
 				priorities.unshift(ObjectType.FOOD);
-            }
-			return [priorities, this.hunger / this.hungerMax]
+			}
+			return [priorities, this.hunger / this.hungerMax];
 		}
 	}
 
 	class Queen extends Ant {
-		letter = "Q";
-		delay = 3;
-		hungerMax = 500;
+		letter     = "Q";
+		delay      = 3;
+		hungerMax  = 500;
 		hungerRate = 1;
-		birthTime = 30;
+		birthTime  = birthTime;
 		birthCount = 0;
+
+		constructor(x, y) {
+			super(x, y);
+			queenCount++;
+			this.hunger = this.hungerMax;
+		}
+
+		die() {
+			super.die();
+			queenCount--;
+		}
 
 		takeTurn(action = () => {}) {
 			super.takeTurn(() => {
@@ -230,28 +330,33 @@
 					this.birthCount = 0;
 					if (Math.random() < queenChance) {
 						new Queen(this.x + 1, this.y);
-                    } else {
+					} else {
 						new Ant(this.x + 1, this.y);
 					}
-                }
+				}
 				action();
-            });
+			});
 		}
 	}
 
 	/**
 	 * Function for drawing the world
 	 * TODO: only draw the new parts of the world, right now it iterates over the whole thing
+     * TODO: Pretty sure there is a negative coordinate that has a chan ce of being drawn, which
+     * is causing areas to be drawn outside of a scrollable area. Needs fixing.
 	 */
 	function draw() {
+		// map
 		let x;
 		let y;
+		let tilesExplored = 0;
 		let text = "";
 		for (y = minY; y <= maxY; y++) {
 			for (x = minX; x <= maxX; x++) {
 				const curObjects = objects[coord(x, y)];
 
 				if (curObjects) {
+					tilesExplored++;
 					text += Object.values(curObjects)[0].letter;
 					continue;
 				}
@@ -260,6 +365,8 @@
 					text += "░";
 					continue;
 				}
+
+				tilesExplored++;
 				const [left, top, bottom, right] = adjacent(x, y);
 
 				// ╣
@@ -312,6 +419,16 @@
 			text += "\n";
 		}
 		root.innerText = text;
+
+		// legend
+		queensEle.innerText         = queenCount.toString();
+		antsEle.innerText           = antCount.toString();
+		foodEle.innerText           = foodCount.toString();
+		tilesEle.innerText          = tilesExplored.toString();
+		timeEle.innerText           = tickCount.toString();
+		foodDropEle.innerText       = (foodChance * 100).toString();
+		queenBirthEle.innerText     = (queenChance * 100).toString();
+		timeUntilBirthEle.innerText = birthTime.toString();
 	}
 
 
@@ -326,6 +443,7 @@
 				}
 			});
 		});
+		tickCount++;
 	}
 
 	/**
@@ -463,21 +581,21 @@
 				.sort(sort)[0]
 		);
 		bestRight < 0 ?
-            bestRight = Number.MAX_SAFE_INTEGER :
-            bestRight += rightDistance * distanceNegative;
+			bestRight = Number.MAX_SAFE_INTEGER :
+			bestRight += rightDistance * distanceNegative;
 
 		let list = [
 			[bestLeft, "left"],
-            [bestTop, "top"],
-            [bestBottom, "bottom"],
-            [bestRight, "right"],
-        ];
+			[bestTop, "top"],
+			[bestBottom, "bottom"],
+			[bestRight, "right"]
+		];
 
-		list = list.sort((a, b) => (a[0] - b[0]));
+		list       = list.sort((a, b) => (a[0] - b[0]));
 		let lowest = list[0][0];
-		list = list.filter(p => p[0] <= lowest);
-		return list[Math.floor(Math.random()*list.length)][1];
-    }
+		list       = list.filter(p => p[0] <= lowest);
+		return list[Math.floor(Math.random() * list.length)][1];
+	}
 
 	new Queen(0, 0);
 	setInterval(draw, drawTime);
