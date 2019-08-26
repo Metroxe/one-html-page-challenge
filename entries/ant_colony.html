@@ -13,6 +13,11 @@
             margin: 0;
         }
 
+        h3 {
+            text-align: center;
+            margin: 0;
+        }
+
         .label {
             font-weight: bold;
         }
@@ -22,18 +27,19 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            height: 90vh;
-            width: 90vw;
+            height: calc(100vh - 80px);
+            width: calc(100vw - 80px);
             border-color: black;
             border-style: solid;
             border-width: 1px;
             transform: translate(-50%, -50%);
             display: flex;
+            text-align: center;
             justify-content: center;
             align-items: center;
         }
 
-        #ui {
+        #legend {
             position: absolute;
             min-height: 250px;
             min-width: 180px;
@@ -45,13 +51,29 @@
             padding: 10px;
             background-color: white;
         }
+
+        #banner {
+            position: absolute;
+            border-width: 1px;
+            border-style: solid;
+            border-color: black;
+            padding: 10px;
+            min-height: 40px;
+            right: 80px;
+            bottom: 15px;
+            justify-self: center;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
 <div id="window">
     <div id="root"></div>
 </div>
-<div id="ui">
+<div id="legend">
     <h1>Colony</h1>
     <br/>
     <span class="label">Queen(s): </span><span id="queens"></span>
@@ -72,7 +94,10 @@
     <span class="label">Queen Birth Chance: </span><span id="queenBirth"></span><span>%</span>
     <br/>
     <span class="label">Time Until Birth: </span><span id="timeUntilBirth"></span><span> ticks</span>
-
+</div>
+<div id="banner">
+    <h3>Coded by <a href="https://github.com/metroxe">Christopher Powroznik</a> for the <a
+            href="https://onehtmlpagechallenge.com">One HTML Page Challenge</a></h3>
 </div>
 </body>
 <script>
@@ -104,15 +129,17 @@
 	const objects = {}; // holds all classes
 
 	// variables
-	let queenCount    = 0;
-	let antCount      = 0;
-	let tickCount     = 0;
-	let foodCount     = 0;
-	let minX          = 0;
-	let maxX          = 0;
-	let minY          = 0;
-	let maxY          = 0;
-	let idIncrement   = 0;
+	let queenCount  = 0;
+	let antCount    = 0;
+	let tickCount   = 0;
+	let foodCount   = 0;
+	let minX        = 0;
+	let maxX        = 0;
+	let minY        = 0;
+	let maxY        = 0;
+	let idIncrement = 0;
+	let ticking     = false; //in case of lag, this will avoid double ticking on the same tick.
+	let drawing     = false; //in case of lag, this will avoid double drawing on the same draw.
 
 	/**
 	 * Default Class for all Objects in the world
@@ -267,7 +294,7 @@
 		die() {
 			super.die();
 			antCount--;
-        }
+		}
 
 		takeTurn(action = () => {}) {
 			super.takeTurn(() => {
@@ -342,15 +369,17 @@
 	/**
 	 * Function for drawing the world
 	 * TODO: only draw the new parts of the world, right now it iterates over the whole thing
-     * TODO: Pretty sure there is a negative coordinate that has a chan ce of being drawn, which
-     * is causing areas to be drawn outside of a scrollable area. Needs fixing.
 	 */
 	function draw() {
+		if (drawing) {
+			return;
+		}
+		drawing           = true;
 		// map
 		let x;
 		let y;
 		let tilesExplored = 0;
-		let text = "";
+		let text          = "";
 		for (y = minY; y <= maxY; y++) {
 			for (x = minX; x <= maxX; x++) {
 				const curObjects = objects[coord(x, y)];
@@ -429,6 +458,7 @@
 		foodDropEle.innerText       = (foodChance * 100).toString();
 		queenBirthEle.innerText     = (queenChance * 100).toString();
 		timeUntilBirthEle.innerText = birthTime.toString();
+		drawing                     = false;
 	}
 
 
@@ -436,14 +466,18 @@
 	 * Iterates over all bugs and makes them take their turn
 	 */
 	function tick() {
-		Object.values(objects).forEach(bugs => {
-			Object.values(bugs).forEach(bug => {
-				if (bug.takeTurn) {
-					bug.takeTurn();
-				}
+		if (!ticking) {
+			ticking = true;
+			Object.values(objects).forEach(bugs => {
+				Object.values(bugs).forEach(bug => {
+					if (bug.takeTurn) {
+						bug.takeTurn();
+					}
+				});
 			});
-		});
-		tickCount++;
+			tickCount++;
+			ticking = false;
+		}
 	}
 
 	/**
@@ -597,9 +631,12 @@
 		return list[Math.floor(Math.random() * list.length)][1];
 	}
 
+	// start with 1 queen
 	new Queen(0, 0);
-	setInterval(draw, drawTime);
+
 	setInterval(tick, tickTime);
+	setInterval(draw, drawTime);
+
 
 </script>
 </html>
