@@ -635,7 +635,7 @@
 	new Queen(0, 0);
 
 	setInterval(tick, tickTime);
-	setInterval(draw, drawTime);
+	setInterval(() => window.requestAnimationFrame(draw), drawTime);
 
 
 </script>
