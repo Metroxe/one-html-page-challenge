@@ -130,7 +130,7 @@ const entries = [
 	},
 	{
 		title: "Interval",
-		filename: "interval.html",
+		filename: "Interval.html",
 		description: "Increase reading speed by training in short bursts.",
 		author: "John Gillespie",
 		github: "olddognewtrix123", 
