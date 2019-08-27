@@ -122,6 +122,13 @@ const entries = [
 		github: "rago4",
 	},
 	{
+		title: "Interval",
+		filename: "interval.html",
+		description: "Increase reading speed by training in short bursts.",
+		author: "John Gillespie",
+		github: "olddognewtrix123", 
+  },
+	{
 		title: "Meat on the Move",
 		filename: "meat-on-the-move.html",
 		description: "It's meat on the move!",
