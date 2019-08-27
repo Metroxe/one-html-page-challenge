@@ -121,4 +121,11 @@ const entries = [
 		author: "Rafał Goławski",
 		github: "rago4",
 	},
+		{
+		title: "Interval",
+		filename: "interval.html",
+		description: "Increase reading speed by training in short bursts.",
+		author: "John Gillespie",
+		github: "olddognewtrix123",
+	},
 ];
