@@ -122,6 +122,13 @@ const entries = [
 		github: "rago4",
 	},
 	{
+		title: "Just HTML. Mostly.",
+		filename: "just_html.html",
+		description: "Nothing to see here. This was an HTML challenge, so I tried to do just HTML.",
+		author: "Shawn Oden",
+		github: "shawnoden",
+  },
+  {
 		title: "Bronchalia: The Windy City",
 		filename: "bronchalia.htm",
 		description: "Battle pathogens as the human immune system.",
