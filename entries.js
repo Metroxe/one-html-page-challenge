@@ -122,7 +122,13 @@ const entries = [
 		github: "rago4",
 	},
 	{
-		title: "Just HTML. Mostly.",
+		title: "Meat on the Move",
+		filename: "meat-on-the-move.html",
+		description: "It's meat on the move!",
+		author: "Jeff Phillips",
+  },
+  {
+    title: "Just HTML. Mostly.",
 		filename: "just_html.html",
 		description: "Nothing to see here. This was an HTML challenge, so I tried to do just HTML.",
 		author: "Shawn Oden",
