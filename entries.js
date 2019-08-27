@@ -122,6 +122,12 @@ const entries = [
 		github: "rago4",
 	},
 	{
+		title: "Wargames",
+		filename: "wargames.html",
+		description: "Recreation of the terminal window from a scene in the movie Wargames.",
+		author: "Vasilios Daskalopoulos",
+		github: "vasil9v",
+	},
 		title: "Interval",
 		filename: "interval.html",
 		description: "Increase reading speed by training in short bursts.",
@@ -147,5 +153,5 @@ const entries = [
 		description: "Battle pathogens as the human immune system.",
 		author: "quicksilv3rflash (instructables, reddit)",
 		github: "quicksilv3rflash",
-	},
+	}
 ];
