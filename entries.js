@@ -121,4 +121,11 @@ const entries = [
 		author: "Rafał Goławski",
 		github: "rago4",
 	},
+	{
+		title: "Wargames",
+		filename: "wargames.html",
+		description: "Recreation of the terminal window from a scene in the movie Wargames.",
+		author: "Vasilios Daskalopoulos",
+		github: "vasil9v",
+	}
 ];
