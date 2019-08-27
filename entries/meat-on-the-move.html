@@ -65,20 +65,35 @@ function loadMeat(){
     theDiv = document.getElementById("placeholderdiv");
 
     document.getElementById("placeholderdiv").addEventListener("mousedown", function (e){
-    	e.preventDefault(); // see https://stackoverflow.com/questions/5429827/how-can-i-prevent-text-element-selection-with-cursor-drag
+        e.preventDefault(); // see https://stackoverflow.com/questions/5429827/how-can-i-prevent-text-element-selection-with-cursor-drag
         mouseDown = 1;
         curX = e.clientX;
         curY = e.clientY;
         return false; // see https://stackoverflow.com/questions/6019190/mouseup-event-on-drag
     });
 
+    document.getElementById("placeholderdiv").addEventListener("touchstart", function (e){
+        e.preventDefault(); // see https://stackoverflow.com/questions/5429827/how-can-i-prevent-text-element-selection-with-cursor-drag
+        mouseDown = 1;
+        curX = e.touches[0].clientX;
+        curY = e.touches[0].clientY;
+        return false; // see https://stackoverflow.com/questions/6019190/mouseup-event-on-drag
+    });
+
     document.getElementById("placeholderdiv").addEventListener("mouseup", function (e){
+        mouseDown = 0;
+    });
+    document.getElementById("placeholderdiv").addEventListener("touchend", function (e){
         mouseDown = 0;
     });
 
     document.getElementById("placeholderdiv").addEventListener("mousemove", function (e){
         curX = e.clientX;
         curY = e.clientY;
+    });
+    document.getElementById("placeholderdiv").addEventListener("touchmove", function (e){
+        curX = e.touches[0].clientX;
+        curY = e.touches[0].clientY;
     });
 
     setInterval(checkMouseDown, 75);
