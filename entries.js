@@ -154,5 +154,12 @@ const entries = [
 		description: "Battle pathogens as the human immune system.",
 		author: "quicksilv3rflash (instructables, reddit)",
 		github: "quicksilv3rflash",
+	},
+	{
+		title: "Magic Wand",
+		filename: "magicWand.html",
+		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
+		author: "Jacob Ewing",
+		github: "jacobEwing"
 	}
 ];
