@@ -154,5 +154,12 @@ const entries = [
 		description: "Battle pathogens as the human immune system.",
 		author: "quicksilv3rflash (instructables, reddit)",
 		github: "quicksilv3rflash",
-	}
+	},
+	{
+		title: "ASCII Camera",
+		filename: "ascii-cam.html",
+		description: "Display camera output in colourised ASCII",
+		author: "iveseenthedark",
+		github: "iveseenthedark",
+	},
 ];
