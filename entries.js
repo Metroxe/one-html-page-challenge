@@ -156,6 +156,13 @@ const entries = [
 		github: "quicksilv3rflash",
 	},
 	{
+		title: "ASCII Camera",
+		filename: "ascii-cam.html",
+		description: "Display camera output in colourised ASCII",
+		author: "iveseenthedark",
+		github: "iveseenthedark",
+	},
+  {
 		title: "Magic Wand",
 		filename: "magicWand.html",
 		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
