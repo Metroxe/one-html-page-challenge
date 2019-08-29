@@ -162,4 +162,11 @@ const entries = [
 		author: "iveseenthedark",
 		github: "iveseenthedark",
 	},
+  {
+		title: "Magic Wand",
+		filename: "magicWand.html",
+		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
+		author: "Jacob Ewing",
+		github: "jacobEwing"
+	}
 ];
