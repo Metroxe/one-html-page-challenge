@@ -168,5 +168,12 @@ const entries = [
 		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
 		author: "Jacob Ewing",
 		github: "jacobEwing"
+	},
+	{
+		title: "Fishies",
+		filename: "fishies.html",
+		description: "Spawn fishies and let your fishie grow!",
+		author: "William Chung",
+		github: "wiiliam"
 	}
 ];
