@@ -169,7 +169,7 @@ const entries = [
 		author: "Jacob Ewing",
 		github: "jacobEwing"
 	},
-  {
+	{
 		title: "Fishies",
 		filename: "fishies.html",
 		description: "Spawn fishies and let your fishie grow!",
