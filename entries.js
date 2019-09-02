@@ -173,7 +173,7 @@ const entries = [
 		title: "Fishies",
 		filename: "fishies.html",
 		description: "Spawn fishies and let your fishie grow!",
-		author: "William Chung",
+		author: "William Chung (wiiliam)",
 		github: "wiiliam"
 	}
 ];
