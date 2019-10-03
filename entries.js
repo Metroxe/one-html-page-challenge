@@ -162,7 +162,7 @@ const entries = [
 		author: "iveseenthedark",
 		github: "iveseenthedark",
 	},
-  {
+  	{
 		title: "Magic Wand",
 		filename: "magicWand.html",
 		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
@@ -175,5 +175,19 @@ const entries = [
 		description: "Spawn fishies and let your fishie grow!",
 		author: "William Chung (wiiliam)",
 		github: "wiiliam"
-	}
+	},
+	{
+		title: "Snake Game",
+		filename: "Snakegame.html",
+		description: "In this I used HTML ,CSS, JAVASCRIPT for making snake game.",
+		author: "kuljeet Singh",
+		github: "Kuljeet-123"
+	},
+	{
+		title: "Simple Oui",
+		filename: "watermelon-pixel.html",
+		description: "A Simple Oui.",
+		author: "Maxime DO",
+		github: "Maxime-DO"
+	},
 ];
