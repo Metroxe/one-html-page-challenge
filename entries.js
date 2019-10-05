@@ -15,13 +15,6 @@
 
 const entries = [
 	{
-		title: "Snake Game",
-		filename: "Snakegame.html",
-		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
-		author: "Kuljeet Singh(Kuljeet-123)",
-		github: "Kuljeet-123",
-	},
-	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
@@ -196,5 +189,12 @@ const entries = [
 		description: "A Simple Oui.",
 		author: "Maxime DO",
 		github: "Maxime-DO"
+	},
+	{
+		title: "Snake Game",
+		filename: "Snakegame.html",
+		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
+		author: "Kuljeet Singh(Kuljeet-123)",
+		github: "Kuljeet-123",
 	},
 ];
