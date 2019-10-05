@@ -17,7 +17,7 @@ const entries = [
 	{
 		title: "Snake Game",
 		filename: "Snakegame.html",
-		description: "My first submission to the One HTML Page Challenge. It is a simple snake game using html, css and javascript.",
+		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
 		author: "Kuljeet Singh(Kuljeet-123)",
 		github: "Kuljeet-123",
 	},
