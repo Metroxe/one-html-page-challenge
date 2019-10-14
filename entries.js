@@ -177,13 +177,6 @@ const entries = [
 		github: "wiiliam"
 	},
 	{
-		title: "Snake Game",
-		filename: "Snakegame.html",
-		description: "In this I used HTML ,CSS, JAVASCRIPT for making snake game.",
-		author: "kuljeet Singh",
-		github: "Kuljeet-123"
-	},
-	{
 		title: "Simple Oui",
 		filename: "watermelon-pixel.html",
 		description: "A Simple Oui.",
@@ -194,7 +187,7 @@ const entries = [
 		title: "Snake Game",
 		filename: "Snakegame.html",
 		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
-		author: "Kuljeet Singh(Kuljeet-123)",
+		author: "Kuljeet Singh (Kuljeet-123)",
 		github: "Kuljeet-123",
 	},
         {
