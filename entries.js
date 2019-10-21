@@ -196,5 +196,12 @@ const entries = [
 	        description: "A simple implementation of Conway's Game of Life in JS.",
 	        author: "bendersteed",
 	        github: "bendersteed",
-	}, 
+	},
+	{
+		title: "Ladner British Columbia",
+		filename: "ladner_british_columbia.html",
+		description: "Applied an <feTurbulence> to an image of my hometown Ladner British Columbia, in order to create a cool water effect.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
+	},
 ];
