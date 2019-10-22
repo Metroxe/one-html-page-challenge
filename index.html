@@ -44,6 +44,22 @@
 					content: 'Supported in:';
 					margin-right: 0.5em;
 				}
+
+				.btn.btn-success {
+					color: #ffffff;
+					background-color: hotpink;
+					border-color: hotpink;
+				}
+
+				.btn.btn-success:hover,
+				.btn.btn-success:focus,
+				.btn.btn-success:active,
+				.btn.btn-success.active {
+					color: #ffffff;
+					background-color: deeppink;
+					border-color: deeppink;
+				}
+
     </style>
 </head>
 <body>
@@ -58,6 +74,7 @@
 										<p>The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. <b>How creative can you be with such restrictions?</b></p>
 										<a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge/blob/master/README.md#how-to-submit" role="button">Submit an Entry</a>
 										<a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge" role="button">Github</a>
+										<a class="btn btn-success btn-lg" href="https://github.com/sponsors/Metroxe" role="button">Sponsor ❤️</a>
 								</div>
 								<div class="input-group flex-nowrap">
 										<input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="addon-wrapping" id="search" oninput="searchOnInput()">
@@ -104,7 +121,7 @@
 				});
 
 				// create list
-				filteredEntries.forEach(({title, description, filename, github, author, compatibleBrowsers}) => {
+				filteredEntries.forEach(({title, description, filename, github, author, compatibleBrowsers, sponsored}) => {
 						// horizontal rule
 						const hr = document.createElement("hr");
 						list.appendChild(hr);
@@ -129,6 +146,27 @@
 								const authorSubtitleNode = document.createTextNode(author);
 								authorSubtitle.className = "card-subtitle mb-2 text-muted";
 								authorSubtitle.appendChild(authorSubtitleNode);
+
+								// add a sponsor tag
+								if (sponsored) {
+									const sponsorEmoji = document.createElement("a");
+									const sponsorEmojiNode = document.createTextNode(" ❤️");
+									sponsorEmoji.href = "https://github.com/sponsors/Metroxe";
+									sponsorEmoji.title = "Sponsored Submission";
+									sponsorEmoji.appendChild(sponsorEmojiNode);
+									authorSubtitle.appendChild(sponsorEmoji);
+								}
+
+								// add an owner tag for myself
+								if (author.includes("Christopher Powroznik")) {
+									const ownerEmoji = document.createElement("a");
+									const ownerEmojiNode = document.createTextNode(" 👑️");
+									ownerEmoji.href = "https://github.com/Metroxe";
+									ownerEmoji.title = "Owner";
+									ownerEmoji.appendChild(ownerEmojiNode);
+									authorSubtitle.appendChild(ownerEmoji);
+								}
+
 								body.appendChild(authorSubtitle);
 						}
 

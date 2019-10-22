@@ -10,6 +10,7 @@
  *     author?: string // your name/tag that will be listed
  *     github?: string // username on github that will display a link to your profile
  *     compatibleBrowsers?: array // browsers that this page is compatible with
+ *     sponsored?: boolean // don't worry about adding this, this is done by the owner of the project, your submission will be rejected if set to true without permission.
  * }
  */
 
@@ -133,7 +134,7 @@ const entries = [
 		filename: "Interval.html",
 		description: "Increase reading speed by training in short bursts.",
 		author: "John Gillespie",
-		github: "olddognewtrix123", 
+		github: "olddognewtrix123",
   	},
 	{
 		title: "Meat on the Move",
