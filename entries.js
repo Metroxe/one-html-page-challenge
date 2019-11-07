@@ -205,4 +205,11 @@ const entries = [
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
 	},
+	{
+		title: "Web Minesweeper",
+		filename: "webmine.html",
+		description: "Nearly full implementation of the original Minesweeper game (no high scores list).  Left click to hit a square and test for mines, right click to plant a flag.",
+		author: "Terry McKay",
+		github: "terrymckay",
+	},
 ];
