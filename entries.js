@@ -212,4 +212,11 @@ const entries = [
 		author: "Terry McKay",
 		github: "terrymckay",
 	},
+	{
+		title: "Platform",
+		filename: "platform.html",
+		description: "v3.0 - Just a simple JavaScript game",
+		author: "Mini Ware",
+		github: "Mini-Ware",
+	},
 ];
