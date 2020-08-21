@@ -70,10 +70,10 @@ const entries = [
 		github: "zghnachvi",
 	},
 	{
-      title: "Moon and stars blinking.",
-      filename: "moon_and_stars_colorchange.html",
+      title: "Moon and stars Effect.",
+      filename: "color-change-on-hover-objects.html",
       description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
       author: "Yousuf Uyghur",
-      github: "Alfen16"
- * }
+      github: "alfen-yu"
+  },
 ];
