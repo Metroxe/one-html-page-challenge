@@ -1,8 +1,8 @@
-[![One HTML Page Challenge](./meta/one-html-page-logo.png?raw=true "One HTML Page Challenge")](https://metroxe.github.io/one-html-page-challenge/)
+[![One HTML Page Challenge](./meta/one-html-page-logo.png?raw=true "One HTML Page Challenge")](https://onehtmlpagechallenge.com/)
 
 The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. **How creative can you be with such restrictions?**
 
-### [View Submissions](https://metroxe.github.io/one-html-page-challenge/)
+### [View Submissions](https://onehtmlpagechallenge.com)
 
 ## Rules
  - You must write all of your code in 1 single HTML file.
@@ -19,8 +19,14 @@ The goal is to create anything you want within 1 single html file. Practice your
  
  _* You may submit as many entries as you'd like._
  
+ ## Publicity
+ - [**Boing Boing** - The "One HTML Page Challenge", a great example of view-source culture](https://boingboing.net/2019/08/23/the-one-html-page-challenge.html)
+ - [**Medium** - How Having No-Internet Lead Me to Building a Worldwide Viral Website.](https://medium.com/@metroxe/one-html-page-challenge-d0e6e6d23e16)
+ - [**10BestDesign** - Coders Try a Single-page HTML Coding Challenge to Boost Skills](https://www.10bestdesign.com/blog/coders-try-a-single-page-html-coding-challenge-to-boost-skills/)
+ 
+ 
  ## Useful Links
- - [Fun Timess with CSS Pixel Art](https://css-tricks.com/fun-times-css-pixel-art/)
+ - [Fun Times with CSS Pixel Art](https://css-tricks.com/fun-times-css-pixel-art/)
  - [Pixel Art to CSS](https://www.pixelartcss.com/)
  - [How to make a simple HTML5 Canvas Game](http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/)
  - [JSCompress: Compile Multiple JS Files Into a Single Script Tag](https://jscompress.com/)

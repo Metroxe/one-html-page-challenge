@@ -9,6 +9,8 @@
  *     description?: string // description that will be listed with your entry
  *     author?: string // your name/tag that will be listed
  *     github?: string // username on github that will display a link to your profile
+ *     compatibleBrowsers?: array // browsers that this page is compatible with
+ *     sponsored?: boolean // don't worry about adding this, this is done by the owner of the project, your submission will be rejected if set to true without permission.
  * }
  */
 
@@ -26,6 +28,7 @@ const entries = [
 		description: "Simulation of an ant colony creating a never ending underground colony. The 'Q' represents a queen that can giver birth to ants 'A'. Food sources are represented by the numbers 9 - 1. (Currently only works in desktop Chrome)",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
+		compatibleBrowsers: ["Chrome Desktop"],
 	},
 	{
 		title: "Strange Insults",
@@ -44,24 +47,25 @@ const entries = [
 	{
 		title: "Fool's Mate",
 		filename: "fools-mate.html",
-		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This can be achieved only by Black, who can deliver checkmate on move 2 with the queen. Fool's Mate received its name because it can only occur if White commits an extraordinary blunder. Even among rank beginners, the mate almost never occurs in practice.",
+		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This play is created by animating grid rows and columns.",
 		author: "Chen Hui Jing (huijing)",
 		github: "huijing",
+		compatibleBrowsers: ["Firefox 66+"],
 	},
-  {
-      title: "Pure CSS Still Life - Water and Lemons",
-      filename: "pure-css-still-life-water-lemon.html",
-      description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
-      author: "Ben Evans",
-      github: "ivorjetski"
-  },
-  {
-    title: "Calculate Worked Hours",
+	{
+		title: "Pure CSS Still Life - Water and Lemons",
+		filename: "pure-css-still-life-water-lemon.html",
+		description: " A Pure CSS Still Life. No images, No SVG, just CSS, absolutely pointless!",
+		author: "Ben Evans",
+		github: "ivorjetski"
+	},
+	{
+		title: "Calculate Worked Hours",
 		filename: "calculate_hours_worked.html",
 		description: "Calculates the amount of hours worked based on the start and end time of the work shifts and break times if there is any.",
 		author: "Jacky Ly (lyjacky11)",
 		github: "lyjacky11",
-  },
+	},
 	{
 		title: "Car Game",
 		filename: "mini_car_game.html",
@@ -70,10 +74,148 @@ const entries = [
 		github: "zghnachvi",
 	},
 	{
-      title: "Moon and stars Effect.",
-      filename: "color-change-on-hover-objects.html",
-      description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
-      author: "Yousuf Uyghur",
-      github: "alfen-yu"
+    title: "Moon and stars Effect.",
+    filename: "color-change-on-hover-objects.html",
+    description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
+    author: "Yousuf Uyghur",
+    github: "alfen-yu"
   },
+		title: "Color Clock",
+		filename: "colorclock.html",
+		description: "Shows you the time with a lovely background generated from the current time.",
+		author: "mechamech",
+		github: "mechamech",
+	},
+	{
+		title: "Color Quiz",
+		filename: "color-quiz.html",
+		description: "A little quiz about the named colors. You try and guess what the color displayed is called.",
+		author: "Andrea Kaminski (Kazeheki)",
+		github: "kazeheki"
+	},
+	{
+		title: "KNFL",
+		filename: "knfl.html",
+		description: "A one-throw-kniffel-like game.",
+		author: "Pascal Claisse",
+		github: "pclaisse"
+	},
+	{
+		title: "Hangman",
+		filename: "hangman.html",
+		description: "A hangman game with words about web development.",
+		author: "Sandro Roth",
+		github: "rothsandro",
+	},
+	{
+		title: "Tile game",
+		filename: "tiles.html",
+		description: "Tile ordering game.",
+		author: "Marc Lajoie",
+		github: "quickhand",
+	},
+	{
+		title: "Bits Rain",
+		filename: "bits-rain.html",
+		description: "It's raining bits.",
+		author: "Alexandre Nicolas (Kornflexx)",
+		github: "Kornflexx",
+	},
+	{
+		title: "Todo list",
+		filename: "todo_list.html",
+		description: "Just another one todo list.",
+		author: "Rafał Goławski",
+		github: "rago4",
+	},
+	{
+		title: "Wargames",
+		filename: "wargames.html",
+		description: "Recreation of the terminal window from a scene in the movie Wargames.",
+		author: "Vasilios Daskalopoulos",
+		github: "vasil9v",
+	},
+	{
+		title: "Interval",
+		filename: "Interval.html",
+		description: "Increase reading speed by training in short bursts.",
+		author: "John Gillespie",
+		github: "olddognewtrix123",
+  	},
+	{
+		title: "Meat on the Move",
+		filename: "meat-on-the-move.html",
+		description: "It's meat on the move!",
+		author: "Jeff Phillips",
+  	},
+  	{
+    		title: "Just HTML. Mostly.",
+		filename: "just_html.html",
+		description: "Nothing to see here. This was an HTML challenge, so I tried to do just HTML.",
+		author: "Shawn Oden",
+		github: "shawnoden",
+  	},
+  	{
+		title: "Bronchalia: The Windy City",
+		filename: "bronchalia.htm",
+		description: "Battle pathogens as the human immune system.",
+		author: "quicksilv3rflash (instructables, reddit)",
+		github: "quicksilv3rflash",
+	},
+	{
+		title: "ASCII Camera",
+		filename: "ascii-cam.html",
+		description: "Display camera output in colourised ASCII",
+		author: "iveseenthedark",
+		github: "iveseenthedark",
+	},
+  	{
+		title: "Magic Wand",
+		filename: "magicWand.html",
+		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
+		author: "Jacob Ewing",
+		github: "jacobEwing"
+	},
+	{
+		title: "Fishies",
+		filename: "fishies.html",
+		description: "Spawn fishies and let your fishie grow!",
+		author: "William Chung (wiiliam)",
+		github: "wiiliam"
+	},
+	{
+		title: "Simple Oui",
+		filename: "watermelon-pixel.html",
+		description: "A Simple Oui.",
+		author: "Maxime DO",
+		github: "Maxime-DO"
+	},
+	{
+		title: "Snake Game",
+		filename: "Snakegame.html",
+		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
+		author: "Kuljeet Singh (Kuljeet-123)",
+		github: "Kuljeet-123",
+	},
+        {
+	        title: "Game of Life",
+	        filename: "game_of_life.html",
+	        description: "A simple implementation of Conway's Game of Life in JS.",
+	        author: "bendersteed",
+	        github: "bendersteed",
+	},
+	{
+		title: "Ladner British Columbia",
+		filename: "ladner_british_columbia.html",
+		description: "Applied an <feTurbulence> to an image of my hometown Ladner British Columbia, in order to create a cool water effect.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
+	},
+	{
+		title: "Web Minesweeper",
+		filename: "webmine.html",
+		description: "Nearly full implementation of the original Minesweeper game (no high scores list).  Left click to hit a square and test for mines, right click to plant a flag.",
+		author: "Terry McKay",
+		github: "terrymckay",
+	}
 ];
