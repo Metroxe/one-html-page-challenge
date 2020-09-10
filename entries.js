@@ -218,5 +218,12 @@ const entries = [
 		description: "Nearly full implementation of the original Minesweeper game (no high scores list).  Left click to hit a square and test for mines, right click to plant a flag.",
 		author: "Terry McKay",
 		github: "terrymckay",
-	}
+	},
+	{
+	        title: "Anim-More and More",
+		filename: "index.html",
+		description: "A web-page full of transitions, animations great-UI, and some basic animations without javascript",
+		author: "Aryan Kapoor",
+		github: "Aryankpoor",
+		
 ];
