@@ -74,6 +74,13 @@ const entries = [
 		github: "zghnachvi",
 	},
 	{
+		title: "Moon and stars Effect.",
+		filename: "color-change-on-hover-objects.html",
+		description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
+		author: "Yousuf Uyghur",
+		github: "alfen-yu"
+	},
+	{
 		title: "Color Clock",
 		filename: "colorclock.html",
 		description: "Shows you the time with a lovely background generated from the current time.",

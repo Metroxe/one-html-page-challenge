@@ -1,6 +1,6 @@
 [![One HTML Page Challenge](./meta/one-html-page-logo.png?raw=true "One HTML Page Challenge")](https://onehtmlpagechallenge.com/)
 
-The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework. **How creative can you be with such restrictions?**
+The goal is to create anything you want within 1 single html file. Practice your skills with the barebones of web development. **How creative can you be with such restrictions?**
 
 ### [View Submissions](https://onehtmlpagechallenge.com)
 
@@ -23,6 +23,8 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [**Boing Boing** - The "One HTML Page Challenge", a great example of view-source culture](https://boingboing.net/2019/08/23/the-one-html-page-challenge.html)
  - [**Medium** - How Having No-Internet Lead Me to Building a Worldwide Viral Website.](https://medium.com/@metroxe/one-html-page-challenge-d0e6e6d23e16)
  - [**10BestDesign** - Coders Try a Single-page HTML Coding Challenge to Boost Skills](https://www.10bestdesign.com/blog/coders-try-a-single-page-html-coding-challenge-to-boost-skills/)
+ 
+[![Stargazers over time](https://starchart.cc/Metroxe/one-html-page-challenge.svg)](https://starchart.cc/Metroxe/one-html-page-challenge)
  
  
  ## Useful Links
