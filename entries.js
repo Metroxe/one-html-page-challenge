@@ -199,11 +199,11 @@ const entries = [
 		github: "Kuljeet-123",
 	},
 	{
-	        title: "Game of Life",
-	        filename: "game_of_life.html",
-	        description: "A simple implementation of Conway's Game of Life in JS.",
-	        author: "bendersteed",
-	        github: "bendersteed",
+		title: "Game of Life",
+		filename: "game_of_life.html",
+		description: "A simple implementation of Conway's Game of Life in JS.",
+		author: "bendersteed",
+		github: "bendersteed",
 	},
 	{
 		title: "Ladner British Columbia",
