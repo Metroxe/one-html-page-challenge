@@ -191,7 +191,7 @@ const entries = [
 		author: "Kuljeet Singh (Kuljeet-123)",
 		github: "Kuljeet-123",
 	},
-        {
+	{
 	        title: "Game of Life",
 	        filename: "game_of_life.html",
 	        description: "A simple implementation of Conway's Game of Life in JS.",
@@ -211,5 +211,12 @@ const entries = [
 		description: "Nearly full implementation of the original Minesweeper game (no high scores list).  Left click to hit a square and test for mines, right click to plant a flag.",
 		author: "Terry McKay",
 		github: "terrymckay",
+	},
+	{
+		title: "Out On a Limb",
+		filename: "out_on_a_limb.html",
+		description: "Aesthetic lyric page for Out on a limb by Jayaire Woods.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
 	},
 ];
