@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+   <style type="text/css" media="all">
+     *{
+       margin: 0;
+       border:0;
+       box-sizing: border-box;
+     }
+     ul{
+       display:flex;
+       align-items:center;
+       justify-content: center;
+       min-height: 100vh;
+       background:black;
+      
+     }
+     li{
+       position: relative;
+       padding: 4px;
+       list-style: none;
+     }
+     a{
+       text-decoration: none;
+     }
+     .fa{
+       font-size: 5rem;
+       color:black;
+     }
+     .tw::before{
+       font-family: fontAwesome;
+       content:'\f099';
+       position:absolute;
+       top:0.5vh;
+       height:0;
+       font-size:5rem;
+       overflow:hidden;
+       transition: 0.5s ease-in-out;
+       border-bottom:2px solid navy;
+     }
+     .tw:hover::before{
+       height:55vh;
+       color:rgb(8, 8, 255);
+     
+     }
+     .wh:hover::before{
+       height:55vh;
+       color:green;
+     
+     }
+     .git:hover::before{
+       height:55vh;
+       color:pink;
+     
+     }
+     .git::before{
+       font-family: fontAwesome;
+       content:'\f09b';
+       position:absolute;
+       top:0.5vh;
+       height:0;
+       font-size:5rem;
+       overflow:hidden;
+       transition: 0.5s ease-in-out;
+       border-bottom:2px solid palevioletred;
+     }  
+     .wh::before{
+       font-family: fontAwesome;
+       content:'\f232';
+       position:absolute;
+       top:0;
+       height:0.5vh;
+       font-size:5rem;
+       overflow:hidden;
+       transition: 0.5s ease-in-out;
+       border-bottom:2px solid lawngreen;
+     }  
+     
+     
+     
+   </style>
+</head>
+
+<body>
+<ul>
+  <li class="tw"><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i> </a></li>
+  <li class="wh"><a href="#"><i class="fa fa-whatsapp" aria-hidden="true"></i> </a></li>
+  <li class="git"><a href="#"><i class="fa fa-github" aria-hidden="true"></i> </a></li>
+</ul>
+
+
+
+</body>
+
+</html>
