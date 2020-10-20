@@ -225,9 +225,9 @@ const entries = [
 		description: "v3.0 - Just a simple JavaScript game",
 		author: "Mini Ware",
 		github: "Mini-Ware",
-  },
-  {
-    title: "Out On a Limb",
+  	},
+  	{
+    		title: "Out On a Limb",
 		filename: "out_on_a_limb.html",
 		description: "Aesthetic lyric page for Out on a limb by Jayaire Woods.",
 		author: "Christopher Powroznik (Metroxe)",
