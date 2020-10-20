@@ -74,6 +74,13 @@ const entries = [
 		github: "zghnachvi",
 	},
 	{
+		title: "Moon and stars Effect.",
+		filename: "color-change-on-hover-objects.html",
+		description: "Moon and stars showing a twinkiling effect. The background also turns to night view upon hovering over the moon, stars or the body.",
+		author: "Yousuf Uyghur",
+		github: "alfen-yu"
+	},
+	{
 		title: "Color Clock",
 		filename: "colorclock.html",
 		description: "Shows you the time with a lovely background generated from the current time.",
@@ -191,12 +198,12 @@ const entries = [
 		author: "Kuljeet Singh (Kuljeet-123)",
 		github: "Kuljeet-123",
 	},
-        {
-	        title: "Game of Life",
-	        filename: "game_of_life.html",
-	        description: "A simple implementation of Conway's Game of Life in JS.",
-	        author: "bendersteed",
-	        github: "bendersteed",
+	{
+		title: "Game of Life",
+		filename: "game_of_life.html",
+		description: "A simple implementation of Conway's Game of Life in JS.",
+		author: "bendersteed",
+		github: "bendersteed",
 	},
 	{
 		title: "Ladner British Columbia",
@@ -218,5 +225,12 @@ const entries = [
 		description: "v3.0 - Just a simple JavaScript game",
 		author: "Mini Ware",
 		github: "Mini-Ware",
+  },
+  {
+    title: "Out On a Limb",
+		filename: "out_on_a_limb.html",
+		description: "Aesthetic lyric page for Out on a limb by Jayaire Woods.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe",
 	},
 ];
