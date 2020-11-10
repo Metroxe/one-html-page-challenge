@@ -233,4 +233,11 @@ const entries = [
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
 	},
+	{
+    		title: "background lights",
+		filename: "backgroundlight.html",
+		description: "Its a hover website, when u hover on a box it will react diiferently and background will keep on changing its color.",
+		author: "rahil",
+		github: "Rahilcode",
+	},
 ];
