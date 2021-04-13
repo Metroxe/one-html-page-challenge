@@ -240,4 +240,11 @@ const entries = [
 		author: "rahil",
 		github: "Rahilcode",
 	},
+	{
+	      title: "Tribute page",
+	      filename: "A-tribute-page.html",
+	      description: "Just a tribute page to a completely random person",
+	      author: "MAZ12211",
+	      github: "MAZ12211",
+  },
 ];
