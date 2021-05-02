@@ -15,6 +15,7 @@
  */
 
 const entries = [
+
 	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
@@ -142,21 +143,21 @@ const entries = [
 		description: "Increase reading speed by training in short bursts.",
 		author: "John Gillespie",
 		github: "olddognewtrix123",
-  	},
+	},
 	{
 		title: "Meat on the Move",
 		filename: "meat-on-the-move.html",
 		description: "It's meat on the move!",
 		author: "Jeff Phillips",
-  	},
-  	{
-    		title: "Just HTML. Mostly.",
+	},
+	{
+		title: "Just HTML. Mostly.",
 		filename: "just_html.html",
 		description: "Nothing to see here. This was an HTML challenge, so I tried to do just HTML.",
 		author: "Shawn Oden",
 		github: "shawnoden",
-  	},
-  	{
+	},
+	{
 		title: "Bronchalia: The Windy City",
 		filename: "bronchalia.htm",
 		description: "Battle pathogens as the human immune system.",
@@ -170,7 +171,7 @@ const entries = [
 		author: "iveseenthedark",
 		github: "iveseenthedark",
 	},
-  	{
+	{
 		title: "Magic Wand",
 		filename: "magicWand.html",
 		description: "Wave your magic wand!  A simple demo using mouse motion and button.",
@@ -225,26 +226,33 @@ const entries = [
 		description: "v3.0 - Just a simple JavaScript game",
 		author: "Mini Ware",
 		github: "Mini-Ware",
-  	},
-  	{
-    		title: "Out On a Limb",
+	},
+	{
+		title: "Out On a Limb",
 		filename: "out_on_a_limb.html",
 		description: "Aesthetic lyric page for Out on a limb by Jayaire Woods.",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe",
 	},
 	{
-    		title: "background lights",
+		title: "background lights",
 		filename: "backgroundlight.html",
 		description: "Its a hover website, when u hover on a box it will react diiferently and background will keep on changing its color.",
 		author: "rahil",
 		github: "Rahilcode",
 	},
 	{
-	      title: "Tribute page",
-	      filename: "A-tribute-page.html",
-	      description: "Just a tribute page to a completely random person",
-	      author: "MAZ12211",
-	      github: "MAZ12211",
-  },
+		title: "Tribute page",
+		filename: "A-tribute-page.html",
+		description: "Just a tribute page to a completely random person",
+		author: "MAZ12211",
+		github: "MAZ12211",
+	},
+	{
+		title: "Fall Game",
+		filename: "fall_game.html",
+		description: "A fall game created using html,css and Javascript",
+		author: "Snehal",
+		github: "SNEHAL311998",
+	},
 ];
