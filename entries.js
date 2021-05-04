@@ -246,7 +246,7 @@ const entries = [
 	      description: "Just a tribute page to a completely random person",
 	      author: "MAZ12211",
 	      github: "MAZ12211",
-  },
+ 	},
 	{
 		title: "Fall Game",
 		filename: "fall_game.html",
