@@ -247,4 +247,11 @@ const entries = [
 	      author: "MAZ12211",
 	      github: "MAZ12211",
   },
+	{
+		title: "Fall Game",
+		filename: "fall_game.html",
+		description: "A fall game created using html,css,javascript",
+		author: "Snehal",
+		github: "SNEHAL311998",
+	},
 ];
