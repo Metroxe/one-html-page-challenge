@@ -16,6 +16,13 @@
 
 const entries = [
 	{
+		title: "Draw RGB",
+		filename: "draw-rgb.html",
+		description: "A svg draw with RGB.",
+		author: "Erik Giovani",
+		github: "ErikGIovani",
+	},
+	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
