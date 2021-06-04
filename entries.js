@@ -254,4 +254,11 @@ const entries = [
 		author: "Snehal",
 		github: "SNEHAL311998",
 	},
+	{
+		title: "Draw RGB",
+		filename: "draw-rgb.html",
+		description: "A svg draw with RGB.",
+		author: "Erik Giovani",
+		github: "ErikGIovani",
+	},
 ];
