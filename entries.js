@@ -264,11 +264,8 @@ const entries = [
 	{
 		title: "Birthday Cake",
 		filename: "birthday-cake.html",
-		description: `This is a simple animated birthday cake written in Vanilla JavaScript, CSS and HTML. It allows you to set:
-		- the number of candles (via param ?candles=15);
-		- the addressee name to display the phrase "Happy Birthday" with this name (via param ?name=Green);
-		-  or set your own congratulations (via param ?message=Happy%20Birthday,%20Green&message=Have%20a%20nice%20Day).`,
-		author: "Alexander A. Kropotin(ololx)",
+		description: `This is a simple animated birthday cake written in Vanilla JavaScript, CSS and HTML. It allows you to set:\n- the number of candles (via param ?candles=15);\n- the addressee name to display the phrase "Happy Birthday" with this name (via param ?name=Green);\n- or set your own congratulations (via param ?message=Happy%20Birthday,%20Green&message=Have%20a%20nice%20Day).`,
+		author: "Alexander A. Kropotin (ololx)",
 		github: "ololx",
 	},
 ];
