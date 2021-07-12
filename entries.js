@@ -227,7 +227,7 @@ const entries = [
 		github: "Mini-Ware",
   	},
   	{
-    		title: "Out On a Limb",
+    	title: "Out On a Limb",
 		filename: "out_on_a_limb.html",
 		description: "Aesthetic lyric page for Out on a limb by Jayaire Woods.",
 		author: "Christopher Powroznik (Metroxe)",
@@ -260,5 +260,12 @@ const entries = [
 		description: "A svg draw with RGB.",
 		author: "Erik Giovani",
 		github: "ErikGIovani",
+	},
+	{
+		title: "Birthday Cake",
+		filename: "birthday-cake.html",
+		description: `This is a simple animated birthday cake written in Vanilla JavaScript, CSS and HTML. It allows you to set:\n- the number of candles (via param ?candles=15);\n- the addressee name to display the phrase "Happy Birthday" with this name (via param ?name=Green);\n- or set your own congratulations (via param ?message=Happy%20Birthday,%20Green&message=Have%20a%20nice%20Day).`,
+		author: "Alexander A. Kropotin (ololx)",
+		github: "ololx",
 	},
 ];
