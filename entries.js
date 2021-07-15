@@ -268,4 +268,11 @@ const entries = [
 		author: "Alexander A. Kropotin (ololx)",
 		github: "ololx",
 	},
+	{
+		title: "Baby Wants Milk",
+		filename: "BabyWantsMilk.html",
+		description: "Baby is home alone and hungry. Take baby 👶 to the milk 🍼. It is my baby step towards HTML/JS/CSS 😉",
+		author: "Seshu Thanneeru",
+		github: "SeshuTechie",
+	},
 ];
