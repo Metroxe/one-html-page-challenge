@@ -60,6 +60,13 @@ const entries = [
 		github: "ivorjetski"
 	},
 	{
+		title: "Character Counter",
+		filename: "character_counter.html",
+		description: "A character counter which can count characters and having awesome custom style property.",
+		author: "Sami Ullah Saleem",
+		github: "samiullahsaleem"
+	},
+	{
 		title: "Calculate Worked Hours",
 		filename: "calculate_hours_worked.html",
 		description: "Calculates the amount of hours worked based on the start and end time of the work shifts and break times if there is any.",
