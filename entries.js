@@ -275,4 +275,11 @@ const entries = [
 		author: "Seshu Thanneeru",
 		github: "SeshuTechie",
 	},
+	{
+		title: "Tic Tac Toe Game",
+		filename: "tic-tac-toe.html",
+		description: "It is just a simple tic tac toe game!",
+		author: "Sumandeep Kaur",
+		github: "Sumandeep-Kaur",
+	},
 ];
