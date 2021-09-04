@@ -282,4 +282,11 @@ const entries = [
 		author: "Sumandeep Kaur",
 		github: "Sumandeep-Kaur",
 	},
+	{
+		title: "Analog-cum-Digital Clock",
+		filename: "clock.html",
+		description: "This is an analog-cum-digital clock with both dark and light modes!!",
+		author: "Sumandeep Kaur",
+		github: "Sumandeep-Kaur",
+	},
 ];
