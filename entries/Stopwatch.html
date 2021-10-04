@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+        integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>StopWatch</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-width: thin;
+            scrollbar-color: #2b2a33 #f7e39d;
+        }
+
+        .timerinfo,
+        .btns {
+            display: flex;
+            height: 15vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            margin: .5em;
+        }
+
+        .button-primary {
+            font-family: "Raleway", sans-serif;
+            font-size: medium;
+            margin: 0.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="timerinfo">
+        <h1 id="hrs">00</h1>
+        <h1 id="mins">00</h1>
+        <h1 id="sec">00</h1>
+        <h1 id="millisec">00</h1>
+    </div>
+    <div class="btns">
+        <button class="button-primary start">Start</button>
+        <button class="button-primary stop">Stop</button>
+        <button class="button-primary pause">Pause</button>
+        <button class="button-primary reset">Reset</button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/easytimer@1.1.3/src/easytimer.min.js"></script>
+    <script>
+        let startBtn = document.querySelector('.start')
+        let stopBtn = document.querySelector('.stop')
+        let resetBtn = document.querySelector('.reset')
+        let pauseBtn = document.querySelector('.pause')
+
+        let hours = document.querySelector('#hrs')
+        let seconds = document.querySelector('#sec')
+        let minutes = document.querySelector('#mins')
+        let milliseconds = document.querySelector('#millisec')
+
+        var timer = new Timer();
+
+        timer.addEventListener('secondTenthsUpdated', () => {
+            const obj = timer.getTimeValues()
+
+            hours.innerHTML = obj.hours.toString();
+            minutes.innerHTML = obj.minutes.toString();
+            seconds.innerHTML = obj.seconds.toString();
+            milliseconds.innerHTML = obj.secondTenths.toString();
+        })
+        startBtn.addEventListener('click', () => {
+            timer.start({
+                precision: 'secondTenths'
+            })
+        })
+        pauseBtn.addEventListener('click', () => {
+            timer.pause()
+        })
+        stopBtn.addEventListener('click', () => {
+            timer.stop()
+        })
+        resetBtn.addEventListener('click', () => {
+            timer.stop();
+            hours.innerHTML = '00';
+            milliseconds.innerHTML = '00';
+            minutes.innerHTML = '00';
+            seconds.innerHTML = '00';
+
+        })
+    </script>
+</body>
+
+</html>
