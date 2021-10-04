@@ -15,6 +15,12 @@
  */
 
 const entries = [
+	{	title: "StopWatch",
+		filename: "Stopwatch.html",
+		description: "Stop Watch or chronowatch made by vanilla Js,css and Html",
+		author: "Ronit Dutta",
+		github: "RD91",
+	},
 	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
