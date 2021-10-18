@@ -289,4 +289,11 @@ const entries = [
 		author: "Sumandeep Kaur",
 		github: "Sumandeep-Kaur",
 	},
+	{
+		title: "Ask Me on a Date Form",
+		filename: "date_me_form.html",
+		description: "Well, this is an application form for asking me on a date kind of thing",
+		author: "Lailah Grant",
+		github: "lailahgrant",
+	},
 ];
