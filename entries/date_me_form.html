@@ -16,10 +16,67 @@
         font-size: 1.3rem;
         text-decoration:none;
     }
+    a, input{
+        cursor:pointer;
+    }
+    .main-bg {
+        background: #ece9e2;
+    }
+    .title{
+        margin-bottom: 1rem;
+    }
+    .bord{
+        margin: 0 auto;
+        margin-top: 2rem;
+        width: 80%;
+        border: 1px solid #cfcfcf;
+        margin-bottom:2rem;
+        padding: 1rem .5rem 1rem .5rem;
+    }
+    .content {
+        margin: 0 auto;
+        margin-top: 2rem;
+        padding-top:2rem;
+        margin-bottom:2rem;
+        width: 80%;
+        border: 1 solid #cfcfcf;
+        background: #f2dcde;
+        text-align: center;
+        border-radius: .3rem;
+    }
+    form.content{
+        padding-bottom:2rem;
+    }
     </style>
 
 </head>
 <body class="main-bg">
-    
+    <form  class="content">
+        <h2 class="title">Application for permission to date me</h2>
+        <p class="note">
+            <b>Note : </b>
+            The Form is to be completed at least 21 days prior.
+        </p>
+        <fieldset class="bord">
+            <legend>
+                <h2 class="title">Personal Details</h2>
+            </legend>
+            <label>Name : </label>
+                <input type="text" placeholder="Enter your name here"> <br> <br>
+            <label>Email : </label>
+                <input type="text" placeholder="Enter your email here"> <br> <br>
+            <label>Address : </label>
+                <input type="text" placeholder="Enter your address here"> <br> <br>
+            <label>Phone Number : </label>
+                <input type="text" placeholder="Enter your phone number here">  <br> <br>
+            <label>IQ : </label>
+                <input type="text" placeholder="Enter your IQ here">  <br> <br>      
+            <label>Gender: </label> <br><br>
+                <input type="radio" name="gender">Male 
+                <input type="radio" name="gender">Female <br><br>
+            <label>Date of Proposed Outing : </label>
+                <input type="date">       
+        </fieldset>
+    </form>    
 </body>
 </html>
