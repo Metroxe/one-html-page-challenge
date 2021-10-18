@@ -289,10 +289,18 @@ const entries = [
 		author: "Sumandeep Kaur",
 		github: "Sumandeep-Kaur",
 	},
-	{       title: "Calculator",
+	{       
+		title: "Calculator",
 	        filename: "css-calc.html",
 	        descrition: "Only html, css caluclator",
 	        author: "Aryan Kapoor",
 	        github: "Aryankpoor",
+	},
+	{
+		title: "Hover Button",
+	        filename: "button-hover.html",
+	        descrition: "A simple button hover.",
+	        author: "Vanshika Rana",
+	        github: "Vanshika-Rana",	
 	},
 ];
