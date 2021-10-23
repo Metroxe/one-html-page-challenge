@@ -295,5 +295,19 @@ const entries = [
 		description: "Well, this is an application form for asking me on a date kind of thing",
 		author: "Lailah Grant",
 		github: "lailahgrant",
+  },
+	{       
+		title: "Calculator",
+	        filename: "css-calc.html",
+	        descrition: "Only html, css caluclator",
+	        author: "Aryan Kapoor",
+	        github: "Aryankpoor",
+	},
+	{
+		title: "Hover Button",
+	        filename: "button-hover.html",
+	        descrition: "A simple button hover.",
+	        author: "Vanshika Rana",
+	        github: "Vanshika-Rana",	
 	},
 ];
