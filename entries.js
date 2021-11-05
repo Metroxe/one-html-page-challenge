@@ -295,7 +295,7 @@ const entries = [
 		description: "Well, this is an application form for asking me on a date kind of thing",
 		author: "Lailah Grant",
 		github: "lailahgrant",
-  },
+  	},
 	{       
 		title: "Calculator",
 	        filename: "css-calc.html",
