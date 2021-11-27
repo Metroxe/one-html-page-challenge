@@ -317,4 +317,11 @@ const entries = [
 		author: "Hector Krionas Lamprou",
 		github: "EKrionasLamprou",
 	},
+	{
+		title: "Your IP",
+		filename: "ip.html",
+		description: "Find out what's your IP address",
+		author: "Elisha Hollander (donno2048)",
+		github: "donno2048",
+	},
 ];
