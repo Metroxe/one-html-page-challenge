@@ -324,4 +324,12 @@ const entries = [
 		author: "Elisha Hollander (donno2048)",
 		github: "donno2048",
 	},
+	{
+		title: "Your Screen Resolution",
+		filename: "my-screen-resolution.html",
+		description: "THIS PAGE HELPS YOU TO FIND YOUR MONITOR/SCREEN RESOLUTIONS.",
+		author: "Prateek Singh",
+		github: "7ORP3DO",
+		compatibleBrowsers: ["Chrome","Edge","Firefox","Internet Explorer","Opera","Safari"],
+	}
 ];
