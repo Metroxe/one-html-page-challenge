@@ -192,6 +192,13 @@ const entries = [
 		github: "Maxime-DO"
 	},
 	{
+		title: "Ring Loader",
+		filename: "ring-loader.html",
+		description: "CSS only loaders is still the buzz now so I imported one of my tests.",
+		author: "Markus Mafz",
+		github: "headquarter8302"
+	},
+	{
 		title: "Snake Game",
 		filename: "Snakegame.html",
 		description: "My first submission to the One HTML Page Challenge.It is a simple snake game using html, css and javascript.",
