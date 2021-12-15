@@ -332,4 +332,11 @@ const entries = [
 		github: "7ORP3DO",
 		compatibleBrowsers: ["Chrome","Edge","Firefox","Internet Explorer","Opera","Safari"],
 	}
+	{
+		title: "Fireworks",
+		filename: "fireworks.html",
+		description: "Clickable fireworks!",
+		author: "Matthew Hu",
+		github: "wagabooga",
+	},
 ];
