@@ -331,7 +331,7 @@ const entries = [
 		author: "Prateek Singh",
 		github: "7ORP3DO",
 		compatibleBrowsers: ["Chrome","Edge","Firefox","Internet Explorer","Opera","Safari"],
-	}
+	},
 	{
 		title: "Fireworks",
 		filename: "fireworks.html",
