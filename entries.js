@@ -346,4 +346,11 @@ const entries = [
 		author: "Matthew Hu",
 		github: "wagabooga",
 	},
+	{
+		title: "Adjustable Fireworks",
+		filename: "adjustable-fireworks.html",
+		description: "A firework generating website with tons of settings.",
+		author: "Tyler Gordon Hill",
+		github: "TyHil",
+	},
 ];
