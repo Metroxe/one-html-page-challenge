@@ -352,4 +352,11 @@ const entries = [
 		author: "Tyler Gordon Hill",
 		github: "TyHil",
 	},
+	{
+		title: "Marching Squares",
+		filename: "marching-squares.html",
+		description: "Marching Squares algorithm in one HTML page!",
+		author: "Magoninho",
+		github: "Magoninho",
+	},
 ];
