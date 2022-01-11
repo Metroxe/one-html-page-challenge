@@ -15,22 +15,21 @@
 
 const entries = [
 	{
-		title: "Dancing Man",
+		title: "Out Run Game",
 		filename: "Out Run.html",
 		description: "The Out Run Game By Cassie-Campbell For One  Html Page Challenge.",
 		author: " Cassie",
 		github: "Cassie-Campbell",
 	}, 
-	{
-                title: "Out Run Game",
-		filename: "ant_colony.html",
-		description: "Simulation of an ant colony creating a never ending underground colony. The 'Q' represents a queen that can giver birth to ants 'A'. Food sources are represented by the numbers 9 - 1. (Currently only works in desktop Chrome)",
+         {
+		title: "Dancing Man",
+		filename: "dancing_man.html",
+		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
 		author: "Christopher Powroznik (Metroxe)",
-		github: "Metroxe",
-	 	compatibleBrowsers: ["Chrome Desktop"],
-	},     
+		github: "Metroxe",   
+	},
 	{
-		title: "Ant Colony",
+           	title: "Ant Colony",
 		filename: "ant_colony.html",
 		description: "Simulation of an ant colony creating a never ending underground colony. The 'Q' represents a queen that can giver birth to ants 'A'. Food sources are represented by the numbers 9 - 1. (Currently only works in desktop Chrome)",
 		author: "Christopher Powroznik (Metroxe)",
