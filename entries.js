@@ -14,7 +14,7 @@
  */
 
 const entries = [
-         {
+        {
 		title: "Dancing Man",
 		filename: "dancing_man.html",
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
