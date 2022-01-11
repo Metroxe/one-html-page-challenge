@@ -14,13 +14,6 @@
  */
 
 const entries = [
-	{
-		title: "Out Run Game",
-		filename: "Out Run.html",
-		description: "The Out Run Game By Cassie-Campbell For One  Html Page Challenge.",
-		author: " Cassie",
-		github: "Cassie-Campbell",
-	}, 
          {
 		title: "Dancing Man",
 		filename: "dancing_man.html",
@@ -366,4 +359,11 @@ const entries = [
 		author: "Magoninho",
 		github: "Magoninho",
 	},
+	{
+		title: "Out Run Game",
+		filename: "Out Run.html",
+		description: "The Out Run Game By Cassie-Campbell For One  Html Page Challenge.",
+		author: " Cassie",
+		github: "Cassie-Campbell",
+	}, 
 ];
