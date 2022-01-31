@@ -45,3 +45,7 @@ _If you write a blog or post about the challenge, feel free to add to the list_
  - [How to render images in HTML with base64 strings](https://stackoverflow.com/a/41057998)
  - [Convert images to base64](https://www.browserling.com/tools/image-to-base64)
 
+## Contributors
+<a href="https://github.com/Metroxe/one-html-page-challenge/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Metroxe/one-html-page-challenge" />
+</a>
