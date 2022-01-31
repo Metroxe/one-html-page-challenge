@@ -28,6 +28,7 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [**What's Going On?** -  Ep #5 (Worst Traffic Bottleneck In North America, IOS vs Android, What's 5g?)](https://www.stitcher.com/show/gronzo/episode/whats-going-on-ep-5-worst-traffic-bottleneck-in-north-america-ios-vs-android-whats-5g-63569131)
  - [**JPEGZILLA** - findings](https://jpegzilla.com/blog/posts/20190724.html)
  - [**chenhuijing.com** - Recreating the Fool's Mate chess move with CSS Grid](https://chenhuijing.com/blog/recreating-the-fools-mate-chess-move-with-css-grid/#%F0%9F%92%BB)
+ - [**Hello Github** - Volume 70](https://hellogithub.com/periodical/volume/70/)
 
 _If you write a blog or post about the challenge, feel free to add to the list_
  
