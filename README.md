@@ -31,6 +31,7 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [**Advent One** - ansible-challenge](https://github.com/AdventOne/ansible-challenge)
  - [**Hello Github** - Volume 70](https://hellogithub.com/periodical/volume/70/)
  - [**Dev Awesome** - Issue #14](https://devawesome.io/archive/14)
+ - [**Tympanus** - Collective #531](https://tympanus.net/codrops/collective/collective-531/)
 
 _If you write a blog or post about the challenge, feel free to add to the list_
  
