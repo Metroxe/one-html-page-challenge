@@ -401,7 +401,7 @@ const entries = [
 	},
 	{
                  title: "Calculator",
-                 filename: "Calculator",  
+                 filename: "Calculator.html",  
                  description: "Calculator Using-Javascript For One Page Html Challenge",
                  author: "Abhay Mourya (Abhay557)",
                  github: "Abhay557"
