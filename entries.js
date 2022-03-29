@@ -21,6 +21,14 @@ const entries = [
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe"
 	},
+        {
+                 title: "Calculator",
+                 filename: "Calculator",  
+                 description: "Calculator Using-Javascript For One Page Html Challenge",
+                 author: "Abhay Mourya (Abhay557)",
+                 github: "Abhay557"
+      
+        },
 	{
 		title: "Ant Colony",
 		filename: "ant_colony.html",
