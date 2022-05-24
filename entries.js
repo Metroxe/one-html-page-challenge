@@ -406,4 +406,11 @@ const entries = [
                  author: "Abhay Mourya (Abhay557)",
                  github: "Abhay557"
         },
+	{
+		title: "Whack-a-mole",
+		filename: "whack-a-mole.html",
+		description: "New whack-a-mole with speed rounds and shufffle keyboard",
+		author: "sakshi",
+		github: "sakshi-011"
+	},
 ];
