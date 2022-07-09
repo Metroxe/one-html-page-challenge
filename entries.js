@@ -413,4 +413,11 @@ const entries = [
 		author: "sakshi",
 		github: "sakshi-011"
 	},
+	{
+		title: "Organs-For-Debt",
+		filename: "organs-for-debt.html",
+		description: "You have a lot of debt and nothing but your body to pay for it",
+		author: "Justin Chao"
+		github: "jutsK"
+	},
 ];
