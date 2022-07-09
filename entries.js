@@ -417,7 +417,7 @@ const entries = [
 		title: "Organs-For-Debt",
 		filename: "organs-for-debt.html",
 		description: "You have a lot of debt and nothing but your body to pay for it",
-		author: "Justin Chao"
+		author: "Justin Chao",
 		github: "jutsK"
 	},
 ];
