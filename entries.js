@@ -400,12 +400,12 @@ const entries = [
 		compatibleBrowsers: ["Chrome Desktop", "Firefox Desktop", "Safari Desktop", "Edge Chromium Desktop"]
 	},
 	{
-                 title: "Calculator",
-                 filename: "Calculator.html",  
-                 description: "Calculator Using-Javascript For One Page Html Challenge",
-                 author: "Abhay Mourya (Abhay557)",
-                 github: "Abhay557"
-        },
+		title: "Calculator",
+		filename: "Calculator.html",
+		description: "Calculator Using-Javascript For One Page Html Challenge",
+		author: "Abhay Mourya (Abhay557)",
+		github: "Abhay557"
+	},
 	{
 		title: "Whack-a-mole",
 		filename: "whack-a-mole.html",
@@ -419,5 +419,12 @@ const entries = [
 		description: "You have a lot of debt and nothing but your body to pay for it",
 		author: "Justin Chao",
 		github: "jutsK"
+	},
+	{
+		title: "Blur background loading",
+		filename: "blur-loading-page.html",
+		description: "A smooth Css transition to slowly load the contents of the web page",
+		author: "Nirban Chakraborty",
+		github: "nirban256"
 	},
 ];
