@@ -15,13 +15,6 @@
 
 const entries = [
 	{
-		title: "StopWatch",
-		filename: "stopWatch.html",
-		description: "An online stopwatch to keep your performance in check",
-		author: "Kabir Seth",
-		github: "sethkabir"
-	},
-	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
@@ -426,5 +419,12 @@ const entries = [
 		description: "You have a lot of debt and nothing but your body to pay for it",
 		author: "Justin Chao",
 		github: "jutsK"
+	},
+	{
+		title: "StopWatch",
+		filename: "stopWatch.html",
+		description: "An online stopwatch to keep your performance in check",
+		author: "Kabir Seth",
+		github: "sethkabir"
 	},
 ];
