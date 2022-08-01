@@ -420,4 +420,12 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{
+		title: "Weather Website",
+		filename: "weather-website.html",
+		description: "allow location permisson & see the current temperature in your area.",
+		author: "Ankita Malik",
+		github: "AnkitaMalik22"
+	},
+
 ];
