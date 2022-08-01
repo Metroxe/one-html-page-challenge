@@ -420,4 +420,11 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{
+		title: "Moving Block",
+		filename: "movingblock.html",
+		description: "You have to use the cursor to move the block as you desire and avoid to the obstacles to score the maximum score",
+		author: "Ayush Bajpai",
+		github: "Ayushbajpai19"
+	},
 ];
