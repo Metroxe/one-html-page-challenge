@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+      <div id = "title">
+          <h1>freeCodeCamp Survey Form</h1>
+           <h4 id = "description">Thank you for taking the time to help us improve the platform</h4>
+                 
+    </div>
+    <div class = "header">
+        <form id = "survey-form">
+            <div class = "heigth">
+              <label id="name-label" for="name" ><strong>Name</strong></label>
+              <br>
+              <input type = "text"  name="name"  id="name"   placeholder="Enter your name" class = "input" required />
+            </div>
+            <br>
+            <div class = "heigth">
+              <label id="id="email-label" for="email" ><strong>Email</strong></label>
+              <br>
+              <input type = "text"  name="email"  id="email"   placeholder="Enter your Email" class = "input" required />
+                                                                                                             </div>                               <br>
+            <div class = "heigth">
+              <label id="id="number-label" for="number" ><strong>Age</strong></label>
+              <br>
+              <input type = "number"  name="age"  id="number"  min="16" max="99"  placeholder="Enter your Age" class = "input" required />
+            </div>
+          <div class = heigth>
+            <p><strong>Which option best describes your current role?</strong></p>
+            <select id="dropdown" name="role" required class = "input">
+            <option disabled selected value>Select current role</option>
+            <option value="student">Student</option>
+            <option value="job">Full Time Job</option>
+            <option value="other">Other</option>
+            </select>
+          </div>
+          <br>
+          
+          <div class = "font">
+            <p><strong>Would you recommend freeCodeCamp to a friend?</strong></p>
+          
+            <label for="indoor">
+            <input name="indoor"  value = "Defenatily" type="radio" name="indoor-outdoor"> Defenatily</label>
+            <br>
+            <br>
+            <label for="outdoor">
+            <input name="outdoor"   value = "May be" type="radio" name="indoor-outdoor">May be</label>
+            <br>
+            <br>
+            <label for="outdoor">
+            <input name="outdoor" value = " Not sure" type="radio" name="indoor-outdoor"> Not sure</label>
+          </div>
+          <br>
+          <br>
+          <div class = "font">
+            <p><strong>What is your favorite feature of freeCodeCamp?</strong></p>
+            <label for="indoor">
+            <input name="indoor" type="checkbox" name="indoor-outdoor">challenges</label>
+            <br>
+            <br>
+            <label for="outdoor">
+            <input id="outdoor" type="checkbox" name="indoor-outdoor">projects</label>
+            <label for="indoor">
+              <br>
+              <br>
+              <input id="indoor" type="checkbox" name="indoor-outdoor"> community</label>
+              <br>
+              <br>
+              <label for="outdoor">
+              <input id="outdoor" type="checkbox" name="indoor-outdoor">0pen source</label>
+          </div>
+          <div class = "font">
+            <p><strong>Any comments or suggestions?</strong></p>
+            <textarea  id="comments" class="coo" name="comment" placeholder="Enter your comment."></textarea>
+          </div>
+          <br>
+          <br>
+           <div class =" button">
+            <button type="submit" id = "submit"><strong>submit</strong></button>
+           </div>
+        
+        </form>
+    </div>
+    </body>
+</html>
