@@ -420,4 +420,11 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{
+		title: "RIP- Siddhu Moosewala -Rapper",
+		filename: "Sidhumoosewala-tribute-page.html",
+		description: "A small tribute to a legend",
+		author: "Guneet Singh",
+		github: "IamGuneet"
+	}
 ];
