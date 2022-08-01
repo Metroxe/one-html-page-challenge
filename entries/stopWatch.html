@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>StopWatch</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body id="bodyId" class="bg-[#F5E8E4]">
+		<div
+			id="main-div"
+			class="flex flex-col mt-12 border-solid bg-[#F5C7A9] w-full lg:w-1/3 p-10 m-auto border-white border-2 rounded-md"
+		>
+			<h1 class="text-7xl p-2 place-self-center text-[#411530]">
+				<span>StopWatch</span>
+			</h1>
+
+			<div
+				id="timer-digits"
+				class="flex m-5 justify-center text-[#411530]"
+			>
+				<p class="text-2xl" id="minutes">00</p>
+				<p class="text-2xl">:</p>
+				<p class="text-2xl" id="seconds">00</p>
+			</div>
+			<div class="flex justify-evenly px-10">
+				<button
+					class="bg-[#D1512D] text-white rounded-md w-20 h-12"
+					id="start-button"
+				>
+					Start
+				</button>
+				<button
+					class="bg-[#D1512D] text-white rounded-md w-20 h-12"
+					id="stop-button"
+				>
+					Stop
+				</button>
+				<button
+					class="bg-[#D1512D] text-white rounded-md w-20 h-12"
+					id="lap-button"
+				>
+					Lap
+				</button>
+				<button
+					class="bg-[#D1512D] text-white rounded-md w-20 h-12"
+					id="reset-button"
+				>
+					Reset
+				</button>
+			</div>
+		</div>
+		<div
+			class="mx-auto m-10 bg-[#F5C7A9] w-full lg:w-1/3 max-h-96 overflow-auto divide-y"
+			id="lap-div"
+		></div>
+
+		<footer class="absolute bottom-0 right-0 text-lg text-[#411530]">
+			<span> made by Kabir Seth </span>
+		</footer>
+
+		<script>
+			var myVar;
+			var seconds = 0;
+			var minutes = 0;
+			var srNo = 0;
+			var minuteTag = document.getElementById("minutes");
+			var secondsTag = document.getElementById("seconds");
+			var lapTag = document.getElementById("lap-div");
+			var darkTag = false;
+
+			//Logic for the Lap functionality
+			document.getElementById("lap-button").onclick = function () {
+				srNo++;
+				var newDiv = document.createElement("div");
+				newDiv.className =
+					"px-5 py-1 text-lg text-[#411530] rounded-md";
+				newDiv.innerHTML =
+					srNo +
+					"." +
+					" " +
+					" " +
+					minuteTag.innerHTML +
+					":" +
+					secondsTag.innerHTML;
+				lapTag.appendChild(newDiv);
+			};
+
+			//Logic for coding the stopwatch
+			document.getElementById("start-button").onclick = function () {
+				clearInterval(myVar);
+				myVar = setInterval(setTimer, 10);
+			};
+
+			document.getElementById("stop-button").onclick = function () {
+				clearInterval(myVar);
+			};
+			document.getElementById("reset-button").onclick = function () {
+				clearInterval(myVar);
+				seconds = 0;
+				minutes = 0;
+				srNo = 0;
+				secondsTag.innerHTML = "00";
+				minuteTag.innerHTML = "00";
+				lapTag.textContent = "";
+			};
+
+			function setTimer() {
+				if (seconds < 99) {
+					seconds++;
+					if (seconds < 10) {
+						seconds = "0" + seconds;
+					}
+				} else {
+					minutes++;
+					if (minutes < 10) {
+						minuteTag.innerHTML = "0" + minutes;
+					} else {
+						minuteTag.innerHTML = minutes;
+					}
+					seconds = "0" + 0;
+				}
+				secondsTag.innerHTML = seconds;
+			}
+		</script>
+	</body>
+</html>
