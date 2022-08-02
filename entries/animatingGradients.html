@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animating Gradients</title>
+  <style>
+      .container{
+      width: 100%;
+      height: 100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size: 30px;
+      font-weight:700;
+      font-family:sans-serif;
+      text-transform:uppercase;
+      
+    }
+
+    .container h1{
+      background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size:300%;
+      animation: bg-animations 2s infinite alternate;
+      
+    }
+
+    @keyframes bg-animations{
+      0%{
+        background-postion:left;
+      }
+      100%{
+        background-position:right;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+  
+    <h1>Animating Gradients </h1> 
+  </div>
+  
+</body>
+</html>
