@@ -420,4 +420,11 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{
+		title: "Random-Password-Generator",
+		filename: "randomPassword.html",
+		description: "Generate random strong passwords  ",
+		author: "Ankita",
+		github: "AnkitaMalik22"
+	},
 ];
