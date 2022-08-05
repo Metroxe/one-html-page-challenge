@@ -34,6 +34,7 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [**Tympanus** - Collective #531](https://tympanus.net/codrops/collective/collective-531/)
  - [**Phoenix Code Editor** - Default Project for HTML Games](https://phcode.dev/)
  - [**Community Classroom** - Frontend Development Course](https://www.commclassroom.org/frontend-roadmap)
+ - [**aiyoubucuo.com/** - July 3rd 2022 Post](https://aiyoubucuo.com/202207.html)
 
 _If you write a blog or post about the challenge, feel free to add to the list_
  
