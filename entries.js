@@ -420,4 +420,10 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{	title: "Cup Water Wave",
+	 	filesname: "cupWaterWave.html",
+	 	description: "A cup filled with water and creating wave",
+	 	author: "Satyabrata Sahoo",
+	 	github: "satyasonu"
+	}
 ];
