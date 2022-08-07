@@ -421,6 +421,12 @@ const entries = [
 		github: "jutsK"
 	},
 	{
+		title: "Random-Password-Generator",
+		filename: "randomPassword.html",
+		description: "Generate random strong passwords  ",
+		author: "Ankita",
+		github: "AnkitaMalik22"
+	},
 		title: "StopWatch",
 		filename: "stopWatch.html",
 		description: "An online stopwatch to keep your performance in check",
