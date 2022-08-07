@@ -421,6 +421,13 @@ const entries = [
 		github: "jutsK"
 	},
 	{
+		title:"Hilbert Curve",
+		filename:"hilbert-curve.html",
+		description:"Draws a hilbert curve, a curve to map a two dimensional space in one dimension",
+		author:"Ahmad Raza",
+		github:"razaahmad333"
+  },
+  {
 		title: "Random-Password-Generator",
 		filename: "randomPassword.html",
 		description: "Generate random strong passwords  ",
