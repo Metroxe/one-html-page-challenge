@@ -400,12 +400,12 @@ const entries = [
 		compatibleBrowsers: ["Chrome Desktop", "Firefox Desktop", "Safari Desktop", "Edge Chromium Desktop"]
 	},
 	{
-                 title: "Calculator",
-                 filename: "Calculator.html",  
-                 description: "Calculator Using-Javascript For One Page Html Challenge",
-                 author: "Abhay Mourya (Abhay557)",
-                 github: "Abhay557"
-        },
+    title: "Calculator",
+    filename: "Calculator.html",  
+    description: "Calculator Using-Javascript For One Page Html Challenge",
+    author: "Abhay Mourya (Abhay557)",
+    github: "Abhay557"
+  },
 	{
 		title: "Whack-a-mole",
 		filename: "whack-a-mole.html",
@@ -427,4 +427,23 @@ const entries = [
 		author: "Ankita",
 		github: "AnkitaMalik22"
 	},
+		title: "StopWatch",
+		filename: "stopWatch.html",
+		description: "An online stopwatch to keep your performance in check",
+		author: "Kabir Seth",
+		github: "sethkabir"
+	},
+  }
+		title: "RIP- Siddhu Moosewala -Rapper",
+		filename: "Sidhumoosewala-tribute-page.html",
+		description: "A small tribute to a legend",
+		author: "Guneet Singh",
+		github: "IamGuneet"
+  },
+	{	title: "Cup Water Wave",
+	 	filesname: "cupWaterWave.html",
+	 	description: "A cup filled with water and creating wave",
+	 	author: "Satyabrata Sahoo",
+	 	github: "satyasonu"
+	}
 ];
