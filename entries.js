@@ -455,4 +455,11 @@ const entries = [
 		author: "Satyabrata Sahoo",
 		github: "satyasonu"
 	}
+	{
+		title: "Guess_My_number",
+		filename: "guess_my_number",
+		description: "You have to guess the number genarated by the system",
+                author: "Soumojit Chakraborty",
+                github: "SOUMOJIT-CHAKRABORTY"
+	},
 ];
