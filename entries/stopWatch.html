@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>StopWatch</title>
+	</head>
+	<style>
+		body {
+			background: #f5e8e4;
+		}
+		p {
+			font-size: xx-large;
+			line-height: 2rem;
+		}
+		footer {
+			position: absolute;
+			right: 0;
+			bottom: 0;
+			font-size: 1.125rem;
+			line-height: 1.75rem;
+			color: #411530;
+		}
+		.heading {
+			padding: 0.5rem;
+			font-size: 4.5rem;
+			line-height: 1;
+			place-self: center;
+			color: #411530;
+		}
+		.mainDiv {
+			display: flex;
+			padding: 2.5rem;
+			margin-top: 3rem;
+			margin-left: auto;
+			margin-right: auto;
+			flex-direction: column;
+			width: 100%;
+			border-radius: 0.375rem;
+			border-width: 2px;
+			border-color: #ffffff;
+			border-style: solid;
+			background: #f5c7a9;
+		}
+		.timerDigit {
+			display: flex;
+			margin-bottom: 1.25rem;
+			justify-content: center;
+			color: #411530;
+		}
+		.buttonDiv {
+			display: flex;
+			padding-left: 2.5rem;
+			padding-right: 2.5rem;
+			justify-content: space-evenly;
+		}
+		.Button {
+			color: #ffffff;
+			width: 6rem;
+			height: 4rem;
+			font-size: medium;
+			border-radius: 0.375rem;
+			background: #d1512d;
+		}
+		.lapDiv {
+			overflow: auto;
+			margin: 2.5rem;
+			margin-left: auto;
+			margin-right: auto;
+			width: 100%;
+			max-height: 24rem;
+			border-top-width: 1px;
+			background: #f5c7a9;
+		}
+		.newDiv {
+			padding-top: 0.25rem;
+			padding-bottom: 0.25rem;
+			padding-left: 1.25rem;
+			padding-right: 1.25rem;
+			font-size: 1.125rem;
+			line-height: 1.75rem;
+			border-radius: 0.375rem;
+			border-bottom-style: solid;
+			border-bottom-width: 1px;
+			color: #411530;
+		}
+
+		@media (min-width: 1024px) {
+			.lapDiv {
+				width: 33.333333%;
+			}
+			.mainDiv {
+				width: 33.333333%;
+			}
+		}
+	</style>
+	<body id="bodyId">
+		<div id="main-div" class="mainDiv">
+			<h1 class="heading">
+				<span>StopWatch</span>
+			</h1>
+
+			<div id="timer-digits" class="timerDigit">
+				<p id="minutes">00</p>
+				<p>:</p>
+				<p id="seconds">00</p>
+			</div>
+
+			<div class="buttonDiv">
+				<button class="Button" id="start-button">Start</button>
+				<button class="Button" id="stop-button">Stop</button>
+				<button class="Button" id="lap-button">Lap</button>
+				<button class="Button" id="reset-button">Reset</button>
+			</div>
+		</div>
+		<div class="lapDiv" id="lap-div"></div>
+
+		<footer>
+			<span> made by Kabir Seth </span>
+		</footer>
+
+		<script>
+			var myVar;
+			var seconds = 0;
+			var minutes = 0;
+			var srNo = 0;
+			var minuteTag = document.getElementById("minutes");
+			var secondsTag = document.getElementById("seconds");
+			var lapTag = document.getElementById("lap-div");
+			var darkTag = false;
+
+			//Logic for the Lap functionality
+			document.getElementById("lap-button").onclick = function () {
+				srNo++;
+				var newDiv = document.createElement("div");
+				newDiv.className = "newDiv";
+				newDiv.innerHTML =
+					"Lap " +
+					srNo +
+					": " +
+					" " +
+					" " +
+					minuteTag.innerHTML +
+					":" +
+					secondsTag.innerHTML;
+				lapTag.appendChild(newDiv);
+			};
+
+			//Logic for coding the stopwatch
+			document.getElementById("start-button").onclick = function () {
+				clearInterval(myVar);
+				myVar = setInterval(setTimer, 10);
+			};
+
+			document.getElementById("stop-button").onclick = function () {
+				clearInterval(myVar);
+			};
+			document.getElementById("reset-button").onclick = function () {
+				clearInterval(myVar);
+				seconds = 0;
+				minutes = 0;
+				srNo = 0;
+				secondsTag.innerHTML = "00";
+				minuteTag.innerHTML = "00";
+				lapTag.textContent = "";
+			};
+
+			function setTimer() {
+				if (seconds < 99) {
+					seconds++;
+					if (seconds < 10) {
+						seconds = "0" + seconds;
+					}
+				} else {
+					minutes++;
+					if (minutes < 10) {
+						minuteTag.innerHTML = "0" + minutes;
+					} else {
+						minuteTag.innerHTML = minutes;
+					}
+					seconds = "0" + 0;
+				}
+				secondsTag.innerHTML = seconds;
+			}
+		</script>
+	</body>
+</html>
