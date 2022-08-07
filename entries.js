@@ -400,12 +400,12 @@ const entries = [
 		compatibleBrowsers: ["Chrome Desktop", "Firefox Desktop", "Safari Desktop", "Edge Chromium Desktop"]
 	},
 	{
-                 title: "Calculator",
-                 filename: "Calculator.html",  
-                 description: "Calculator Using-Javascript For One Page Html Challenge",
-                 author: "Abhay Mourya (Abhay557)",
-                 github: "Abhay557"
-        },
+    title: "Calculator",
+    filename: "Calculator.html",  
+    description: "Calculator Using-Javascript For One Page Html Challenge",
+    author: "Abhay Mourya (Abhay557)",
+    github: "Abhay557"
+  },
 	{
 		title: "Whack-a-mole",
 		filename: "whack-a-mole.html",
@@ -426,5 +426,11 @@ const entries = [
 		description: "A small tribute to a legend",
 		author: "Guneet Singh",
 		github: "IamGuneet"
+  },
+	{	title: "Cup Water Wave",
+	 	filesname: "cupWaterWave.html",
+	 	description: "A cup filled with water and creating wave",
+	 	author: "Satyabrata Sahoo",
+	 	github: "satyasonu"
 	}
 ];
