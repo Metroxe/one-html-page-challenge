@@ -421,6 +421,13 @@ const entries = [
 		github: "jutsK"
 	},
 	{
+		title: "StopWatch",
+		filename: "stopWatch.html",
+		description: "An online stopwatch to keep your performance in check",
+		author: "Kabir Seth",
+		github: "sethkabir"
+	},
+  }
 		title: "RIP- Siddhu Moosewala -Rapper",
 		filename: "Sidhumoosewala-tribute-page.html",
 		description: "A small tribute to a legend",
