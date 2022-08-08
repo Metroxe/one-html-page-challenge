@@ -459,14 +459,14 @@ const entries = [
 		title: "Guess_My_number",
 		filename: "guess_my_number",
 		description: "You have to guess the number genarated by the system",
-    author: "Soumojit Chakraborty",
-    github: "SOUMOJIT-CHAKRABORTY"
+		author: "Soumojit Chakraborty",
+		github: "SOUMOJIT-CHAKRABORTY"
 	},
-  {
-	  title:"Contact List",
-	  filename:"contact_list.html",
-	  description:"Contact List where contacts saved at local storage",
-	  author:"Rahul Reddy",
-	  github:"rahulreddy-001"
+	{
+		title: "Contact List",
+		filename: "contact_list.html",
+		description: "Contact List where contacts saved at local storage",
+		author: "Rahul Reddy",
+		github: "rahulreddy-001"
 	}
 ];
