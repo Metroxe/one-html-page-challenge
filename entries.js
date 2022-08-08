@@ -454,7 +454,7 @@ const entries = [
 		description: "A cup filled with water and creating wave",
 		author: "Satyabrata Sahoo",
 		github: "satyasonu"
-	}
+	},
 	{
 		title: "Guess_My_number",
 		filename: "guess_my_number",
