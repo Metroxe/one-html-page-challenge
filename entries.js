@@ -454,5 +454,14 @@ const entries = [
 		description: "A cup filled with water and creating wave",
 		author: "Satyabrata Sahoo",
 		github: "satyasonu"
+	},
+	{
+	title:"Contact List",
+	filename:"contact_list.html",
+	description:"Contact List where contacts saved at local storage",
+	author:"Rahul Reddy",
+	github:"rahulreddy-001"
+	
+	
 	}
 ];
