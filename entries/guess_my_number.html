@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- <link rel="stylesheet" href="style.css" /> -->
+    <style>
+      /* @import url("https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap"); */
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: inherit;
+      }
+
+      html {
+        font-size: 62.5%;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Press Start 2P", sans-serif;
+        color: #eee;
+        background-color: #222;
+        /* background-color: #60b347; */
+      }
+
+      /* LAYOUT */
+      header {
+        position: relative;
+        height: 35vh;
+        border-bottom: 7px solid #eee;
+      }
+
+      main {
+        height: 65vh;
+        color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+
+      .left {
+        width: 52rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .right {
+        width: 52rem;
+        font-size: 2rem;
+      }
+
+      /* ELEMENTS STYLE */
+      h1 {
+        font-size: 4rem;
+        text-align: center;
+        position: absolute;
+        width: 100%;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .number {
+        background: #eee;
+        color: #333;
+        font-size: 6rem;
+        width: 15rem;
+        padding: 3rem 0rem;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+      }
+
+      .between {
+        font-size: 1.4rem;
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+      }
+
+      .again {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+      }
+
+      .guess {
+        background: none;
+        border: 4px solid #eee;
+        font-family: inherit;
+        color: inherit;
+        font-size: 5rem;
+        padding: 2.5rem;
+        width: 25rem;
+        text-align: center;
+        display: block;
+        margin-bottom: 3rem;
+      }
+
+      .btn {
+        border: none;
+        background-color: #eee;
+        color: #222;
+        font-size: 2rem;
+        font-family: inherit;
+        padding: 2rem 3rem;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #ccc;
+      }
+
+      .message {
+        margin-bottom: 8rem;
+        height: 3rem;
+      }
+
+      .label-score {
+        margin-bottom: 2rem;
+      }
+    </style>
+    <title>Guess My Number!</title>
+  </head>
+  <body>
+    <header>
+      <h1>Guess My Number!</h1>
+      <p class="between">(Between 1 and 20)</p>
+      <button class="btn again">Again!</button>
+      <div class="number">?</div>
+    </header>
+    <main>
+      <section class="left">
+        <input type="number" class="guess" />
+        <button class="btn check">Check!</button>
+      </section>
+      <section class="right">
+        <p class="message">Start guessing...</p>
+        <p class="label-score">💯 Score: <span class="score">20</span></p>
+        <p class="label-highscore">
+          🥇 Highscore: <span class="highscore">0</span>
+        </p>
+      </section>
+    </main>
+    <!-- <script src="script.js"></script> -->
+    <script>
+      "use strict";
+
+      //const array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+      let secretNumber = Math.trunc(Math.random() * 20) + 1;
+      var check = document.querySelector(".check");
+      let score = 20;
+      let highScore = 0;
+
+      check.addEventListener("click", function () {
+        var guessValue = Number(document.querySelector(".guess").value);
+        console.log(guessValue);
+
+        // When no number is entered -->
+        if (!guessValue) {
+          console.log("⛔️ No Number!");
+          document.querySelector(".message").textContent = "⛔️No Number!";
+        }
+        // When number is equal to the corret one -->
+        else if (guessValue === secretNumber) {
+          document.querySelector(".message").textContent = "🎉 Correct Number:";
+          document.querySelector(".number").textContent = secretNumber;
+          if (score > highScore) {
+            highScore = score;
+            document.querySelector(".highscore").textContent = highScore;
+          }
+
+          document.querySelector("body").style.backgroundColor = "#60b347";
+          document.querySelector(".number").style.width = "30rem";
+        }
+        // When number is not equal to the correct one -->
+        else if (guessValue !== secretNumber) {
+          if (guessValue > secretNumber) {
+            if (score > 0) {
+              document.querySelector(".message").textContent = "📈 High";
+              score--;
+              document.querySelector(".score").textContent = score;
+            } else {
+              document.querySelector(".message").textContent =
+                "😖 You lost the game!";
+            }
+          } else if (guessValue < secretNumber) {
+            if (score > 0) {
+              document.querySelector(".message").textContent = "📉 Low";
+              score--;
+              document.querySelector(".score").textContent = score;
+            } else {
+              document.querySelector(".message").textContent =
+                "😖 You lost the game!";
+            }
+          }
+        }
+      });
+
+      var again = document.querySelector(".again");
+
+      again.addEventListener("click", function () {
+        score = 20;
+        document.querySelector("body").style.backgroundColor = "#222";
+        document.querySelector(".number").style.width = "15rem";
+        document.querySelector(".number").textContent = "?";
+        //document.querySelector('.highscore').textContent = score;
+        document.querySelector(".score").textContent = score;
+        document.querySelector(".message").textContent = "Start guessing...";
+        document.querySelector(".guess").value = "";
+
+        secretNumber = Math.trunc(Math.random() * 20) + 1;
+      });
+    </script>
+  </body>
+</html>
