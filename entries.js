@@ -468,5 +468,12 @@ const entries = [
 		description: "Contact List where contacts saved at local storage",
 		author: "Rahul Reddy",
 		github: "rahulreddy-001"
+	},
+	{
+		title: "Simon Game",
+		filename: "simon-game.html",
+		description: "Well known simon game, short term memory game",
+		author: "Sai Mahith Reddy Bekkem",
+		github: "mahith257"
 	}
 ];
