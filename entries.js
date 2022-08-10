@@ -420,4 +420,11 @@ const entries = [
 		author: "Justin Chao",
 		github: "jutsK"
 	},
+	{
+		title: "Animating Gradients",
+		filename: "animatingGradients.html",
+		description: "Infinite beautiful animating gradients",
+		author: "Tejashwa Rajvardhan",
+		github: "tejash023"
+	},
 ];
