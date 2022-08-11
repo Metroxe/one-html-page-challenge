@@ -421,6 +421,13 @@ const entries = [
 		github: "jutsK"
 	},
 	{
+		title: "Task List App",
+		filename: "taskListApp.html",
+		description: "A task list application with local storage and filter tasks functionality",
+		author: "Tejashwa Rajvardhan",
+		github: "tejash023"
+  },
+  {
 		title: "Hilbert Curve",
 		filename: "hilbert-curve.html",
 		description: "Draws a hilbert curve, a curve to map a two dimensional space in one dimension",
