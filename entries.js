@@ -457,7 +457,7 @@ const entries = [
 	},
 	{
 		title: "Cup Water Wave",
-		filesname: "cupWaterWave.html",
+		filename: "cupWaterWave.html",
 		description: "A cup filled with water and creating wave",
 		author: "Satyabrata Sahoo",
 		github: "satyasonu"
