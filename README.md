@@ -7,7 +7,7 @@ The goal is to create anything you want within 1 single html file. Practice your
 ## Rules
  - You must write all of your code in 1 single HTML file.
  - Your file must be less than 1mb (measured by the file size on github).
- - You cannot import any external files (this will be checked by looking at the network tab in chrome).
+ - You cannot import any external files (this means you cannot import images, stylesheets or js files from external sources). 
  - Due to the nature of hiding lots of funtionality behind APIs, you cannot have any incoming network requests.
  - You are allowed to use libraries, however the library must be hard coded into a script tag and still must fit under the 1MB file size. (I suggest using a cdn and replacing with hardcoding the minified library at the end, or use [JSCompress](https://jscompress.com/)).
  
@@ -33,6 +33,9 @@ The goal is to create anything you want within 1 single html file. Practice your
  - [**Dev Awesome** - Issue #14](https://devawesome.io/archive/14)
  - [**Tympanus** - Collective #531](https://tympanus.net/codrops/collective/collective-531/)
  - [**Phoenix Code Editor** - Default Project for HTML Games](https://phcode.dev/)
+ - [**Community Classroom** - Frontend Development Course](https://www.commclassroom.org/frontend-roadmap)
+ - [**aiyoubucuo.com** - July 3rd 2022 Post](https://aiyoubucuo.com/202207.html)
+ - [**Anas Khan** - Open Source is overrated 🤔](https://anaskhan28.hashnode.dev/open-source-is-overrated)
 
 _If you write a blog or post about the challenge, feel free to add to the list_
  
