@@ -482,5 +482,12 @@ const entries = [
 		description: "Well known simon game, short term memory game",
 		author: "Sai Mahith Reddy Bekkem",
 		github: "mahith257"
+	},
+	{
+		title: "Random colour generator",
+		filename: "RandomColourGenerator.html",
+		description: "A random colour generator which shows you different colours after every click",
+		author: "Rajiv Sahal",
+		github: "Ryukemeister"
 	}
 ];
