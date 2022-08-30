@@ -24,7 +24,7 @@
     }
 
     .bg {
-        background: url('https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1287&q=80') no-repeat center center/cover;
+        background-color: royalblue;
         position: absolute;
         top: -30px;
         left: -30px;
@@ -84,7 +84,7 @@
             text.style.opacity = scale(i, 0, 100, 1, 0);
             intro.style.opacity = scale(i, 0, 100, 0, 1);
             like.style.opacity = scale(i, 0, 100, 0, 1);
-            background.style.filter = `blur(${scale(i, 0, 100, 30, 0)}px)`;
+            background.style.filter = `blur(${scale(i, 0, 30, 60, 50)}px)`;
 
         }, 30);
 
