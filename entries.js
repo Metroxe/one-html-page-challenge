@@ -421,6 +421,13 @@ const entries = [
 		github: "jutsK"
 	},
 	{
+		title: "Blur background loading",
+		filename: "blur-loading-page.html",
+		description: "A smooth Css transition to slowly load the contents of the web page",
+		author: "Nirban Chakraborty",
+		github: "nirban256"
+	},
+  {
 		title: "Task List App",
 		filename: "taskListApp.html",
 		description: "A task list application with local storage and filter tasks functionality",

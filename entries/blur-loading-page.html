@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blur loading page</title>
+</head>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+    }
+
+    .bg {
+        background-color: royalblue;
+        position: absolute;
+        top: -30px;
+        left: -30px;
+        width: calc(100vw + 60px);
+        height: calc(100vh + 60px);
+        z-index: -1;
+        filter: blur(0px);
+    }
+
+    .text {
+        font-size: 4rem;
+        color: #fff;
+    }
+
+    .intro {
+        text-align: center;
+    }
+
+    .intro,
+    .like {
+        color: #fff;
+    }
+</style>
+
+<body>
+    <section class="bg"></section>
+    <div class="text">0%</div>
+
+    <div class="intro">
+        <h1>Hello there</h1>
+        <p>
+            <strong>Have a nice day</strong>.
+        </p>
+    </div>
+
+    <div class="like">
+        <p>
+            Refresh the page to see the transition again.
+        </p>
+    </div>
+
+    <script>
+        const background = document.querySelector('.bg');
+        const text = document.querySelector('.text');
+        const intro = document.querySelector('.intro');
+        const like = document.querySelector('.like');
+
+        let i = 0;
+
+        let time = setInterval(() => {
+
+            i++;
+            if (i > 99) {
+                clearInterval(time)
+            }
+            text.innerHTML = `${i}%`;
+            text.style.opacity = scale(i, 0, 100, 1, 0);
+            intro.style.opacity = scale(i, 0, 100, 0, 1);
+            like.style.opacity = scale(i, 0, 100, 0, 1);
+            background.style.filter = `blur(${scale(i, 0, 30, 60, 50)}px)`;
+
+        }, 30);
+
+        function scale(number, inMin, inMax, outMin, outMax) {
+            return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+        }
+    </script>
+
+</body>
+
+</html>
