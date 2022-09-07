@@ -427,4 +427,74 @@ const entries = [
 		author: "Nirban Chakraborty",
 		github: "nirban256"
 	},
+  {
+		title: "Task List App",
+		filename: "taskListApp.html",
+		description: "A task list application with local storage and filter tasks functionality",
+		author: "Tejashwa Rajvardhan",
+		github: "tejash023"
+	},
+	{
+		title: "Hilbert Curve",
+		filename: "hilbert-curve.html",
+		description: "Draws a hilbert curve, a curve to map a two dimensional space in one dimension",
+		author: "Ahmad Raza",
+		github: "razaahmad333"
+	},
+	{
+		title: "Random-Password-Generator",
+		filename: "randomPassword.html",
+		description: "Generate random strong passwords  ",
+		author: "Ankita",
+		github: "AnkitaMalik22"
+	},
+	{
+		title: "StopWatch",
+		filename: "stopWatch.html",
+		description: "An online stopwatch to keep your performance in check",
+		author: "Kabir Seth",
+		github: "sethkabir"
+	},
+	{
+		title: "RIP- Siddhu Moosewala -Rapper",
+		filename: "Sidhumoosewala-tribute-page.html",
+		description: "A small tribute to a legend",
+		author: "Guneet Singh",
+		github: "IamGuneet"
+	},
+	{
+		title: "Cup Water Wave",
+		filename: "cupWaterWave.html",
+		description: "A cup filled with water and creating wave",
+		author: "Satyabrata Sahoo",
+		github: "satyasonu"
+	},
+	{
+		title: "Guess_My_number",
+		filename: "guess_my_number",
+		description: "You have to guess the number genarated by the system",
+		author: "Soumojit Chakraborty",
+		github: "SOUMOJIT-CHAKRABORTY"
+	},
+	{
+		title: "Contact List",
+		filename: "contact_list.html",
+		description: "Contact List where contacts saved at local storage",
+		author: "Rahul Reddy",
+		github: "rahulreddy-001"
+	},
+	{
+		title: "Simon Game",
+		filename: "simon-game.html",
+		description: "Well known simon game, short term memory game",
+		author: "Sai Mahith Reddy Bekkem",
+		github: "mahith257"
+	},
+	{
+		title: "Random colour generator",
+		filename: "RandomColourGenerator.html",
+		description: "A random colour generator which shows you different colours after every click",
+		author: "Rajiv Sahal",
+		github: "Ryukemeister"
+	}
 ];

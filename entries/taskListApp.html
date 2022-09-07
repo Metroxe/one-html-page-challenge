@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+    body{
+      background-color: #29335C;
+    }
+    .nav-wrapper{
+      height: 10vh;
+      background-color: #3DB2FF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .nav-wrapper a{
+      color: white;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 2rem;
+      align-items: center;
+    }
+    .container{
+      margin: auto;
+      width: 80%;
+      background-color: #29335C;
+    }
+    .card{
+      display: flex;
+      flex-flow: column wrap;
+      align-items: center;
+    }
+
+    .card-content , .card-action{
+      height: auto;
+      background-color: #29335C;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px;
+    }
+
+    .row{
+      width: 97%;
+    }
+    .card-title, .task-title{
+      font-size: 2rem;
+      font-weight: 200;
+      margin-bottom: 10px;
+      color: white;
+    }
+
+    .input-field input{
+      border: none;
+      outline: none;
+      padding: 10px;
+      width: 91%;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      border-bottom: 1px solid white;
+      background-color: #29335C;
+      transition: all 0.1s ease-in;
+      color: white;
+    }
+
+    .input-field input:focus{
+      border-bottom: 2px solid orangered;
+    }
+
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: orangered;
+      opacity: 0.5;
+      font-size: 1rem;
+    }
+
+
+    .filter{
+      width: 100%;
+    }
+
+    .btn{
+      outline: none;
+      border: none;
+      padding: 7px 12px;
+      font-size: 1rem;
+      background-color: orangered;
+      border-radius: 3px;
+      color: white;
+      margin-bottom: 15px;
+    }
+
+    .collection{
+      list-style: none;
+      padding: 15px;
+      font-size: 1.25rem;
+      width: 90%;
+    }
+
+    .collection li{
+      border: 1px solid orangered;
+      margin: 5px;
+      padding: 7px;
+      position: relative;
+      color: white;
+    }
+
+    .clear-tasks{
+      text-decoration: none;
+    }
+
+    .delete-item {
+      position: absolute;
+      right: 22px;
+      top: 14px;
+      width: 12px;
+      height: 12px;
+      
+    }
+    
+    .delete-item:before, .delete-item:after {
+      position: absolute;
+      left: 15px;
+      content: ' ';
+      height: 12px;
+      width: 2px;
+      background-color: red;
+    }
+    .delete-item:before {
+      transform: rotate(45deg);
+    }
+    .delete-item:after {
+      transform: rotate(-45deg);
+    }
+
+
+
+  </style>
+ 
+  <title>Task List
+  </title>
+</head>
+<body>
+  <nav>
+    <div class="nav-wrapper blue">
+      <a href="#" class="brand-logo center">To do List</a>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <div id="main" class="card">
+          <div class="card-content">
+            <h3 class="card-title">Task List</h3>
+            <div class="row">
+              <form id="task-form">
+                <div class="input-field">
+                <input type="text" id="task" name="task" placeholder="New Task">
+                
+              </div>
+              <input type="submit" class="btn" value="Add Task">
+              </form>
+            </div>
+
+            </div>
+            <div class="card-action">
+              <h5 class="task-title">Tasks</h5>
+              <div class="input-field">
+                <input type="text" id="filter" name="filter" placeholder="Filter Tasks">
+                
+              </div>
+              <ul class="collection">
+                
+              </ul>
+            <a href="#" class="clear-tasks btn black">Clear Tasks</a>
+            </div>
+            
+          </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <script>
+        //Define UI varibale
+
+    const form = document.querySelector('#task-form');
+    const taskList = document.querySelector('.collection');
+    const clearBtn = document.querySelector('.clear-tasks');
+    const filter = document.querySelector('#filter');
+    const taskInput = document.querySelector('#task');
+
+    //load all event listeners
+
+    loadEventListeners();
+
+    function loadEventListeners(){
+      //DOM load event
+      document.addEventListener('DOMContentLoaded', getTasks);
+      //Add task event
+      form.addEventListener('submit',addTask);
+      //remove task list
+      taskList.addEventListener('click',removeTask);
+      //clear all task
+      clearBtn.addEventListener('click',clearAll);
+      //filter task
+      filter.addEventListener('keyup',filterTasks);
+    }
+    //get tasks from local storage
+    function getTasks(){
+      let tasks;
+      if(localStorage.getItem('tasks') === null){
+        tasks = [];
+      }else{
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+      }
+      // console.log(tasks);
+      // console.log('helllo');
+
+      tasks.forEach(function(task){
+        //create li element
+      const li = document.createElement('li');
+      //add class
+      li.className = 'collection-item';
+      //add text node and append
+      li.appendChild(document.createTextNode(task));
+      //add cross link 
+      const link = document.createElement('a');
+      //add class
+      link.className = 'delete-item';
+      //add inner html
+      
+      //append to li
+      li.appendChild(link);
+      //append li as child to ul
+      taskList.appendChild(li);
+      // console.log(li);
+
+      })
+
+    }
+
+    //add task
+    function addTask(e){
+      if(taskInput.value === ''){
+        alert('Please enter a value');
+      }
+
+      //create li element
+      const li = document.createElement('li');
+      //add class
+      li.className = 'collection-item';
+      //add text node and append
+      li.appendChild(document.createTextNode(taskInput.value));
+      //add cross link 
+      const link = document.createElement('a');
+      //add class
+      link.className = 'delete-item';
+      //add inner html
+      
+      //append to li
+      li.appendChild(link);
+      //append li as child to ul
+      taskList.appendChild(li);
+
+      //Store in local storage
+      storeInLocalStorage(taskInput.value);
+      //clear input
+      taskInput.value = '';
+
+
+      //PREVENT default
+      e.preventDefault();
+    }
+
+    //store in local storage
+    function storeInLocalStorage(task){
+      let tasks;
+      if(localStorage.getItem('tasks') === null){
+        tasks = [];
+      }else{
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+      }
+      tasks.push(task);
+      localStorage.setItem('tasks',JSON.stringify(tasks));
+    }
+    //-------------------------------
+
+    //--------------------------------
+
+    //Remove task
+    function removeTask(e){
+      if(e.target.parentElement.classList.contains('delete-item')){
+        if(confirm('Are you sure?')){
+        e.target.parentElement.parentElement.remove();
+        //remove from local storage
+        removeTaskFromLocalStorage(e.target.parentElement.parentElement);
+        }
+      }
+    }
+
+
+
+
+    //remove from local storage
+    function removeTaskFromLocalStorage(taskItem){
+      // console.log(taskItem);
+      let tasks;
+      if(localStorage.getItem('tasks') === null){
+        tasks = [];
+      }else{
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+      }
+      // console.log(tasks);
+
+      tasks.forEach(function(task,index){
+        if(taskItem.textContent === task){
+          tasks.splice(index,1);
+        }
+      });
+
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+
+    }
+    //clear all
+    function clearAll(e){
+      // taskList.innerHTML = ''; //slower way
+
+      //faster way
+      while(taskList.firstChild){
+        taskList.removeChild(taskList.firstChild);
+      }
+      
+      //clear from LS
+      clearFromLocalStorage();
+    }
+
+    //Clear from Local Storage
+    function clearFromLocalStorage(){
+      localStorage.clear();
+    }
+
+    //filter taks
+    function filterTasks(e){
+      const text = e.target.value.toLowerCase();
+      
+      document.querySelectorAll('.collection-item').forEach(function(task){
+        const item = task.firstChild.textContent;
+        if(item.toLowerCase().indexOf(text) != -1 ){
+          task.style.display = 'block';
+        }else
+        task.style.display = 'none';
+
+      });
+
+
+    }
+  </script>
+</body>
+</html>
