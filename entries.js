@@ -497,4 +497,11 @@ const entries = [
 		author: "Rajiv Sahal",
 		github: "Ryukemeister"
 	}
+	{
+		title: "Soping Website",
+		filename: "shoping-Website.html",
+		description: "A normal website for saree shoping.",
+		author: "Vanya Rastogi",
+		github: "VanyaRastogi"
+	}
 ];
