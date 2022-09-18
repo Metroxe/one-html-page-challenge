@@ -496,5 +496,12 @@ const entries = [
 		description: "A random colour generator which shows you different colours after every click",
 		author: "Rajiv Sahal",
 		github: "Ryukemeister"
+	},
+	{
+		title: "Tips-Calculator",
+		filename: "Tips-Calculator.html",
+		description: "A simple Tips-calculator",
+		author: "Amaan Haider",
+		github: "AmaanHaider"
 	}
 ];

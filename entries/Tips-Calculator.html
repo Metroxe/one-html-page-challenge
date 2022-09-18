@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tip-Calculator</title>
+
+    <style>
+        * {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-color: hsl(0, 0%, 0%);
+  font-family: "Space Mono", monospace;
+}
+
+.logo {
+  text-align: center;
+  margin-top: 1.7rem;
+  margin-bottom: 2.3rem;
+}
+
+.tip-calculator {
+  margin-top: 5%;
+  background-color: #150050;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border-radius: 1.4rem 1.4rem 0 0;
+}
+
+label {
+  color: hsl(180, 100%, 99%);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+input {
+  border: none;
+  outline: none;
+  padding: 5px;
+  padding-right: 18px;
+  background-position: 17px 15px;
+  background-repeat: no-repeat;
+  background-color: hsl(189, 41%, 97%);
+  text-align: right;
+  font-size: 24px;
+  color: hsl(73, 100%, 15%);
+  font-weight: bolder;
+  font-family: "Space Mono", monospace;
+}
+
+.bill-input {
+  background-image: url("images/icon-dollar.svg");
+}
+
+.bill-input {
+  margin-bottom: 36px;
+}
+
+.tip {
+  margin-top: 0.7rem;
+  display: grid;
+  grid-template-columns: 144px 144px;
+  row-gap: 2em;
+  column-gap: 18px;
+  margin-bottom: 2rem;
+}
+
+.tips {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  background-color: #ff4c29;
+  color: white;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.active-tip {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  color: hsl(0, 0%, 100%);
+  background-color: #fa937e;
+  font-weight: bolder;
+}
+
+.people-input {
+  background-image: url("images/icon-person.svg");
+  margin-bottom: 2.4rem;
+}
+
+.result {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  background-color: #2c394b;
+  color: white;
+  padding: 39px 21px;
+  border-radius: 12px;
+}
+
+.tip-amount,
+.total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.7rem;
+}
+
+.person {
+  font-size: 12px;
+  color: hsl(184, 14%, 56%);
+  font-weight: 700;
+}
+
+.amount {
+  font-size: 28px;
+  color: hsl(172, 67%, 45%);
+  font-weight: 700;
+}
+
+.reset {
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+    rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: hsl(0, 0%, 100%);
+  background-color: hsl(358, 100%, 50%);
+  padding: 9px 0 9px 0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#tip-custom input {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.peopleLabel {
+  display: flex;
+  justify-content: space-between;
+}
+
+.error {
+  color: red;
+  display: none;
+}
+
+@media only screen and (min-width: 1000px) {
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input {
+    width: 415px;
+    padding: 9px;
+    background-position: 17px 18px;
+  }
+
+  .tip-calculator {
+    width: 990px;
+    flex-direction: row;
+    border-radius: 1.4rem;
+    padding: 2.3rem;
+    height: 479px;
+  }
+
+  .partOne {
+    margin-top: 1rem;
+    margin-left: 1.2rem;
+  }
+
+  .bill-input {
+    margin-bottom: 3.4rem;
+  }
+
+  .tip {
+    grid-template-columns: 135px 135px 135px;
+    row-gap: 1.2em;
+    column-gap: 17px;
+    margin-bottom: 3.2rem;
+  }
+
+  .tips {
+    height: 55px;
+  }
+
+  .partOne {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .result {
+    margin-left: auto;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    padding: 48px 38px;
+  }
+
+  .amount {
+    font-size: 55px;
+  }
+
+  .reset {
+    padding: 13px 0 13px 0;
+    margin-top: auto;
+  }
+}
+    </style>
+  </head>
+  <body>
+    
+    <div class="tip-calculator">
+        <div class="partOne">
+          <label for="">Bill</label>
+          <input type="number" class="input bill-input" id="bill-input">
+          <label for="">Select Tip %</label>
+          <div class="tip">
+            <div class="tips tip-5">5%</div>
+            <div class="tips tip-10">10%</div>
+            <div class="tips active-tip tip-15">15%</div>
+            <div class="tips tip-25">25%</div>
+            <div class="tips tip-50">50%</div>
+            <div  id="tip-custom"><input class="tip-custom" type="number" placeholder="CUSTOM"></div>
+          </div>
+          <div class="peopleLabel">
+            <label for="">Number of People</label>
+            <label for="" class="error">Can't be Zero</label>
+          </div>
+          <input type="number" class="input people-input">
+        </div>
+        
+  
+        <div class="result">
+          <div class="tip-amount">
+            <div class="text">
+              <p>Tip Amount</p>
+              <p class="person">per person</p>
+            </div>
+            <div class="amount" id="tip-amount">$4.27</div>
+          </div>
+          <div class="total">
+            <div class="text">
+              <p>Total</p>
+              <p class="person">per person</p>
+            </div>
+            <div class="amount" id="total-amount">$32.79</div>
+          </div>
+          <div class="reset">RESET</div>
+        </div>
+      <div>
+  </body>
+  <script >
+    const billInput = document.querySelector(".bill-input");
+const peopleInput = document.querySelector(".people-input");
+const tips = document.querySelectorAll(".tips");
+const tipPerPerson = document.getElementById("tip-amount");
+const totalPerPerson = document.getElementById("total-amount");
+const resetBtn = document.querySelector(".reset");
+const tipCustom = document.querySelector(".tip-custom");
+const error = document.querySelector(".error");
+
+billInput.addEventListener("input", billInputFun);
+peopleInput.addEventListener("input", peopleInputFun);
+tips.forEach(function (val) {
+  val.addEventListener("click", handleClick);
+});
+resetBtn.addEventListener("click", reset);
+tipCustom.addEventListener("input", tipInputFun);
+
+billInput.value = "0.0";
+peopleInput.value = "1";
+tipPerPerson.innerHTML = "$" + (0.0).toFixed(2);
+totalPerPerson.innerHTML = "$" + (0.0).toFixed(2);
+
+let billValue = 0.0;
+let peopleValue = 1;
+let tipValue = 0.15;
+
+function billInputFun() {
+  billValue = parseFloat(billInput.value);
+  calculateTip();
+}
+
+function tipInputFun() {
+  tipValue = parseFloat(tipCustom.value / 100);
+
+  tips.forEach(function (val) {
+    val.classList.remove("active-tip");
+  });
+  calculateTip();
+}
+
+function peopleInputFun() {
+  peopleValue = parseFloat(peopleInput.value);
+
+  if (peopleValue < 1) {
+    error.style.display = "flex";
+    peopleInput.style.border = "thick solid red";
+  } else {
+    error.style.display = "none";
+    peopleInput.style.border = "none";
+    calculateTip();
+  }
+}
+
+function handleClick(event) {
+  tips.forEach(function (val) {
+    val.classList.remove("active-tip");
+    if (event.target.innerHTML == val.innerHTML) {
+      val.classList.add("active-tip");
+      tipValue = parseFloat(val.innerHTML) / 100;
+    }
+  });
+  calculateTip();
+}
+
+function calculateTip() {
+  if (peopleValue >= 1) {
+    let tipAmount = (billValue * tipValue) / peopleValue;
+    let total = (billValue + tipAmount) / peopleValue;
+    tipPerPerson.innerHTML = "$" + tipAmount.toFixed(2);
+    totalPerPerson.innerHTML = "$" + total.toFixed(2);
+  }
+}
+
+function reset() {
+  billInput.value = "0.0";
+  billInputFun();
+  peopleInput.value = "1";
+  peopleInputFun();
+  tipCustom.value = "";
+}
+  </script>
+</html>
