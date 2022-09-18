@@ -498,7 +498,7 @@ const entries = [
 		github: "Ryukemeister"
 	}
 	{
-		title: "Soping Website",
+		title: "Shoping Website",
 		filename: "shoping-Website.html",
 		description: "A normal website for saree shoping.",
 		author: "Vanya Rastogi",
