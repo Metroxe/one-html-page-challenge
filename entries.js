@@ -427,7 +427,7 @@ const entries = [
 		author: "Nirban Chakraborty",
 		github: "nirban256"
 	},
-  {
+	{
 		title: "Task List App",
 		filename: "taskListApp.html",
 		description: "A task list application with local storage and filter tasks functionality",
@@ -503,8 +503,8 @@ const entries = [
 		description: "A simple Tips-calculator",
 		author: "Amaan Haider",
 		github: "AmaanHaider"
-  },
-  {
+	},
+	{
 		title: "Movie List",
 		filename: "movie-list.html",
 		description: "Ratings for movies i've seen.",
