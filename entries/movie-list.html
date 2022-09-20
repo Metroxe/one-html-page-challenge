@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Christopher Powroznik's Movie List</title>
+    <style>
+
+        body {
+            font-family: sans-serif;
+            font-weight: 100;
+            background-color: #FAF9F6;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        table {
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .primary {
+            width: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card {
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="primary">
+    <div class="card">
+        <h1>Movie List</h1>
+        <p>
+            This is a list of movies watched by Christopher Powroznik. Hopefully the goal one day is to include all movies
+            watched. For sake of understanding, when rating the list, I consider 5 as the average movie, so trying to make
+            things somewhat bell-curved. Also, I do not rate movies giving context for their timeframe, so no bonus points
+            for being culturally significant or being old. I initially made the list from the top 250 on IMDB, but will
+            expand upon over time.
+        </p>
+        <p>
+            If you want to add a comment or feedback, there is an array you can add to. Feel free to commit your comment
+            back to the repo.
+        </p>
+    </div>
+
+    <br/>
+    <table class="card" id="table">
+        <tr>
+            <th>Title</th>
+            <th>Rating</th>
+            <th>Notes</th>
+        </tr>
+    </table>
+    <br/>
+    <br/>
+    <div class="card" id="comments"></div>
+</div>
+<script>
+    // list of comments
+    // if you want to leave a comment, add to this list.
+    const comments = [
+        {
+            name: "Christopher Powroznik (Metroxe)",
+            githubLink: "https://github.com/Metroxe",
+            comment: "Feel free to add a comment here, you can fork and add to this HTML file to add your comment."
+        }
+    ]
+
+    // list of movies
+    const movies = [
+        {
+            title: "The Warriors",
+            rating: 10,
+            notes: "My orignal favourite movie of all time. From time to time, I change my opinion on if this is still my favourite movie of all time from time to time, but is always in the discussion.",
+        },
+        {
+            title: "The Shawshank Redemption",
+            rating: 9,
+        },
+        {
+            title: "The Godfather",
+            rating: 8,
+            notes: "",
+        },
+        {
+            title: "The Dark Knight",
+            rating: 6,
+        },
+        {
+            title: "The Godfather Part II",
+            rating: 7,
+            notes: "",
+        },
+        {
+            title: "Schindler's List",
+            rating: 3,
+            notes: "Only ever watched once, and it was overwhelmingly boring. Perhaps if I watched again, while in a different mood, it would be better.",
+        },
+        {
+            title: "The Lord of the Rings: The Return of the King",
+            rating: 7.5,
+        },
+        {
+            title: "Pulp Fiction",
+            rating: 8,
+        },
+        {
+            title: "The Lord of the Rings: The Fellowship of the Ring",
+            rating: 8,
+        },
+        {
+            title: "The Good, the Bad and the Ugly",
+            rating: 8.5,
+        },
+        {
+            title: "Forest Gump",
+            rating: 8,
+        },
+        {
+            title: "Fight Club",
+            rating: 8.5,
+            notes: "",
+        },
+        {
+            title: "Inception",
+            rating: 7.5,
+        },
+        {
+            title: "The Lord of the Rings: The Two Towers",
+            rating: 6,
+            notes: "When watched in a marathon, this movie is a lot better, but watching on its own lacks a lot.",
+        },
+        {
+            title: "The Matrix",
+            rating: 8,
+            notes: "Might be higher, but the subsequent movies kinda give it a dull feeling afterwards.",
+        },
+        {
+            title: "Goodfellas",
+            rating: 8.5,
+        },
+        {
+            title: "One Flew Over the Cuckoo's Nest ",
+            rating: 5,
+        },
+        {
+            title: "Se7en",
+            rating: 5,
+        },
+        {
+            title: "The Silence of the Lambs",
+            rating: 7
+        },
+        {
+            title: "Saving Private Ryan",
+            rating: 8
+        },
+        {
+            title: "The Green Mile",
+            rating: 8
+        },
+        {
+            title: "Interstellar",
+            rating: 6.5
+        },
+        {
+            title: "Terminator 2: Judgment Day",
+            rating: 6.5
+        },
+        {
+            title: "Back to the Future",
+            rating: 9.5
+        },
+        {
+            title: "Spirited Away",
+            rating: 8.5
+        },
+        {
+            title: "Léon: The Professional",
+            rating: 5
+        },
+        {
+            title: "Parasite",
+            rating: 6.5
+        },
+        {
+            title: "The Lion King",
+            rating: 5
+        },
+        {
+            title: "Gladiator",
+            rating: 7.5
+        },
+        {
+            title: "American History X",
+            rating: 5.5
+        },
+        {
+            title: "The Departed",
+            rating: 7.5
+        },
+        {
+            title: "The Usual Suspects",
+            rating: 4
+        },
+        {
+            title: "The Prestige",
+            rating: 9
+        },
+        {
+            title: "Whiplash",
+            rating: 5
+        },
+        {
+            title: "Grave of the Fireflies",
+            rating: 3
+        },
+        {
+            title: "Alien",
+            rating: 6,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Apocalypse Now",
+            rating: 4,
+            notes: "I actually like the theatrical release more."
+        },
+        {
+            title: "Memento",
+            rating: 4
+        },
+        {
+            title: "Indiana Jones and the Raiders of the Lost Ark",
+            rating: 7,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Django Unchained",
+            rating: 8
+        },
+        {
+            title: "WALL·E",
+            rating: 3.5
+        },
+        {
+            title: "The Shining",
+            rating: 7
+        },
+        {
+            title: "Top Gun: Maverick",
+            rating: 7
+        },
+        {
+            title: "American Beauty",
+            rating: 5
+        },
+        {
+            title: "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
+            rating: 2,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now. At the time, I thought it was really boring."
+        },
+        {
+            title: "The Dark Knight Rises ",
+            rating: 7.5,
+        },
+        {
+            title: "Oldboy (2003)",
+            rating: 5,
+        },
+        {
+            title: "Joker",
+            rating: 5,
+        },
+        {
+            title: "Braveheart",
+            rating: 5,
+        },
+        {
+            title: "Toy Story",
+            rating: 7,
+        },
+        {
+            title: "Inglourious Basterds",
+            rating: 4,
+        },
+        {
+            title: "Princess Mononoke",
+            rating: 8.5,
+        },
+        {
+            title: "Good Will Hunting",
+            rating: 9,
+        },
+        {
+            title: "Your Name.",
+            rating: 10,
+        },
+        {
+            title: "Requiem for a Dream",
+            rating: 8,
+        },
+        {
+            title: "Toy Story 3",
+            rating: 8,
+        },
+        {
+            title: "2001: A Space Odyssey",
+            rating: 2,
+            notes: "I've seen this twice, and I just don't think it holds up."
+        },
+        {
+            title: "Eternal Sunshine of the Spotless Mind",
+            rating: 5
+        },
+        {
+            title: "Reservoir Dogs",
+            rating: 6,
+        },
+        {
+            title: "Citizen Kane",
+            rating: 1,
+            notes: "I find this movie very hard to sit through, I'm ware of its significance, but for entertainment value, its very boring. Watching this feels like reading a textbook, is good for learning and history, but its not fun reading a textbook."
+        },
+        {
+            title: "Come and See",
+            rating: 4,
+        },
+        {
+            title: "A Clockwork Orange",
+            rating: 5,
+        },
+        {
+            title: "Full Metal Jacket",
+            rating: 8,
+        },
+        {
+            title: "Scarface",
+            rating: 9,
+        },
+        {
+            title: "Taxi Driver",
+            rating: 9.5,
+        },
+        {
+            title: "Up",
+            rating: 5,
+        },
+        {
+            title: "Die Hard",
+            rating: 5.5,
+        },
+        {
+            title: "Indiana Jones and the Last Crusade",
+            rating: 7.5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Batman Begins",
+            rating: 7,
+        },
+        {
+            title: "The Wolf of Wall Street",
+            rating: 9,
+        },
+        {
+            title: "Casino",
+            rating: 8.5,
+        },
+        {
+            title: "Unforgiven",
+            rating: 6.5,
+        },
+        {
+            title: "There Will Be Blood",
+            rating: 5,
+        },
+        {
+            title: "The Truman Show",
+            rating: 6.5,
+        },
+        {
+            title: "The Sixth Sense",
+            rating: 5.5,
+        },
+        {
+            title: "A Beautiful Mind",
+            rating: 5.5,
+        },
+        {
+            title: "Monty Python and the Holy Grail",
+            rating: 5,
+        },
+        {
+            title: "Shutter Island",
+            rating: 5,
+        },
+        {
+            title: "Jurassic Park",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Finding Nemo",
+            rating: 5
+        },
+        {
+            title: "The Thing (1982)",
+            rating: 9
+        },
+        {
+            title: "Howl's Moving Castle",
+            rating: 5
+        },
+        {
+            title: "Trainspotting",
+            rating: 5.5
+        },
+        {
+            title: "Gran Torino",
+            rating: 5
+        },
+        {
+            title: "My Neighbor Totoro",
+            rating: 7
+        },
+        {
+            title: "Million Dollar Baby",
+            rating: 5
+        },
+        {
+            title: "Catch Me If You Can",
+            rating: 7
+        },
+        {
+            title: "Blade Runner",
+            rating: 4.5
+        },
+        {
+            title: "Gone Girl",
+            rating: 8.5
+        },
+        {
+            title: "The Deer Hunter",
+            rating: 10
+        },
+        {
+            title: "Hacksaw Ridge",
+            rating: 5
+        },
+        {
+            title: "Room",
+            rating: 2
+        },
+        {
+            title: "Mad Max: Fury Road",
+            rating: 8
+        },
+        {
+            title: "The Big Lebowski",
+            rating: 6.5
+        },
+        {
+            title: "Jaws",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Monsters, Inc.",
+            rating: 6.5,
+        },
+        {
+            title: "Tokyo Story",
+            rating: 1,
+            notes: "This movie is hard to watch for pure entertainment value."
+        },
+        {
+            title: "Rocky",
+            rating: 9.5,
+        },
+        {
+            title: "Platoon",
+            rating: 7,
+        },
+        {
+            title: "The Terminator",
+            rating: 5.5,
+        },
+        {
+            title: "Into the Wild",
+            rating: 5.5,
+        },
+        {
+            title: "Groundhog Day",
+            rating: 5,
+        },
+        {
+            title: "The Exorcist",
+            rating: 8.5,
+        },
+        {
+            title: "The Incredibles",
+            rating: 7,
+        },
+        {
+            title: "Pirates of the Caribbean: The Curse of the Black Pearl",
+            rating: 6,
+        },
+        {
+            title: "Aladdin",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Iron Giant",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        }
+    ]
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .sort((a, b) => b.rating - a.rating);
+
+    function renderTable() {
+        const table = document.getElementById("table");
+        for (const movie of movies) {
+            const row = document.createElement("tr");
+            const title = document.createElement("td");
+            const rating = document.createElement("td");
+            const notes = document.createElement("td");
+
+            row.appendChild(title);
+            row.appendChild(rating);
+            row.appendChild(notes);
+
+            title.textContent = movie.title;
+            rating.textContent = movie.rating;
+            notes.textContent = movie.notes;
+
+            table.appendChild(row);
+        }
+    }
+
+    function renderComments() {
+        const commentsParent = document.getElementById("comments");
+        for (const comment of comments) {
+            const card = document.createElement("div");
+            const name = document.createElement("a");
+            const message = document.createElement("p");
+
+            card.appendChild(name);
+            card.appendChild(message);
+
+            name.innerText = comment.name;
+            name.href = comment.githubLink;
+            message.innerText = comment.comment;
+
+            commentsParent.appendChild(card);
+        }
+    }
+
+    renderTable();
+    renderComments();
+</script>
+
+</body>
+</html>

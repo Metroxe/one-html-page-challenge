@@ -496,5 +496,12 @@ const entries = [
 		description: "A random colour generator which shows you different colours after every click",
 		author: "Rajiv Sahal",
 		github: "Ryukemeister"
+	},
+	{
+		title: "Move List",
+		filename: "movie-list.html",
+		description: "Ratings for movies i've seen.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe"
 	}
 ];
