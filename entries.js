@@ -498,7 +498,14 @@ const entries = [
 		github: "Ryukemeister"
 	},
 	{
-		title: "Move List",
+		title: "Tips-Calculator",
+		filename: "Tips-Calculator.html",
+		description: "A simple Tips-calculator",
+		author: "Amaan Haider",
+		github: "AmaanHaider"
+  },
+  {
+		title: "Movie List",
 		filename: "movie-list.html",
 		description: "Ratings for movies i've seen.",
 		author: "Christopher Powroznik (Metroxe)",
