@@ -503,5 +503,12 @@ const entries = [
 		description: "A simple Tips-calculator",
 		author: "Amaan Haider",
 		github: "AmaanHaider"
+  },
+  {
+		title: "Movie List",
+		filename: "movie-list.html",
+		description: "Ratings for movies i've seen.",
+		author: "Christopher Powroznik (Metroxe)",
+		github: "Metroxe"
 	}
 ];
