@@ -510,5 +510,12 @@ const entries = [
 		description: "Ratings for movies i've seen.",
 		author: "Christopher Powroznik (Metroxe)",
 		github: "Metroxe"
+	},
+	{
+		title: "Registration Form",
+		filename: "Sattyam.html",
+		description: "Created a Static student Registration Form",
+		author: "Sattyam Samania",
+		github: "SattyamSamania"
 	}
 ];
