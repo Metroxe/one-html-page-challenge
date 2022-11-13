@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ultimate Sudoku</title>
+    <style>
+      * {
+        font-family: "Roboto", sans-serif;
+        text-align: center;
+      }
+      #username {
+        color: rgb(18, 39, 176);
+      }
+      .table {
+        margin-top: 10vh;
+        display: grid;
+        grid-template-columns: 160px 160px 160px;
+        grid-template-rows: 160px 160px 160px;
+        row-gap: 2px;
+        column-gap: 2px;
+        justify-content: center;
+        align-content: center;
+      }
+      .group31,
+      .group32,
+      .group33,
+      .group34,
+      .group35,
+      .group36,
+      .group37,
+      .group38,
+      .group39 {
+        display: grid;
+        grid-template-columns: 50px 50px 50px;
+        grid-template-rows: 50px 50px 50px;
+        border: solid 5px black;
+      }
+      .elem {
+        /* outline:solid 2px red; */
+        border: solid 1px black;
+        font-size: 40px;
+      }
+      .common {
+        display: flex;
+        justify-content: center;
+      }
+      .btn {
+        margin-top: 7vh;
+        /* outline:solid 2px red; */
+        width: 110px;
+        height: 50px;
+        justify-content: center;
+        padding-top: 15px;
+        background-color: green;
+        color: white;
+        font-size: large;
+        border-radius: 10%;
+        transition: all 0.5s ease-out;
+      }
+      .btn:hover {
+        scale: 1.2;
+        transition-delay: 0.01s;
+      }
+      .btn:active {
+        scale: 0.9;
+      }
+      #outputshow {
+        font-size: x-large;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <input type="number" class="elem" id="at9" placeholder="1-9 or x"> -->
+    <h1>
+      Welcome! <span id="username">User</span>, to Ultimate Suduko Game Solver
+    </h1>
+    <h3 id="outputshow"></h3>
+    <h2>
+      Please do not enter Wrong values.<br>Enter Values ranging from 1-9 in the boxes given below. Enter 0 for values
+      you don't know.
+    </h2>
+    <div class="table">
+      <div class="group31">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at1"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at2"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at3"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at4"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at5"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at6"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at7"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at8"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at9"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group32">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at10"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at11"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at12"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at13"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at14"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at15"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at16"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at17"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at18"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group33">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at19"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at20"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at21"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at22"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at23"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at24"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at25"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at26"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at27"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group34">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at28"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at29"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at30"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at31"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at32"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at33"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at34"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at35"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at36"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group35">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at37"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at38"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at39"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at40"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at41"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at42"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at43"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at44"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at45"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group36">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at46"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at47"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at48"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at49"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at50"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at51"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at52"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at53"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at54"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group37">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at55"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at56"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at57"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at58"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at59"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at60"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at61"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at62"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at63"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group38">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at64"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at65"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at66"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at67"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at68"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at69"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at70"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at71"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at72"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+      <div class="group39">
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at73"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at74"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at75"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at76"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at77"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at78"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at79"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at80"
+          maxlength="1"
+          autocomplete="off"
+        />
+        <input
+          inputmode="numeric"
+          class="elem"
+          id="at81"
+          maxlength="1"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <div class="common">
+      <div class="btn" onclick="reader()">Solve This !!</div>
+    </div>
+  </body>
+  <script>
+    document.getElementById('username').innerText="";
+    let username=prompt("Enter your Name :");
+    document.getElementById('username').innerText=username;
+    let board = new Array(9);
+    for (let i = 0; i < 9; i++) {
+      board[i] = new Array(9);
+    }
+    function reader() {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          let objid = i * 9 + j + 1;
+          objid = "at" + objid;
+          let objval=document.getElementById(objid).value;
+          if(objval!="")
+          board[i][j] = objval;
+          else{
+            board[i][j]=0;
+          }
+        }
+      }
+      let newprom = new Promise((resolve, reject) => {
+        let ans = solveNow();
+        if (ans) {
+          console.log("Solved in newprom");
+          resolve();
+        } else {
+          console.log("Error in newprom solve");
+          reject();
+        }
+      });
+      newprom
+      .then(() => {
+        console.log("Solved in newprom");
+        afterSolve();
+        linePrinter(true);
+      })
+      .catch(() => {
+        console.log("Error in newprom solve");
+        linePrinter(false);
+        });
+    }
+
+    function linePrinter(argument) {
+      if (argument) {
+        document.getElementById("outputshow").innerText =
+          "Suduko Game is solved Successfully . You can view the Output below.";
+        document.getElementById("outputshow").style.color = "Green";
+      } else {
+        document.getElementById("outputshow").innerText =
+          "Error in solving the game. Recheck the values and Enter again";
+        document.getElementById("outputshow").style.color = "Red";
+      }
+    }
+    function solveNow() {
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          if (board[i][j] == 0) {
+            for (let val = 1; val <= 9; val++) {
+              if(checker(i,j,val)){
+                board[i][j]=val;
+                let nextsol=solveNow();
+                if(!nextsol){
+                  board[i][j]=0;
+                }
+                else{
+                  return true;
+                }
+              }
+            }
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    function checker(row, col, val) {
+      for (let i = 0; i < 9; i++) {
+        if (board[row][i] == val) {
+          return false;
+        }
+        if (board[i][col] == val) {
+          return false;
+        }
+        if (board[3 * Math.floor(row / 3) + Math.floor(i / 3)][3 * Math.floor(col / 3) + (i % 3)] == val) {
+          return false;
+        }
+      }
+      return true;
+    }
+    function afterSolve() {
+      console.log("Printed Successfully");
+      for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+          let objid = i * 9 + j + 1;
+          objid = "at" + objid;
+          document.getElementById(objid).value = board[i][j];
+        }
+      }
+    }
+  </script>
+</html>

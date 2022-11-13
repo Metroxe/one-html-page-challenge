@@ -517,5 +517,12 @@ const entries = [
 		description: "Created a Static student Registration Form",
 		author: "Sattyam Samania",
 		github: "SattyamSamania"
+	},
+	{
+		title: "Sudoku Solver",
+		filename: "UdhavSudoku.html",
+		description: "A Basic Sudoku Game which solves sudoku puzzle if places filled correctly.",
+		author: "Udhav Sharma",
+		github: "UdhavSharma2004"
 	}
 ];
