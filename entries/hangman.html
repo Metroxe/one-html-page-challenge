@@ -401,7 +401,7 @@
       function gameEndHandler() {
         const content = game.hasWon()
           ? `Great, you are a winner!`
-          : `Oh no, you fucked up! We were looking for <em>${game.getWord()}</em>.`;
+          : `Oh no! We were looking for <em>${game.getWord()}</em>.`;
         showModal(content);
       }
 
