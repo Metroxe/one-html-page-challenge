@@ -531,5 +531,12 @@ const entries = [
 		description: "Renders cards of random colors that can be copied by clicking on the card. Reload button to generate new cards.",
 		author: "Rishabh Singh",
 		github: "Rishabh-Singh-Codes"
+	},
+	{
+		title: "AI Generated Game",
+		filename: "openai-generated-entry.html",
+		description: "This entry was coded completely by OpenAI using the prompt \"code me a game in one html file\".",
+		author: "OpenAI",
+		github: "openai"
 	}
 ];
