@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Color Generator</title>
+    <style>
+        body {
+            background-image: linear-gradient(toright, #fffbd5, #b20a2c);
+        }
+
+        #main {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            height: 250px;
+            width: 175px;
+            /* border: 1px solid black; */
+            border-radius: 20px;
+            display: inline-block;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card:hover {
+            transform: scale(1.1);
+            transition: transform 330ms ease-in-out;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+            cursor: pointer;
+        }
+
+        .selected {
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;
+            transform: scale(0.7);
+        }
+
+        #reload {
+            height: 50px;
+            width: 50px;
+            border-radius: 50px;
+            box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
+            font-size: xx-large;
+            position: fixed;
+            top: 90vh;
+            left: 90vw;
+            z-index: 9999;
+        }
+
+        #info {
+            display: none;
+            text-align: center;
+            width: 100%;
+            font-family: fantasy;
+            font-size: small;
+            opacity: 0.5;
+
+        }
+
+        .card:hover > #info {
+            display: block;
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <button id="reload" onclick="reload()"> &#x21bb; </button>
+    </div>
+</body>
+
+<script>
+    let mainSec = document.getElementById('main');   
+    
+    let copyColor = (code) => {
+        navigator.clipboard.writeText(`#${code}`);
+
+        let selectedCard = document.getElementById(`${code}`);
+
+        selectedCard.classList.add('selected');
+
+    }
+
+    let reload = () => window.location.reload()
+
+    for (let i = 0; i < 102; i++ ){
+        let randomNum = Math.floor(Math.random() * 899999 + 100000);
+        let element = `<div class="card" style="background-color: #${randomNum}" id="${randomNum}" onClick="copyColor(${randomNum})"><div id="info">Click to copy!</div></div>`;
+        mainSec.insertAdjacentHTML('beforeend', element);
+    }
+
+    console.log('Made by: Rishabh Singh.\nGithub: https://github.com/Rishabh-Singh-Codes\nTwitter: https://twitter.com/Rishabh8Singh')
+
+
+</script>
+
+</html>

@@ -524,5 +524,12 @@ const entries = [
 		description: "A Basic Sudoku Game which solves sudoku puzzle if places filled correctly.",
 		author: "Udhav Sharma",
 		github: "UdhavSharma2004"
+	},
+	{
+		title: "Color Grid",
+		filename: "color-grid.html",
+		description: "Renders cards of random colors that can be copied by clicking on the card. Reload button to generate new cards.",
+		author: "Rishabh Singh",
+		github: "Rishabh-Singh-Codes"
 	}
 ];
