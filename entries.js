@@ -40,5 +40,12 @@ const entries = [
 		description: "Drag the top right corner on the building. Price increases as building gets bigger.",
 		author: "Richard Hung (Richard1320)",
 		github: "richard1320",
+	},
+	{
+		title: "Adequate Memory Game",
+		filename: "memory-game.html",
+		description: "Simple memory testing game that I created during a flight while my laptop battery slowly approached 0%. Each level gets faster & adds 1 more color in randomized order to remember!",
+		author: "Spencer Gray",
+		github: "spencergray96",
 	}
 ];

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Game</title>
+
+    <style>
+        body {
+            background-color: #506972;
+            font-family: sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .container-inner {
+            width: 100%;
+            max-width: 1024px;
+        }
+
+        .vertical-space-manager {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .game-player {
+            max-width: 100%;
+            padding: 1rem;
+            background-color: #F0F0F1;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .game-title {
+            text-align: center;
+        }
+
+        #game-description {
+            text-align: center;
+        }
+
+        #start-button-container {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .start-button-container-disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #start-button {
+            color: white;
+            background-color: #11D66D;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #start-button:hover {
+            opacity: 0.7;
+        }
+
+        #current-level-info {
+            margin-top: 1rem;
+        }
+
+        #current-level-number-display {
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+
+        .current-level-number-display-enabled {
+            opacity: 1 !important;
+        }
+
+        #current-level-guesses-message {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #current-level-guesses-display {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .current-correct-guess-panel {
+            flex: 1;
+            aspect-ratio: 1;
+            max-width: 10%;
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+
+        #random-panel-container {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        #random-panel {
+            width: 100%;
+            max-width: 200px;
+            aspect-ratio: 1;
+            border-radius: 16px;
+            /*transition: all 0.2s;*/
+        }
+
+        .random-panel-none {
+            display: none;
+        }
+
+        #controls {
+            margin-top: 1rem;
+            transition: all 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .controls-enabled {
+            opacity: 1 !important;
+            pointer-events: all !important;
+        }
+
+        #controls-instructions {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        #controls-btns-row {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        .controls-btn {
+            flex: 1;
+            aspect-ratio: 1;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .controls-btn:hover {
+            opacity: 0.7;
+        }
+
+        #game-over-container {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .game-over-container-visible {
+            display: block !important;
+        }
+
+        #game-over-message {
+            text-align: center;
+            color: #FF4238;
+        }
+
+        #game-over-correct-solution {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .bg-red {
+            background-color: #FF4238;
+        }
+
+        .bg-yellow {
+            background-color: #FFEE3F;
+        }
+
+        .bg-green {
+            background-color: #11D66D;
+        }
+
+        .bg-purple {
+            background-color: #7859E6;
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <div class="container">
+        <div class="container-inner">
+            <div class="vertical-space-manager">
+                <div>
+                </div>
+
+                <div class="game-player">
+                    <h1 class="game-title">Memory Game</h1>
+                    <h5 id="game-description">
+                        Click "Start Game" and try to remember the colors you see!<br/><br/>
+                        Each level is randomized from the prvevious & gets faster & faster!
+                    </h5>
+
+                    <div id="start-button-container">
+                        <button id="start-button">
+                            Start Game
+                        </button>
+                    </div>
+
+                    <div id="current-level-info">
+                        <div>
+                            <h3 id="current-level-number-display"></h3>
+                        </div>
+
+                        <div>
+                            <h3 id="current-level-guesses-message"></h3>
+
+                            <div id="current-level-guesses-display">
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="random-panel-container">
+                        <div id="random-panel">
+                        </div>
+                    </div>
+
+                    <div id="controls">
+                        <div>
+                            <h3 id="controls-instructions">
+                                Click the colors in the order they appeared
+                            </h3>
+                        </div>
+
+                        <div id="controls-btns-row">
+                            <div id="controls-btn-red" class="controls-btn bg-red">
+                            </div>
+
+                            <div id="controls-btn-yellow" class="controls-btn bg-yellow">
+                            </div>
+
+                            <div id="controls-btn-green" class="controls-btn bg-green">
+                            </div>
+
+                            <div id="controls-btn-purple" class="controls-btn bg-purple">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="game-over-container">
+                        <h2 id="game-over-message">
+                            Game Over!<br/><br/>
+                            Click "Start Game" to play again.<br/><br/>
+                            Correct solution below:
+                        </h2>
+
+                        <div id="game-over-correct-solution">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* I wrote this all during a flight, so don't critique it too hard! */
+
+    console.log("Not trying to cheat, are you?");
+
+    let levelFlashingInProgress = false;
+    let level = 0;
+    const baseRounds = 4;
+    const baseTime = 1000;
+    const levelSpeedMod = 65;
+
+    let currentBg;
+    let currentLevelBgs = [];
+    let currentLevelGuesses = [];
+    let currentIteration = 0;
+
+    const startButtonContainer = document.getElementById("start-button-container");
+    const startButton = document.getElementById("start-button");
+    const currentLevelNumberDisplay = document.getElementById("current-level-number-display");
+    const currentLevelGuessesMessage = document.getElementById("current-level-guesses-message");
+    const currentLevelGuessesDisplay = document.getElementById("current-level-guesses-display");
+    const randomPanel = document.getElementById("random-panel");
+    const controls = document.getElementById("controls");
+    const gameOverContainer = document.getElementById("game-over-container");
+    const gameOverCorrectSolution = document.getElementById("game-over-correct-solution");
+
+    const controlsBtnRed = document.getElementById("controls-btn-red");
+    const controlsBtnYellow = document.getElementById("controls-btn-yellow");
+    const controlsBtnGreen = document.getElementById("controls-btn-green");
+    const controlsBtnPurple = document.getElementById("controls-btn-purple");
+
+    startButton.addEventListener("click", startLevel);
+
+    controlsBtnRed.addEventListener("click", guessColor("bg-red"));
+    controlsBtnYellow.addEventListener("click", guessColor("bg-yellow"));
+    controlsBtnGreen.addEventListener("click", guessColor("bg-green"));
+    controlsBtnPurple.addEventListener("click", guessColor("bg-purple"));
+
+    function getRandomNumberInclusive(lower, upper) {
+        return Math.floor(Math.random() * (upper + 1) - lower);
+    }
+
+    // Map the numbers to classes for the random panel
+    function getClassNameFromNumber(number) {
+        switch(number) {
+            case 0:
+                return "bg-red";
+            case 1:
+                return "bg-yellow";
+            case 2:
+                return "bg-green";
+            case 3:
+            default:
+                return "bg-purple";
+        }
+    }
+
+    function startLevel() {
+        if (levelFlashingInProgress) {
+            return;
+        }
+
+        levelFlashingInProgress = true;
+        // clear the correct guesses section
+        currentLevelGuessesMessage.innerText = "";
+        currentLevelGuessesDisplay.innerHTML = "";
+        startButtonContainer.classList.add("start-button-container-disabled");
+        gameOverContainer.classList.remove("game-over-container-visible");
+        randomPanel.classList.remove("random-panel-none");
+        currentLevelNumberDisplay.innerText = `Current Level: ${level + 1}`;
+        currentLevelNumberDisplay.classList.add("current-level-number-display-enabled")
+
+        const intervalSpeed = baseTime - (level * levelSpeedMod * (((level * 100) / 1000) + 1));
+
+        let workingClassName;
+
+        // Start the level, or "flashing"
+        const flashingInterval =  setInterval(() => {
+            if (workingClassName) {
+                randomPanel.classList.remove(workingClassName); // Remove the previous color of the flashing div
+            }
+
+            workingClassName = getNewClass(); // generate a new class
+            currentBg = workingClassName; // save the new class for reference
+            currentLevelBgs.push(currentBg);
+            randomPanel.classList.add(workingClassName); // add the new class to the flashing div
+            currentIteration++;
+
+            if (currentIteration === level + baseRounds) {
+                clearInterval(flashingInterval);
+                setTimeout(() => {
+                    levelFlashingInProgress = false;
+                    preparePlayingFieldForLevel();
+                }, intervalSpeed);
+            }
+        }, intervalSpeed); // increments a little bit faster each level
+    }
+
+    function preparePlayingFieldForLevel() {
+        // console.log(currentLevelBgs);
+        randomPanel.classList.forEach(c => randomPanel.classList.remove(c));
+        randomPanel.classList.add("random-panel-none");
+        controls.classList.add("controls-enabled");
+        currentLevelGuessesMessage.innerText = getCurrentCorrectGuessesMessage();
+    }
+
+    function guessColor(color) {
+        return () => {
+            if (color === currentLevelBgs[currentLevelGuesses.length]) {
+                currentLevelGuesses.push(color);
+                currentLevelGuessesMessage.innerText = getCurrentCorrectGuessesMessage();
+                getNewCurrentCorrectGuessesDisplay(color, currentLevelGuessesDisplay);
+
+                if (currentLevelGuesses.length === currentLevelBgs.length) {
+                    // clear the controls
+                    controls.classList.remove("controls-enabled");
+
+                    setTimeout(() => {
+                        // reset a whole ton of variables
+                        currentBg = null;
+                        currentLevelBgs = [];
+                        currentLevelGuesses = [];
+                        currentIteration = 0;
+
+                        // clear the correct guesses section
+                        currentLevelGuessesMessage.innerText = "";
+                        currentLevelGuessesDisplay.innerHTML = "";
+
+                        // increment the level
+                        level++;
+
+                        // begin again
+                        startLevel();
+                    }, 1000);
+                }
+            } else {
+                console.log("you lose! (But there's really no winning, is there?)");
+                gameOverContainer.classList.add("game-over-container-visible");
+                randomPanel.classList.add("random-panel-none");
+                currentLevelBgs.forEach(c => getNewCurrentCorrectGuessesDisplay(c, gameOverCorrectSolution));
+                controls.classList.remove("controls-enabled");
+                startButtonContainer.classList.remove("start-button-container-disabled");
+                currentBg = null;
+                currentLevelBgs = [];
+                currentLevelGuesses = [];
+                currentIteration = 0;
+                level = 0;
+            }
+        }
+    }
+
+    function getCurrentCorrectGuessesMessage() {
+        return `Current Correct Guesses: ${currentLevelGuesses.length}/${currentLevelBgs.length}`;
+    }
+
+    function getNewCurrentCorrectGuessesDisplay(className, parent) {
+        const newPanel = document.createElement("div");
+        newPanel.classList.add("current-correct-guess-panel");
+        newPanel.classList.add(className);
+        parent.append(newPanel);
+    }
+
+    function getNewClass() {
+        const classNumber = getRandomNumberInclusive(0, 3);
+        let workingClassName = getClassNameFromNumber(classNumber);
+
+        if (currentBg === workingClassName) {
+            workingClassName = getNewClass();
+        }
+
+        return workingClassName;
+    }
+</script>
+</body>
+</html>
