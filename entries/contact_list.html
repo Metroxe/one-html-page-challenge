@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Contacts</title>
+      <style>
+        * {
+  font-family: sans-serif;
+}
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(to bottom, #a0fff7 0%, #aaa8ff9a 100%);
+}
+.inp_items {
+  max-width: 50vw;
+  margin: auto;
+  background-color: rgba(150, 118, 255, 0.687);
+  padding: 20px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+@media only screen and (max-width: 600px) {
+  .inp_items {
+    max-width: 100%;
+    margin: auto;
+    background-color: rgba(150, 118, 255);
+    padding: 20px;
+    padding-bottom: 10px;
+  }
+}
+
+.inp {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 4px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.inp input {
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  height: 20px;
+}
+.inp_btn {
+  margin: auto;
+  display: flex;
+  padding-top: 10px;
+  justify-content: center;
+}
+.inp_btn input {
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  background-color: gold;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 18px;
+}
+.info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+@media only screen and (max-width: 600px) {
+  .info {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+}
+.card {
+  border-color: rgb(0, 0, 0);
+  border-style: solid;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  background: radial-gradient(
+    circle,
+    rgba(232, 240, 162, 0.532) 0%,
+    rgb(24, 221, 34, 0.7) 100%
+  );
+}
+
+.name {
+  display: flex;
+  justify-content: center;
+}
+
+.card input {
+  margin-left: 10px;
+}
+
+.card input {
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  background-color: gold;
+  padding: 5px;
+}
+      </style>
+</head>
+<body>
+    <h1>My Contacts</h1>
+    
+    <hr>
+    <div class="inp_items">
+        <div class="inp" >
+            First name :
+            <input type="text" id="fname">
+        </div >
+        <div class="inp" >
+            Last name :
+            <input type="text" id="lname">
+        </div>
+        <div class="inp" >
+            Email :
+            <input type="text" id="email">
+        </div>
+        <div class="inp" >
+            Mobile number :
+            <input type="text" id="number">
+        </div>
+        <div class="inp_btn" >
+            <input type="button" id="submit" value="Add Contact" >
+        </div>
+    </div>
+
+    <div>
+        <h1>Contacts</h1>
+        <div class="info">
+        </div>
+    </div>
+    
+    <script>
+      const _localstorage = localStorage.getItem("list");
+var arr = [];
+if (_localstorage) {
+  arr = JSON.parse(_localstorage).data;
+}
+flag = 0;
+const btnHandler = () => {
+  const fname = document.querySelector("#fname").value;
+  const lname = document.querySelector("#lname").value;
+  const email = document.querySelector("#email").value;
+  const number = document.querySelector("#number").value;
+  const uid = new Date().toISOString();
+  let con_obj = {
+    fname,
+    lname,
+    email,
+    number,
+    uid,
+  };
+  arr.push(con_obj);
+  render();
+  document.querySelector("#fname").value = "";
+  document.querySelector("#lname").value = "";
+  document.querySelector("#email").value = "";
+  document.querySelector("#number").value = "";
+  if (flag == 1) {
+    submit.value = "Add Contact";
+    flag == 0;
+  }
+};
+const submit = document.querySelector("#submit");
+submit.addEventListener("click", () => btnHandler());
+
+const render = () => {
+  localStorage.setItem("list", JSON.stringify({ data: arr }));
+  const info = document.querySelector(".info");
+  info.innerHTML = "";
+  arr.map((e, index) => {
+    const ele = document.createElement("div");
+    ele.classList.add("card");
+    const n = document.createElement("h4");
+    n.append(`${e.fname} ${e.lname} `);
+    n.classList.add("name");
+
+    const n1 = document.createElement("p");
+    n1.append(`Email : ${e.email}`);
+    n1.classList.add("creds");
+
+    const n2 = document.createElement("p");
+    n2.append(`Number : ${e.number}`);
+    n2.classList.add("creds");
+
+    const btn = document.createElement("input");
+    btn.type = "Button";
+    btn.value = "Delete";
+
+    const btn_m = document.createElement("input");
+    btn_m.type = "Button";
+    btn_m.value = "Modify";
+
+    const btn_update = document.createElement("input");
+    btn_update.type = "Button";
+    btn_update.value = "Update";
+
+    ele.append(n);
+    ele.append(n1);
+    ele.append(n2);
+    ele.append(btn_m);
+    ele.append(btn);
+    info.append(ele);
+    btn.addEventListener("click", () => {
+      let tem_arr = arr;
+      tem_arr.map((ele, index) => {
+        if (ele.uid == e.uid) {
+          arr.splice(index, 1);
+        }
+      });
+      render();
+    });
+    btn_m.addEventListener("click", () => {
+      alert("Update your changes at top");
+      document.querySelector("#fname").value = e.fname;
+      document.querySelector("#lname").value = e.lname;
+      document.querySelector("#email").value = e.email;
+      document.querySelector("#number").value = e.number;
+      submit.value = "Update";
+      let tem_arr = arr;
+      tem_arr.map((ele, index) => {
+        if (ele.uid == e.uid) {
+          arr.splice(index, 1);
+        }
+      });
+      render();
+      flag = 1;
+    });
+  });
+};
+render();
+    </script>
+</body>
+
+</html>

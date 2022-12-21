@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Guess the Number</title>
+</head>
+<body>
+<h1>Guess the Number</h1>
+<p>I'm thinking of a number between 1 and 100. Can you guess it?</p>
+<input type="number" id="guess">
+<button onclick="checkGuess()">Guess</button>
+<p id="result"></p>
+<script>
+    const target = Math.floor(Math.random() * 100) + 1;
+    let numGuesses = 0;
+
+    function checkGuess() {
+        numGuesses += 1;
+        const guess = document.getElementById("guess").value;
+        const resultParagraph = document.getElementById("result");
+
+        if (guess == target) {
+            resultParagraph.innerHTML = "You got it! It took you " + numGuesses + " guesses.";
+        } else if (guess < target) {
+            resultParagraph.innerHTML = "Your guess is too low. Try again.";
+        } else if (guess > target) {
+            resultParagraph.innerHTML = "Your guess is too high. Try again.";
+        }
+    }
+</script>
+</body>
+</html>

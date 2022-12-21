@@ -1,0 +1,3437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Christopher Powroznik's Movie List</title>
+    <style>
+
+        body {
+            font-family: sans-serif;
+            font-weight: 100;
+            background-color: #FAF9F6;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        table {
+            border-collapse: collapse;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .primary {
+            width: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .card {
+            padding: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<div class="primary">
+    <div class="card">
+        <h1>Movie List</h1>
+        <p>
+            This is a list of movies watched by Christopher Powroznik. Hopefully the goal one day is to include all movies
+            watched. For sake of understanding, when rating the list, I consider 5 as the average movie, so trying to make
+            things somewhat bell-curved. Also, I do not rate movies giving context for their timeframe, so no bonus points
+            for being culturally significant or being old. I initially made the list from the top 250 on IMDB, but will
+            expand upon over time.
+        </p>
+        <p>
+            If you want to add a comment or feedback, there is an array you can add to. Feel free to commit your comment
+            back to the repo.
+        </p>
+        <p>Total Movies Tracked: <b id="total"></b></p>
+    </div>
+
+    <br/>
+    <table class="card" id="table">
+        <tr>
+            <th>Title</th>
+            <th>Rating</th>
+            <th>Notes</th>
+        </tr>
+    </table>
+    <br/>
+    <br/>
+    <div class="card" id="comments"></div>
+</div>
+<script>
+    // list of comments
+    // if you want to leave a comment, add to this list.
+    const comments = [
+        {
+            name: "Christopher Powroznik (Metroxe)",
+            githubLink: "https://github.com/Metroxe",
+            comment: "Feel free to add a comment here, you can fork and add to this HTML file to add your comment."
+        }
+    ]
+
+    // list of movies
+    const movies = [
+        {
+            title: "The Warriors",
+            rating: 10,
+            notes: "My orignal favourite movie of all time. From time to time, I change my opinion on if this is still my favourite movie of all time from time to time, but is always in the discussion.",
+        },
+        {
+            title: "The Shawshank Redemption",
+            rating: 9,
+        },
+        {
+            title: "The Godfather",
+            rating: 8,
+            notes: "",
+        },
+        {
+            title: "The Dark Knight",
+            rating: 6,
+        },
+        {
+            title: "The Godfather Part II",
+            rating: 7,
+            notes: "",
+        },
+        {
+            title: "Schindler's List",
+            rating: 3,
+            notes: "Only ever watched once, and it was overwhelmingly boring. Perhaps if I watched again, while in a different mood, it would be better.",
+        },
+        {
+            title: "The Lord of the Rings: The Return of the King",
+            rating: 7.5,
+        },
+        {
+            title: "Pulp Fiction",
+            rating: 8,
+        },
+        {
+            title: "The Lord of the Rings: The Fellowship of the Ring",
+            rating: 8,
+        },
+        {
+            title: "The Good, the Bad and the Ugly",
+            rating: 8.5,
+        },
+        {
+            title: "Forest Gump",
+            rating: 8,
+        },
+        {
+            title: "Fight Club",
+            rating: 8.5,
+            notes: "",
+        },
+        {
+            title: "Inception",
+            rating: 7.5,
+        },
+        {
+            title: "The Lord of the Rings: The Two Towers",
+            rating: 6,
+            notes: "When watched in a marathon, this movie is a lot better, but watching on its own lacks a lot.",
+        },
+        {
+            title: "The Matrix",
+            rating: 8,
+            notes: "Might be higher, but the subsequent movies kinda give it a dull feeling afterwards.",
+        },
+        {
+            title: "Goodfellas",
+            rating: 8.5,
+        },
+        {
+            title: "One Flew Over the Cuckoo's Nest ",
+            rating: 5,
+        },
+        {
+            title: "Se7en",
+            rating: 5,
+        },
+        {
+            title: "The Silence of the Lambs",
+            rating: 7
+        },
+        {
+            title: "Saving Private Ryan",
+            rating: 8
+        },
+        {
+            title: "The Green Mile",
+            rating: 8
+        },
+        {
+            title: "Interstellar",
+            rating: 6.5
+        },
+        {
+            title: "Terminator 2: Judgment Day",
+            rating: 6.5
+        },
+        {
+            title: "Back to the Future",
+            rating: 10
+        },
+        {
+            title: "Spirited Away",
+            rating: 8.5
+        },
+        {
+            title: "Léon: The Professional",
+            rating: 5
+        },
+        {
+            title: "Parasite",
+            rating: 6.5
+        },
+        {
+            title: "The Lion King",
+            rating: 5
+        },
+        {
+            title: "Gladiator",
+            rating: 7.5
+        },
+        {
+            title: "American History X",
+            rating: 5.5
+        },
+        {
+            title: "The Departed",
+            rating: 7.5
+        },
+        {
+            title: "The Usual Suspects",
+            rating: 4
+        },
+        {
+            title: "The Prestige",
+            rating: 9
+        },
+        {
+            title: "Whiplash",
+            rating: 7.5
+        },
+        {
+            title: "Grave of the Fireflies",
+            rating: 3
+        },
+        {
+            title: "Alien",
+            rating: 6,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Apocalypse Now",
+            rating: 4,
+            notes: "I actually like the theatrical release more."
+        },
+        {
+            title: "Memento",
+            rating: 4
+        },
+        {
+            title: "Indiana Jones and the Raiders of the Lost Ark",
+            rating: 7,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Django Unchained",
+            rating: 8
+        },
+        {
+            title: "WALL·E",
+            rating: 3.5
+        },
+        {
+            title: "The Shining",
+            rating: 7
+        },
+        {
+            title: "Top Gun: Maverick",
+            rating: 7
+        },
+        {
+            title: "American Beauty",
+            rating: 5
+        },
+        {
+            title: "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
+            rating: 2,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now. At the time, I thought it was really boring."
+        },
+        {
+            title: "The Dark Knight Rises ",
+            rating: 7.5,
+        },
+        {
+            title: "Oldboy (2003)",
+            rating: 5,
+        },
+        {
+            title: "Joker",
+            rating: 5,
+        },
+        {
+            title: "Braveheart",
+            rating: 5,
+        },
+        {
+            title: "Toy Story",
+            rating: 7,
+        },
+        {
+            title: "Inglourious Basterds",
+            rating: 4,
+        },
+        {
+            title: "Princess Mononoke",
+            rating: 8.5,
+        },
+        {
+            title: "Good Will Hunting",
+            rating: 9,
+        },
+        {
+            title: "Your Name.",
+            rating: 10,
+        },
+        {
+            title: "Requiem for a Dream",
+            rating: 8,
+        },
+        {
+            title: "Toy Story 3",
+            rating: 8,
+        },
+        {
+            title: "2001: A Space Odyssey",
+            rating: 2,
+            notes: "I've seen this twice, and I just don't think it holds up."
+        },
+        {
+            title: "Eternal Sunshine of the Spotless Mind",
+            rating: 5
+        },
+        {
+            title: "Reservoir Dogs",
+            rating: 6,
+        },
+        {
+            title: "Citizen Kane",
+            rating: 1,
+            notes: "I find this movie very hard to sit through, I'm aware of its significance, but for entertainment value, its very boring. Watching this feels like reading a textbook, is good for learning and history, but its not fun reading a textbook."
+        },
+        {
+            title: "Come and See",
+            rating: 4,
+        },
+        {
+            title: "A Clockwork Orange",
+            rating: 5,
+        },
+        {
+            title: "Full Metal Jacket",
+            rating: 8,
+        },
+        {
+            title: "Scarface",
+            rating: 9,
+        },
+        {
+            title: "Taxi Driver",
+            rating: 9.5,
+        },
+        {
+            title: "Up",
+            rating: 5,
+        },
+        {
+            title: "Die Hard",
+            rating: 5.5,
+        },
+        {
+            title: "Indiana Jones and the Last Crusade",
+            rating: 7.5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Batman Begins",
+            rating: 7,
+        },
+        {
+            title: "The Wolf of Wall Street",
+            rating: 9,
+        },
+        {
+            title: "Casino",
+            rating: 8.5,
+        },
+        {
+            title: "Unforgiven",
+            rating: 6.5,
+        },
+        {
+            title: "There Will Be Blood",
+            rating: 5,
+        },
+        {
+            title: "The Truman Show",
+            rating: 6.5,
+        },
+        {
+            title: "The Sixth Sense",
+            rating: 5.5,
+        },
+        {
+            title: "A Beautiful Mind",
+            rating: 5.5,
+        },
+        {
+            title: "Monty Python and the Holy Grail",
+            rating: 5,
+        },
+        {
+            title: "Shutter Island",
+            rating: 5,
+        },
+        {
+            title: "Jurassic Park",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Finding Nemo",
+            rating: 5
+        },
+        {
+            title: "The Thing (1982)",
+            rating: 9
+        },
+        {
+            title: "Howl's Moving Castle",
+            rating: 5
+        },
+        {
+            title: "Trainspotting",
+            rating: 5.5
+        },
+        {
+            title: "Gran Torino",
+            rating: 5
+        },
+        {
+            title: "My Neighbor Totoro",
+            rating: 7
+        },
+        {
+            title: "Million Dollar Baby",
+            rating: 5
+        },
+        {
+            title: "Catch Me If You Can",
+            rating: 7
+        },
+        {
+            title: "Blade Runner",
+            rating: 4.5
+        },
+        {
+            title: "Gone Girl",
+            rating: 8.5
+        },
+        {
+            title: "The Deer Hunter",
+            rating: 10,
+            notes: "This is probably my favourite movie."
+        },
+        {
+            title: "Hacksaw Ridge",
+            rating: 5
+        },
+        {
+            title: "Room",
+            rating: 2
+        },
+        {
+            title: "Mad Max: Fury Road",
+            rating: 8
+        },
+        {
+            title: "The Big Lebowski",
+            rating: 6.5
+        },
+        {
+            title: "Jaws",
+            rating: 6,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Monsters, Inc.",
+            rating: 6.5,
+        },
+        {
+            title: "Tokyo Story",
+            rating: 1,
+            notes: "This movie is hard to watch for pure entertainment value."
+        },
+        {
+            title: "Rocky",
+            rating: 9.5,
+        },
+        {
+            title: "Platoon",
+            rating: 7,
+        },
+        {
+            title: "The Terminator",
+            rating: 5.5,
+        },
+        {
+            title: "Into the Wild",
+            rating: 5.5,
+        },
+        {
+            title: "Groundhog Day",
+            rating: 5,
+        },
+        {
+            title: "The Exorcist",
+            rating: 8.5,
+        },
+        {
+            title: "The Incredibles",
+            rating: 7,
+        },
+        {
+            title: "Pirates of the Caribbean: The Curse of the Black Pearl",
+            rating: 6,
+        },
+        {
+            title: "Aladdin",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Iron Giant",
+            rating: 5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Primer",
+            rating: 8.5
+        },
+        {
+            title: "The Platform",
+            rating: 7
+        },
+        {
+            title: "Mandela Effect",
+            rating: 3
+        },
+        {
+            title: "Intersect",
+            rating: 2
+        },
+        {
+            title: "Waterworld",
+            rating: 5
+        },
+        {
+            title: "Mad Max",
+            rating: 2.5
+        },
+        {
+            title: "The Road Warrior",
+            rating: 7.5
+        },
+        {
+            title: "Nope",
+            rating: 4
+        },
+        {
+            title: "Get Out",
+            rating: 7
+        },
+        {
+            title: "Us",
+            rating: 5.5
+        },
+        {
+            title: "Ender's Game",
+            rating: 5.5
+        },
+        {
+            title: "Cowboys & Aliens",
+            rating: 3
+        },
+        {
+            title: "The Devil's Own",
+            rating: 6
+        },
+        {
+            title: "Indiana Jones and the Temple of Doom",
+            rating: 6,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Jerry Maguire",
+            rating: 7
+        },
+        {
+            title: "Top Gun",
+            rating: 8
+        },
+        {
+            title: "Jack Reacher",
+            rating: 5,
+        },
+        {
+            title: "Minority Report",
+            rating: 5.5
+        },
+        {
+            title: "Legend",
+            rating: 4,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Outsiders",
+            rating: 5
+        },
+        {
+            title: "The Mummy",
+            rating: 7.5
+        },
+        {
+            title: "Moon",
+            rating: 5
+        },
+        {
+            title: "Ex Machina",
+            rating: 6.5
+        },
+        {
+            title: "E.T. The Extra-Terrestrial",
+            rating: 6
+        },
+        {
+            title: "Ghostbusters",
+            rating: 5
+        },
+        {
+            title: "Ghostbusters II",
+            rating: 5
+        },
+        {
+            title: "Dark Skies",
+            rating: 6
+        },
+        {
+            title: "Where to Invade Next",
+            rating: 3.5
+        },
+        {
+            title: "Bowling for Columbine",
+            rating: 6
+        },
+        {
+            title: "Coherence",
+            rating: 7.5
+        },
+        {
+            title: "Cube (1997)",
+            rating: 5
+        },
+        {
+            title: "Cube²: Hypercube",
+            rating: 5
+        },
+        {
+            title: "Cube Zero",
+            rating: 5.5
+        },
+        {
+            title: "Monsieur Lazhar",
+            rating: 4,
+            notes: "I wrote a 100 page report on this movie for a film studies class in university."
+        },
+        {
+            title: "Napoleon Dynamite",
+            rating: 6,
+        },
+        {
+            title: "Harry Potter and the Chamber of Secrets",
+            rating: 5.5
+        },
+        {
+            title: "Harry Potter and the Prisoner of Azkaban",
+            rating: 4.5
+        },
+        {
+            title: "Harry Potter and the Goblet of Fire",
+            rating: 5.5
+        },
+        {
+            title: "Harry Potter and the Order of the Phoenix",
+            rating: 4.5
+        },
+        {
+            title: "Harry Potter and the Half-Blood Prince",
+            rating: 4
+        },
+        {
+            title: "Harry Potter and the Deathly Hallows: Part 1",
+            rating: 2
+        },
+        {
+            title: "Jackass: The Movie",
+            rating: 8
+        },
+        {
+            title: "Jackass Number Two",
+            rating: 8.5
+        },
+        {
+            title: "Jackass 2.5",
+            rating: 3
+        },
+        {
+            title: "Jackass 3D",
+            rating: 8
+        },
+        {
+            title: "Jackass 3.5",
+            rating: 2
+        },
+        {
+            title: "Jackass Forever",
+            rating: 6
+        },
+        {
+            title: "Jackass 4.5",
+            rating: 2
+        },
+        {
+            title: "Jackass Presents: Bad Grandpa",
+            rating: 1
+        },
+        {
+            title: "Avatar",
+            rating: 6
+        },
+        {
+            title: "The Amazing Spider-Man (2012)",
+            rating: 4
+        },
+        {
+            title: "Spider-Man (2002)",
+            rating: 5
+        },
+        {
+            title: "Spider-Man 2 (2004)",
+            rating: 4
+        },
+        {
+            title: "Spider-Man 3 (2007)",
+            rating: 4
+        },
+        {
+            title: "Iron Man",
+            rating: 7
+        },
+        {
+            title: "Iron Man 2",
+            rating: 4.5
+        },
+        {
+            title: "The Avengers",
+            rating: 7.5
+        },
+        {
+            title: "Thor",
+            rating: 5
+        },
+        {
+            title: "Captain America: The First Avenger",
+            rating: 5
+        },
+        {
+            title: "Ginger Snaps",
+            rating: 8.5
+        },
+        {
+            title: "Saw",
+            rating: 7
+        },
+        {
+            title: "Saw II",
+            rating: 5
+        },
+        {
+            title: "Akira",
+            rating: 9
+        },
+        {
+            title: "A Quiet Place",
+            rating: 4.5
+        },
+        {
+            title: "Dune (2021)",
+            rating: 5
+        },
+        {
+            title: "No Time to Die",
+            rating: 5
+        },
+        {
+            title: "Spectre",
+            rating: 5
+        },
+        {
+            title: "Cry Macho",
+            rating: 1
+        },
+        {
+            title: "Zoolander",
+            rating: 5
+        },
+        {
+            title: "Idiocracy",
+            rating: 5
+        },
+        {
+            title: "Click",
+            rating: 7.5
+        },
+        {
+            title: "Stillwater",
+            rating: 1.5
+        },
+        {
+            title: "August Underground",
+            rating: 8
+        },
+        {
+            title: "August Underground's Mordum",
+            rating: 3
+        },
+        {
+            title: "The House That Jack Built",
+            rating: 3.5
+        },
+        {
+            title: "Spy Kids",
+            rating: 4.5
+        },
+        {
+            title: "Spy Kids 3: Game Over",
+            rating: 3.5
+        },
+        {
+            title: "Infinite",
+            rating: 2.5
+        },
+        {
+            title: "Pig",
+            rating: 1.5
+        },
+        {
+            title: "Space Jam",
+            rating: 8
+        },
+        {
+            title: "The March of the Penguins",
+            rating: 5
+        },
+        {
+            title: "Tetsuo the Iron Man",
+            rating: 2,
+        },
+        {
+            title: "Irreversible",
+            rating: 2
+        },
+        {
+            title: "The Hitman's Bodyguard",
+            rating: 5
+        },
+        {
+            title: "The Pagemaster",
+            rating: 8
+        },
+        {
+            title: "Fargo",
+            rating: 8
+        },
+        {
+            title: "Train to Busan",
+            rating: 5
+        },
+        {
+            title: "A.I. Artificial Intelligence",
+            rating: 7
+        },
+        {
+            title: "The Island",
+            rating: 5.5,
+            notes: "I was a little kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "Office Space",
+            rating: 8
+        },
+        {
+            title: "The Book of Eli",
+            rating: 6,
+            notes: "I was a kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Game",
+            rating: 3.5,
+        },
+        {
+            title: "Inside Man",
+            rating: 8
+        },
+        {
+            title: "Trash Humpers",
+            rating: 1,
+            notes: "This is the worst movie I've ever seen, but I think that's the point."
+        },
+        {
+            title: "Alone in the Wilderness",
+            rating: 5,
+            notes: "Maybe not a movie? TV Show? Dunno"
+        },
+        {
+            title: "Wall Street",
+            rating: 4
+        },
+        {
+            title: "Jacob's Ladder (1990)",
+            rating: 4.5
+        },
+        {
+            title: "Godzilla (2014)",
+            rating: 3.5
+        },
+        {
+            title: "King Kong (2005)",
+            rating: 6
+        },
+        {
+            title: "Cool Hand Luke",
+            rating: 8.5
+        },
+        {
+            title: "The Curious Case of Benjamin Button",
+            rating: 5.5
+        },
+        {
+            title: "Drive",
+            rating: 9
+        },
+        {
+            title: "Zodiac",
+            rating: 8
+        },
+        {
+            title: "10 Cloverfield Lane",
+            rating: 6.5
+        },
+        {
+            title: "El Camino: A Breaking Bad Movie",
+            rating: 7.5
+        },
+        {
+            title: "The Running Man",
+            rating: 3,
+            notes: "Used to like this movie when younger, but just doesn't hold up anymore."
+        },
+        {
+            title: "The Last Mimzy",
+            rating: 7.5
+        },
+        {
+            title: "The Forgotten",
+            rating: 7.5
+        },
+        {
+            title: "John Wick",
+            rating: 6,
+        },
+        {
+            title: "John Wick: Chapter 2",
+            rating: 6
+        },
+        {
+            title: "John Wick: Chapter 3 - Parabellum",
+            rating: 6
+        },
+        {
+            title: "Resident Evil",
+            rating: 5,
+            notes: "I was a kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Count of Monte Cristo",
+            rating: 5
+        },
+        {
+            title: "Frequency",
+            rating: 5,
+            notes: "I was a kid when I watched this, should re-watch for a better rating now."
+        },
+        {
+            title: "The Imitation Game",
+            rating: 6
+        },
+        {
+            title: "Fire in the Sky",
+            rating: 8
+        },
+        {
+            title: "Signs",
+            rating: 8
+        },
+        {
+            title: "Looper",
+            rating: 5
+        },
+        {
+            title: "Scott Pilgrim vs. the World",
+            rating: 8.5
+        },
+        {
+            title: "Mid90s",
+            rating: 5
+        },
+        {
+            title: "Battle Royale",
+            rating: 8.5
+        },
+        {
+            title: "The Poughkeepsie Tapes",
+            rating: 2
+        },
+        {
+            title: "We Need to Talk About Kevin",
+            rating: 5.5
+        },
+        {
+            title: "Hairspray",
+            rating: 5.5
+        },
+        {
+            title: "Gattaca",
+            rating: 8
+        },
+        {
+            title: "Edward Scissorhands",
+            rating: 5
+        },
+        {
+            title: "Clerks",
+            rating: 6
+        },
+        {
+            title: "Animal Factory",
+            rating: 3.5
+        },
+        {
+            title: "American Me",
+            rating: 4.5
+        },
+        {
+            title: "Merry Christmas, Mr. Lawrence",
+            rating: 4.5
+        },
+        {
+            title: "Papillon (2017)",
+            rating: 6
+        },
+        {
+            title: "Sleepers",
+            rating: 5
+        },
+        {
+            title: "Innerspace",
+            rating: 5
+        },
+        {
+            title: "Jeepers Creepers",
+            rating: 8.5
+        },
+        {
+            title: "Bad Boy Bubby",
+            rating: 1.5
+        },
+        {
+            title: "Grotesque",
+            rating: 2.5
+        },
+        {
+            title: "Gummo",
+            rating: 8
+        },
+        {
+            title: "Enter the Void",
+            rating: 1.5
+        },
+        {
+            title: "Evangelion 1.0 You are (Not) Alone",
+            rating: 5.5
+        },
+        {
+            title: "Evangelion 2.0 You can (Not) Advance",
+            rating: 4.5
+        },
+        {
+            title: "Evangelion 3.0 You can (Not) Redo",
+            rating: 6
+        },
+        {
+            title: "The Place Promised in Our Early Days",
+            rating: 4
+        },
+        {
+            title: "The Martian",
+            rating: 7
+        },
+        {
+            title: "Weathering with you",
+            rating: 8
+        },
+        {
+            title: "The Garden of Words",
+            rating: 8
+        },
+        {
+            title: "Children who Chase Lost Voices",
+            rating: 5
+        },
+        {
+            title: "5 Centimeters per Second",
+            rating: 10
+        },
+        {
+            title: "The Invisible Man (2020)",
+            rating: 3
+        },
+        {
+            title: "Kiki's Delivery Service",
+            rating: 5.5
+        },
+        {
+            title: "Whisper of the Heart",
+            rating: 5
+        },
+        {
+            title: "The Nightmare Before Christmas",
+            rating: 8
+        },
+        {
+            title: "Watchmen",
+            rating: 5
+        },
+        {
+            title: "Predator",
+            rating: 5
+        },
+        {
+            title: "Man of Steel",
+            rating: 4
+        },
+        {
+            title: "Conan the Barbarian",
+            rating: 3
+        },
+        {
+            title: "The Fifth Element",
+            rating: 5
+        },
+        {
+            title: "The Princess Bride",
+            rating: 6.5
+        },
+        {
+            title: "Mulan",
+            rating: 5.5
+        },
+        {
+            title: "Airplane!",
+            rating: 5
+        },
+        {
+            title: "South Park: Bigger, Longer & Uncut",
+            rating: 9
+        },
+        {
+            title: "Team America: World Police",
+            rating: 6
+        },
+        {
+            title: "Crumb",
+            rating: 7.5
+        },
+        {
+            title: "Hitman Hart: Wrestling with Shadows",
+            rating: 4
+        },
+        {
+            title: "Darkon",
+            rating: 2
+        },
+        {
+            title: "Back to the Future Part II",
+            rating: 8.5
+        },
+        {
+            title: "Back to the Future Part III",
+            rating: 8.5
+        },
+        {
+            title: "The End of Evangelion",
+            rating: 9
+        },
+        {
+            title: "A Silent Voice",
+            rating: 8.5
+        },
+        {
+            title: "Cowboy Bebop: The Movie",
+            rating: 8.5
+        },
+        {
+            title: "Kingsglaive: Final Fantasy XV",
+            rating: 2
+        },
+        {
+            title: "Berserk: The Golden Age Arc I - The Egg of the King",
+            rating: 1.5
+        },
+        {
+            title: "Berserk: The Golden Age Arc II - The Battle for Doldrey",
+            rating: 1.5
+        },
+        {
+            title: "Berserk: The Golden Age Arc III - The Advent",
+            rating: 1.5
+        },
+        {
+            title: "Voices of a Distant Star",
+            rating: 3
+        },
+        {
+            title: "The Disappearance of Haruhi Suzumiya",
+            rating: 5
+        },
+        {
+            title: "Digimon: The Movie",
+            rating: 6
+        },
+        {
+            title: "Puella Magi Madoka Magica the Movie: Rebellion",
+            rating: 5
+        },
+        {
+            title: "The Last Descent",
+            rating: 3.5
+        },
+        {
+            title: "127 Hours",
+            rating: 5.5
+        },
+        {
+            title: "Speed",
+            rating: 5,
+            notes: "Been so long since I've seen this movie, probably needs a re-rating and a re-watch."
+        },
+        {
+            title: "The Grand Budapest Hotel",
+            rating: 4
+        },
+        {
+            title: "Grave Encounters",
+            rating: 5
+        },
+        {
+            title: "Grave Encounters 2",
+            rating: 7.5
+        },
+        {
+            title: "V/H/S",
+            rating: 5
+        },
+        {
+            title: "Midsommar",
+            rating: 5
+        },
+        {
+            title: "The Texas Chainsaw Massacre (1974)",
+            rating: 5
+        },
+        {
+            title: "Eraserhead",
+            rating: 2
+        },
+        {
+            title: "The Human Centipede",
+            rating: 5.5
+        },
+        {
+            title: "The Human Centipede 2 (Full Sequence)",
+            rating: 8.5
+        },
+        {
+            title: "The Human Centipede 3 (Final Sequence)",
+            rating: 2.5
+        },
+        {
+            title: "Salò, or the 120 Days of Sodom",
+            rating: 1
+        },
+        {
+            title: "A Serbian Film",
+            rating: 4
+        },
+        {
+            title: "Guinea Pig 1: Devil's Experiment",
+            rating: 1.5
+        },
+        {
+            title: "Slaughtered Vomit Dolls",
+            rating: 1
+        },
+        {
+            title: "Concrete",
+            rating: 2.5
+        },
+        {
+            title: "The Evil Dead (1981)",
+            rating: 4.5
+        },
+        {
+            title: "The Cabin in the Woods",
+            rating: 8.5
+        },
+        {
+            title: "Freedom Writers",
+            rating: 6
+        },
+        {
+            title: "Dogtooth",
+            rating: 2
+        },
+        {
+            title: "The Killing of a Sacred Deer",
+            rating: 1.5
+        },
+        {
+            title: "Martyrs (2008)",
+            rating: 7
+        },
+        {
+            title: "Sinister",
+            rating: 8
+        },
+        {
+            title: "Hostel",
+            rating: 6
+        },
+        {
+            title: "House of 1000 Corpses",
+            rating: 5.5
+        },
+        {
+            title: "The Devil's Rejects",
+            rating: 7
+        },
+        {
+            title: "Hellraiser",
+            rating: 4
+        },
+        {
+            title: "Funny Games (1997)",
+            rating: 4
+        },
+        {
+            title: "Fifty Shades of Grey",
+            rating: 4
+        },
+        {
+            title: "Vacancy",
+            rating: 4
+        },
+        {
+            title: "Would You Rather",
+            rating: 4
+        },
+        {
+            title: "Deliverance",
+            rating: 3
+        },
+        {
+            title: "Dread",
+            rating: 4
+        },
+        {
+            title: "The Revenant",
+            rating: 5.5
+        },
+        {
+            title: "Titanic",
+            rating: 3.5
+        },
+        {
+            title: "A Nightmare on Elm Street",
+            rating: 6
+        },
+        {
+            title: "Open Water",
+            rating: 1
+        },
+        {
+            title: "The Mist",
+            rating: 6.5
+        },
+        {
+            title: "The Ring",
+            rating: 6
+        },
+        {
+            title: "Oculus",
+            rating: 3
+        },
+        {
+            title: "1408",
+            rating: 5
+        },
+        {
+            title: "Pontypool",
+            rating: 3.5
+        },
+        {
+            title: "Tremors",
+            rating: 5.5
+        },
+        {
+            title: "Creep",
+            rating: 5
+        },
+        {
+            title: "Paranormal Activity",
+            rating: 7
+        },
+        {
+            title: "Paranormal Activity 2",
+            rating: 7
+        },
+        {
+            title: "Paranormal Activity 3",
+            rating: 7
+        },
+        {
+            title: "Paranormal Activity: The Ghost Dimension",
+            rating: 7
+        },
+        {
+            title: "Paranormal Activity: The Marked Ones",
+            rating: 7
+        },
+        {
+            title: "The Conjuring",
+            rating: 5
+        },
+        {
+            title: "Poltergeist",
+            rating: 6
+        },
+        {
+            title: "District 9",
+            rating: 6
+        },
+        {
+            title: "The Descent",
+            rating: 6.5
+        },
+        {
+            title: "Jumanji",
+            rating: 5
+        },
+        {
+            title: "Osmosis Jones",
+            rating: 6.5
+        },
+        {
+            title: "Holes",
+            rating: 6.5
+        },
+        {
+            title: "The Fly (1986)",
+            rating: 6
+        },
+        {
+            title: "Honey, I Shrunk the Kids",
+            rating: 5
+        },
+        {
+            title: "Death Wish",
+            rating: 5
+        },
+        {
+            title: "Doctor Sleep",
+            rating: 5
+        },
+        {
+            title: "The Outlaw Josey Wales",
+            rating: 8
+        },
+        {
+            title: "Mr. Deeds",
+            rating: 5
+        },
+        {
+            title: "23",
+            rating: 5.5
+        },
+        {
+            title: "The Invitation",
+            rating: 2
+        },
+        {
+            title: "1922",
+            rating: 5.5
+        },
+        {
+            title: "Geralds's Game",
+            rating: 1
+        },
+        {
+            title: "Dawn of the Dead",
+            rating: 1.5
+        },
+        {
+            title: "The Endless",
+            rating: 4
+        },
+        {
+            title: "Castaway",
+            rating: 7
+        },
+        {
+            title: "Sully",
+            rating: 5
+        },
+        {
+            title: "Flight",
+            rating: 5
+        },
+        {
+            title: "Training Day",
+            rating: 7
+        },
+        {
+            title: "Snowpiecer",
+            rating: 4
+        },
+        {
+            title: "Shooter",
+            rating: 7
+        },
+        {
+            title: "Grease",
+            rating: 8
+        },
+        {
+            title: "Starman",
+            rating: 6.5
+        },
+        {
+            title: "Walk the Line",
+            rating: 5
+        },
+        {
+            title: "Green Room",
+            rating: 1
+        },
+        {
+            title: "The Mask",
+            rating: 5
+        },
+        {
+            title: "It (2017)",
+            rating: 6
+        },
+        {
+            title: "It Chapter Two",
+            rating: 2
+        },
+        {
+            title: "Footloose",
+            rating: 5
+        },
+        {
+            title: "Escape from Alcatraz",
+            rating: 5
+        },
+        {
+            title: "Escape from New York",
+            rating: 5
+        },
+        {
+            title: "The Witch",
+            rating: 8
+        },
+        {
+            title: "Rosemary's Baby",
+            rating: 4.5
+        },
+        {
+            title: "Hereditary",
+            rating: 3.5
+        },
+        {
+            title: "The Lighthouse",
+            rating: 4
+        },
+        {
+            title: "The Day After Tomorrow",
+            rating: 4.5
+        },
+        {
+            title: "The Core",
+            rating: 6
+        },
+        {
+            title: "Apollo 13",
+            rating: 6.5
+        },
+        {
+            title: "Armageddon",
+            rating: 5
+        },
+        {
+            title: "The Babadook",
+            rating: 8
+        },
+        {
+            title: "The Longest Yard (1974)",
+            rating: 6
+        },
+        {
+            title: "The Longest Yard (2005)",
+            rating: 6
+        },
+        {
+            title: "Total Recall (2012)",
+            rating: 3.5
+        },
+        {
+            title: "Terminator Salvation",
+            rating: 1
+        },
+        {
+            title: "Cloverfield",
+            rating: 7
+        },
+        {
+            title: "War of the Worlds (2005)",
+            rating: 6.5
+        },
+        {
+            title: "Hancock",
+            rating: 5
+        },
+        {
+            title: "Men in Black",
+            rating: 7.5
+        },
+        {
+            title: "7 Years in Tibet",
+            rating: 5
+        },
+        {
+            title: "Legends of the Fall",
+            rating: 7
+        },
+        {
+            title: "The Untouchables",
+            rating: 4.5
+        },
+        {
+            title: "Midnight Express",
+            rating: 7
+        },
+        {
+            title: "Along Came a Spider",
+            rating: 4
+        },
+        {
+            title: "12 Monkeys",
+            rating: 7.5
+        },
+        {
+            title: "Ratatouille",
+            rating: 5.5
+        },
+        {
+            title: "Saturday Night Fever",
+            rating: 4.5
+        },
+        {
+            title: "Willy Wonka & the Chocolate Factory (1971)",
+            rating: 6
+        },
+        {
+            title: "The Terminal",
+            rating: 7
+        },
+        {
+            title: "Molly's Game",
+            rating: 6
+        },
+        {
+            title: "The Social Network",
+            rating: 7
+        },
+        {
+            title: "A Christmas Story",
+            rating: 6.5
+        },
+        {
+            title: "Gremlins",
+            rating: 5
+        },
+        {
+            title: "Gremlins 2: The New Batch",
+            rating: 4.5
+        },
+        {
+            title: "Beetlejuice",
+            rating: 7.5
+        },
+        {
+            title: "Being John Malkovich",
+            rating: 4.5
+        },
+        {
+            title: "Rounders",
+            rating: 5
+        },
+        {
+            title: "21",
+            rating: 6.5
+        },
+        {
+            title: "My Favourite Martian",
+            rating: 5
+        },
+        {
+            title: "Flubber",
+            rating: 4
+        },
+        {
+            title: "3:10 to Yuma",
+            rating: 5.5
+        },
+        {
+            title: "True Grit (2010)",
+            rating: 6
+        },
+        {
+            title: "Vice",
+            rating: 4
+        },
+        {
+            title: "Hot Tub Time Machine",
+            rating: 3.5
+        },
+        {
+            title: "Happy Gilmore",
+            rating: 6
+        },
+        {
+            title: "Uncut Gems",
+            rating: 7
+        },
+        {
+            title: "Pursuit of Happyness",
+            rating: 5.5
+        },
+        {
+            title: "Superbad",
+            rating: 8.5
+        },
+        {
+            title: "Juno",
+            rating: 6
+        },
+        {
+            title: "The is the End",
+            rating: 6.5
+        },
+        {
+            title: "Pineapple Express",
+            rating: 5
+        },
+        {
+            title: "Moneyball",
+            rating: 8.5
+        },
+        {
+            title: "The 40 Year Old Virgin",
+            rating: 5.5
+        },
+        {
+            title: "Zack and Miri Make a Porno",
+            rating: 4.5
+        },
+        {
+            title: "Waiting...",
+            rating: 3.5
+        },
+        {
+            title: "Employee of the Month",
+            rating: 4
+        },
+        {
+            title: "Deadpool",
+            rating: 6
+        },
+        {
+            title: "Deadpool 2",
+            rating: 5.5
+        },
+        {
+            title: "Creepshow",
+            rating: 2.5
+        },
+        {
+            title: "The Fourth Kind",
+            rating: 3
+        },
+        {
+            title: "Close Encounters of the Third Kind",
+            rating: 6.5
+        },
+        {
+            title: "The Last Exorcism",
+            rating: 6.5
+        },
+        {
+            title: "Dreamcatcher",
+            rating: 5
+        },
+        {
+            title: "Mr. 3000",
+            rating: 5
+        },
+        {
+            title: "The X-Files: I Want to Believe",
+            rating: 5
+        },
+        {
+            title: "Wargames",
+            rating: 5.5
+        },
+        {
+            title: "The Last Starfighter",
+            rating: 6
+        },
+        {
+            title: "Soylent Green (1973)",
+            rating: 4.5
+        },
+        {
+            title: "Pleasantville",
+            rating: 5
+        },
+        {
+            title: "Bubble Boy",
+            rating: 5.5
+        },
+        {
+            title: "Talladega Nights: The Ballad of Ricky Bobby",
+            rating: 7
+        },
+        {
+            title: "Crash",
+            rating: 5
+        },
+        {
+            title: "Blast from the Past",
+            rating: 4.5
+        },
+        {
+            title: "Tron (1982)",
+            rating: 5
+        },
+        {
+            title: "The Hills have Eyes (1977)",
+            rating: 4
+        },
+        {
+            title: "The Hills Have Eyes (2006)",
+            rating: 7
+        },
+        {
+            title: "Identity",
+            rating: 6
+        },
+        {
+            title: "Jeepers Creepers 2",
+            rating: 4
+        },
+        {
+            title: "Jeepers Creepers 3",
+            rating: 2
+        },
+        {
+            title: "The Black Hole",
+            rating: 2
+        },
+        {
+            title: "Demolition Man",
+            rating: 5
+        },
+        {
+            title: "A Man Apart",
+            rating: 5
+        },
+        {
+            title: "8 Mile",
+            rating: 8.5
+        },
+        {
+            title: "Limitless",
+            rating: 7.5
+        },
+        {
+            title: "City Slickers",
+            rating: 6.5
+        },
+        {
+            title: "Raising Arizona",
+            rating: 6
+        },
+        {
+            title: "Planet of the Apes",
+            rating: 6
+        },
+        {
+            title: "Falling Down",
+            rating: 6.5
+        },
+        {
+            title: "The Ninth Gate",
+            rating: 5
+        },
+        {
+            title: "Enemy at the Gates",
+            rating: 6
+        },
+        {
+            title: "The Stanford Prison Experiment",
+            rating: 5.5
+        },
+        {
+            title: "The Butterfly Effect",
+            rating: 6.5
+        },
+        {
+            title: "The Peanut Butter Falcon",
+            rating: 6
+        },
+        {
+            title: "Magic Mike",
+            rating: 5.5
+        },
+        {
+            title: "Death Proof",
+            rating: 4.5
+        },
+        {
+            title: "21 Jump Street",
+            rating: 6.5
+        },
+        {
+            title: "22 Jump Street",
+            rating: 6.5
+        },
+        {
+            title: "Planet Terror",
+            rating: 3.5
+        },
+        {
+            title: "Donnie Darko",
+            rating: 7
+        },
+        {
+            title: "I Am Legend (2007)",
+            rating: 4.5
+        },
+        {
+            title: "Independence Day",
+            rating: 5
+        },
+        {
+            title: "Nightcrawler",
+            rating: 7
+        },
+        {
+            title: "Jarhead",
+            rating: 7
+        },
+        {
+            title: "The Greatest Game Ever Played",
+            rating: 5
+        },
+        {
+            title: "Pawn Sacrifice",
+            rating: 7
+        },
+        {
+            title: "Searching for Bobby Fischer",
+            rating: 3
+        },
+        {
+            title: "The Perfect Storm",
+            rating: 5.5
+        },
+        {
+            title: "The Hunger Games",
+            rating: 6.5
+        },
+        {
+            title: "The Hunger Games: Mockingjay - Part 1",
+            rating: 6.5
+        },
+        {
+            title: "Starship Troopers",
+            rating: 7
+        },
+        {
+            title: "Zombieland",
+            rating: 4
+        },
+        {
+            title: "Dodgeball",
+            rating: 7.5
+        },
+        {
+            title: "Wedding Crashers",
+            rating: 6.5
+        },
+        {
+            title: "500 Days of Summer",
+            rating: 6.5
+        },
+        {
+            title: "Shrek",
+            rating: 7.5
+        },
+        {
+            title: "Shrek 2",
+            rating: 4
+        },
+        {
+            title: "Shrek the Third",
+            rating: 2
+        },
+        {
+            title: "Fear and Loathing in Las Vegas",
+            rating: 4.5
+        },
+        {
+            title: "The Devil All the Time",
+            rating: 5.5
+        },
+        {
+            title: "The Boondock Saints",
+            rating: 6
+        },
+        {
+            title: "Friday the 13th",
+            rating: 5
+        },
+        {
+            title: "The Irishman",
+            rating: 6
+        },
+        {
+            title: "Once Upon a Time in Hollywood",
+            rating: 5.5
+        },
+        {
+            title: "The Godfather Part III",
+            rating: 4
+        },
+        {
+            title: "Gangs of New York",
+            rating: 7
+        },
+        {
+            title: "The Aviator",
+            rating: 4
+        },
+        {
+            title: "The Village",
+            rating: 6
+        },
+        {
+            title: "The Wickerman",
+            rating: 1.5
+        },
+        {
+            title: "Split",
+            rating: 5
+        },
+        {
+            title: "Flight of the Phoenix",
+            rating: 6.5
+        },
+        {
+            title: "Sahara",
+            rating: 5.5
+        },
+        {
+            title: "Home Alone",
+            rating: 5
+        },
+        {
+            title: "Charlie and the Chocolate Factory (2005)",
+            rating: 3.5
+        },
+        {
+            title: "The Aviator",
+            rating: 4.5,
+            notes: "Honestly don't remember much about this movie."
+        },
+        {
+            title: "Devil",
+            rating: 4
+        },
+        {
+            title: "Mama",
+            rating: 3.5
+        },
+        {
+            title: "The Woman in Black",
+            rating: 1.5
+        },
+        {
+            title: "Shark Boy & Lava Girl",
+            rating: 2.5
+        },
+        {
+            title: "Spy Kids 2",
+            rating: 3
+        },
+        {
+            title: "Insidious",
+            rating: 6
+        },
+        {
+            title: "Silent Hill",
+            rating: 8,
+            notes: "One of my favourite looking movies."
+        },
+        {
+            title: "Silent Hill Revelations 3D",
+            rating: 2.5
+        },
+        {
+            title: "Final Destination",
+            rating: 5
+        },
+        {
+            title: "Final Destination 2",
+            rating: 4
+        },
+        {
+            title: "Final Destination 3",
+            rating: 5
+        },
+        {
+            title: "Saw III",
+            rating: 5,
+            notes: "Don't remember too much, all the Saws started blending after Saw II"
+        },
+        {
+            title: "Saw IV",
+            rating: 5,
+            notes: "Don't remember too much, all the Saws started blending after Saw II"
+        },
+        {
+            title: "Saw V",
+            rating: 5,
+            notes: "Don't remember too much, all the Saws started blending after Saw II"
+        },
+        {
+            title: "Saw VI",
+            rating: 5,
+            notes: "Don't remember too much, all the Saws started blending after Saw II"
+        },
+        {
+            title: "American Psycho",
+            rating: 7
+        },
+        {
+            title: "Pirates of the Caribbean: Dead Man's Chest",
+            rating: 5
+        },
+        {
+            title: "Pirates of the Caribbean: At World's End",
+            rating: 5
+        },
+        {
+            title: "Taken",
+            rating: 6.5
+        },
+        {
+            title: "Taken 2",
+            rating: 5
+        },
+        {
+            title: "Taken 3",
+            rating: 5
+        },
+        {
+            title: "Casino Royale",
+            rating: 7
+        },
+        {
+            title: "I,Robot",
+            rating: 5
+        },
+        {
+            title: "X-Men (2000)",
+            rating: 4
+        },
+        {
+            title: "Quantum of Solace",
+            rating: 6
+        },
+        {
+            title: "The Incredible Hulk",
+            rating: 3.5
+        },
+        {
+            title: "The Bourne Identity",
+            rating: 7.5
+        },
+        {
+            title: "The Bourne Supremacy",
+            rating: 6.5
+        },
+        {
+            title: "The Bourne Ultimatum",
+            rating: 6.5
+        },
+        {
+            title: "The Bourne Legacy",
+            rating: 5
+        },
+        {
+            title: "Jason Bourne",
+            rating: 5.5
+        },
+        {
+            title: "Ocean's Eleven (2001)",
+            rating: 8
+        },
+        {
+            title: "Ocean's Twelve",
+            rating: 5
+        },
+        {
+            title: "Ocean's Thirteen",
+            rating: 4.5
+        },
+        {
+            title: "Toy Story 2",
+            rating: 5.5
+        },
+        {
+            title: "Toy Story 4",
+            rating: 8.5
+        },
+        {
+            title: "Gold Finger",
+            rating: 4
+        },
+        {
+            title: "Die Hard 2",
+            rating: 5,
+            notes: "Don't remember too much."
+        },
+        {
+            title: "Die Hard with a Vengeance",
+            rating: 5.5
+        },
+        {
+            title: "Live Free or Die Hard",
+            rating: 5.5
+        },
+        {
+            title: "A Good Day to Die Hard",
+            rating: 5.5
+        },
+        {
+            title: "First Blood",
+            rating: 8
+        },
+        {
+            title: "Rambo: First Blood Part II",
+            rating: 4
+        },
+        {
+            title: "Rambo III",
+            rating: 3
+        },
+        {
+            title: "Rambo",
+            rating: 2
+        },
+        {
+            title: "Rambo: Last Blood",
+            rating: 5
+        },
+        {
+            title: "Rocky II",
+            rating: 9
+        },
+        {
+            title: "Rocky III",
+            rating: 5.5
+        },
+        {
+            title: "Rocky IV",
+            rating: 6
+        },
+        {
+            title: "Rocky V",
+            rating: 2
+        },
+        {
+            title: "Rocky Balboa",
+            rating: 6
+        },
+        {
+            title: "Creed",
+            rating: 5
+        },
+        {
+            title: "The Expendables",
+            rating: 5.5
+        },
+        {
+            title: "The Expendables 2",
+            rating: 4.5
+        },
+        {
+            title: "The Expendables 3",
+            rating: 4.5
+        },
+        {
+            title: "Escape Plan",
+            rating: 4
+        },
+        {
+            title: "Crank",
+            rating: 6
+        },
+        {
+            title: "Shoot em up",
+            rating: 6
+        },
+        {
+            title: "The Big Short",
+            rating: 8.5
+        },
+        {
+            title: "Prometheus",
+            rating: 5
+        },
+        {
+            title: "Terminator 3: Rise of the Machines",
+            rating: 4.5
+        },
+        {
+            title: "Alien vs. Predator",
+            rating: 3.5
+        },
+        {
+            title: "Paul",
+            rating: 4
+        },
+        {
+            title: "Star Trek (2009)",
+            rating: 7
+        },
+        {
+            title: "Star Trek Into Darkness",
+            rating: 4.5
+        },
+        {
+            title: "Star Trek: The Motion Picture",
+            rating: 3
+        },
+        {
+            title: "Straight Outta Compton",
+            rating: 6.5
+        },
+        {
+            title: "Field of Dreams",
+            rating: 6
+        },
+        {
+            title: "The Founder",
+            rating: 5.5
+        },
+        {
+            title: "Super 8",
+            rating: 5
+        },
+        {
+            title: "Step Brothers",
+            rating: 5
+        },
+        {
+            title: "Secret Window",
+            rating: 4
+        },
+        {
+            title: "The Skeleton Key",
+            rating: 5
+        },
+        {
+            title: "Snowden",
+            rating: 6.5
+        },
+        {
+            title: "Jobs",
+            rating: 3.5,
+        },
+        {
+            title: "Steve Jobs",
+            rating: 4.5
+        },
+        {
+            title: "The Walk",
+            rating: 4.5
+        },
+        {
+            title: "Thank you for Smoking",
+            rating: 5.5
+        },
+        {
+            title: "Stranger than Fiction",
+            rating: 6.5
+        },
+        {
+            title: "Little Miss Sunshine",
+            rating: 7
+        },
+        {
+            title: "The Breakfast Club",
+            rating: 7
+        },
+        {
+            title: "Silver Lining's Playbook",
+            rating: 5.5
+        },
+        {
+            title: "Mean Girls",
+            rating: 9
+        },
+        {
+            title: "Ferris Bueller's Day Off",
+            rating: 5
+        },
+        {
+            title: "Kick-Ass",
+            rating: 6
+        },
+        {
+            title: "Kick-Ass 2",
+            rating: 5
+        },
+        {
+            title: "The Hangover",
+            rating: 5
+        },
+        {
+            title: "Hot Fuzz",
+            rating: 6.5
+        },
+        {
+            title: "Ted",
+            rating: 5
+        },
+        {
+            title: "Tropic Thunder",
+            rating: 6.5
+        },
+        {
+            title: "Baby Driver",
+            rating: 6
+        },
+        {
+            title: "The King of Kong: A Fistful of Quarters",
+            rating: 6.5
+        },
+        {
+            title: "Fast Food Nation",
+            rating: 5
+        },
+        {
+            title: "Super Size Me",
+            rating: 2
+        },
+        {
+            title: "Fahrenheit 9/11",
+            rating: 5
+        },
+        {
+            title: "Sicko",
+            rating: 6.5
+        },
+        {
+            title: "An Inconvenient Truth",
+            rating: 3
+        },
+        {
+            title: "Exit Through the Gift Shop",
+            rating: 3
+        },
+        {
+            title: "Trailer Park Boys: The Movie",
+            rating: 6.5
+        },
+        {
+            title: "Mac & Devin Go to High School",
+            rating: 3
+        },
+        {
+            title: "The Benchwarmers",
+            rating: 5
+        },
+        {
+            title: "Spiderhead",
+            rating: 4
+        },
+        {
+            title: "Pitch Black",
+            rating: 6
+        },
+        {
+            title: "The Chronicles of Riddick",
+            rating: 3
+        },
+        {
+            title: "Riddick",
+            rating: 7
+        },
+        {
+            title: "Four Brothers",
+            rating: 4.5
+        },
+        {
+            title: "Friday",
+            rating: 7
+        },
+        {
+            title: "Next Friday",
+            rating: 2
+        },
+        {
+            title: "Rattlesnake",
+            rating: 1
+        },
+        {
+            title: "Initial D",
+            rating: 6
+        },
+        {
+            title: "The Ballad of Buster Scruggs",
+            rating: 5.5
+        },
+        {
+            title: "Shot Caller",
+            rating: 7
+        },
+        {
+            title: "Don't Look Up",
+            rating: 2
+        },
+        {
+            title: "Undercover Brother",
+            rating: 6
+        },
+        {
+            title: "Austin Powers: International Man of Mystery",
+            rating: 6
+        },
+        {
+            title: "Austin Powers: The Spy Who Shagged Me",
+            rating: 6
+        },
+        {
+            title: "Austin Powers in Goldmember",
+            rating: 6.5
+        },
+        {
+            title: "The Hitman's Wife's Bodyguard",
+            rating: 5
+        },
+        {
+            title: "The Rainmaker",
+            rating: 5
+        },
+        {
+            title: "Meet the Parents",
+            rating: 6
+        },
+        {
+            title: "Meet the Fockers",
+            rating: 5.5
+        },
+        {
+            title: "Little Fockers",
+            rating: 2
+        },
+        {
+            title: "In the Shadow of the Moon",
+            rating: 7
+        },
+        {
+            title: "Donnie Brasco",
+            rating: 5
+        },
+        {
+            title: "300",
+            rating: 7
+        },
+        {
+            title: "Clash of the Titans",
+            rating: 4
+        },
+        {
+            title: "300: Rise of an Empire",
+            rating: 1
+        },
+        {
+            title: "The Notebook",
+            rating: 5.5
+        },
+        {
+            title: "Over the Hedge",
+            rating: 4
+        },
+        {
+            title: "The Good Shepherd",
+            rating: 4
+        },
+        {
+            title: "The Wind Rises",
+            rating: 7.5
+        },
+        {
+            title: "The Informer",
+            rating: 5
+        },
+        {
+            title: "The Mule",
+            rating: 2
+        },
+        {
+            title: "Scary Movie",
+            rating: 5
+        },
+        {
+            title: "Scary Movie 2",
+            rating: 5
+        },
+        {
+            title: "Scary Movie 3",
+            rating: 5
+        },
+        {
+            title: "Scary Movie 4",
+            rating: 5.5
+        },
+        {
+            title: "Scary Movie V",
+            rating: 4.5
+        },
+        {
+            title: "American Pie",
+            rating: 5
+        },
+        {
+            title: "American Pie 2",
+            rating: 4
+        },
+        {
+            title: "The Simpsons Movie",
+            rating: 7
+        },
+        {
+            title: "American Pie Presents: Band Camp",
+            rating: 5
+        },
+        {
+            title: "Harold & Kumar Go to White Castle",
+            rating: 6
+        },
+        {
+            title: "Harold & Kumar Escape from Guantanamo Bay",
+            rating: 6
+        },
+        {
+            title: "Accepted",
+            rating: 4.5
+        },
+        {
+            title: "Role Models",
+            rating: 4
+        },
+        {
+            title: "Dude, Where's My Car?",
+            rating: 6
+        },
+        {
+            title: "Project X",
+            rating: 3
+        },
+        {
+            title: "The Interview",
+            rating: 5.5
+        },
+        {
+            title: "RV",
+            rating: 4
+        },
+        {
+            title: "We're the Millers",
+            rating: 3.5
+        },
+        {
+            title: "10,000 BC",
+            rating: 2.5
+        },
+        {
+            title: "Apocalypto",
+            rating: 7
+        },
+        {
+            title: "Fantastic Four (2005)",
+            rating: 2
+        },
+        {
+            title: "The Blair Witch Project",
+            rating: 6
+        },
+        {
+            title: "Apollo 18",
+            rating: 2
+        },
+        {
+            title: "Goosebumps",
+            rating: 5
+        },
+        {
+            title: "A Star Is Born",
+            rating: 3
+        },
+        {
+            title: "Matilda",
+            rating: 6
+        },
+        {
+            title: "Prospect",
+            rating: 3.5
+        },
+        {
+            title: "The Boy Who Harnessed the Wind",
+            rating: 1
+        },
+        {
+            title: "Concussion",
+            rating: 5
+        },
+        {
+            title: "Seven Pounds",
+            rating: 5,
+            notes: "Don't Remember very well."
+        },
+        {
+            title: "Death House",
+            rating: 1
+        },
+        {
+            title: "The Natural",
+            rating: 4
+        },
+        {
+            title: "The Lincoln Lawyer",
+            rating: 5
+        },
+        {
+            title: "The Girl with the Dragon Tattoo",
+            rating: 6,
+            notes: "I need to rewatch."
+        },
+        {
+            title: "The Recall",
+            rating: 1.5
+        },
+        {
+            title: "King of New York",
+            rating: 5
+        },
+        {
+            title: "The King of Staten Island",
+            rating: 5.5
+        },
+        {
+            title: "Knocked Up",
+            rating: 6
+        },
+        {
+            title: "Borat",
+            rating: 4
+        },
+        {
+            title: "Borat Subsequent Moviefilm",
+            rating: 4.5
+        },
+        {
+            title: "Tenet",
+            rating: 6.5
+        },
+        {
+            title: "Spenser Confidential",
+            rating: 5
+        },
+        {
+            title: "A Series of Unfortunate Events (2004)",
+            rating: 6
+        },
+        {
+            title: "A Christmas Carol (2009)",
+            rating: 3
+        },
+        {
+            title: "The Polar Express",
+            rating: 5
+        },
+        {
+            title: "Girl on the Third Floor",
+            rating: 3
+        },
+        {
+            title: "American Made",
+            rating: 4
+        },
+        {
+            title: "Coach Carter",
+            rating: 5
+        },
+        {
+            title: "Monster House",
+            rating: 4.5
+        },
+        {
+            title: "How the Grinch Stole Christmas",
+            rating: 3
+        },
+        {
+            title: "Night at the Museum",
+            rating: 5
+        },
+        {
+            title: "The Santa Clause",
+            rating: 4.5
+        },
+        {
+            title: "Bruce Almighty",
+            rating: 6.5
+        },
+        {
+            title: "Evan Almighty",
+            rating: 4
+        },
+        {
+            title: "Horton Hears a Who!",
+            rating: 2.5
+        },
+        {
+            title: "The Cat in the Hat",
+            rating: 2.5
+        },
+        {
+            title: "Robots",
+            rating: 5
+        },
+        {
+            title: "Ice Age",
+            rating: 5
+        },
+        {
+            title: "Shark Tale",
+            rating: 6
+        },
+        {
+            title: "Happy Feet",
+            rating: 4
+        },
+        {
+            title: "The Karate Kid (2010)",
+            rating: 2
+        },
+        {
+            title: "The Karate Kid (1984)",
+            rating: 6
+        },
+        {
+            title: "The Goonies",
+            rating: 6
+        },
+        {
+            title: "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
+            rating: 5
+        },
+        {
+            title: "Alice in Wonderland (2010)",
+            rating: 4
+        },
+        {
+            title: "Resident Evil: Damnation",
+            rating: 2,
+            notes: "Might need to rewatch this, just remember it being really bad."
+        },
+        {
+            title: "#Unfit: The Psychology of Donald Trump",
+            rating: 2
+        },
+        {
+            title: "Gacy",
+            rating: 2.5
+        },
+        {
+            title: "Dark Encounter",
+            rating: 2
+        },
+        {
+            title: "House of Purgatory",
+            rating: 1
+        },
+        {
+            title: "A Beautiful Day in the Neighborhood",
+            rating: 5
+        },
+        {
+            title: "Cop Land",
+            rating: 5
+        },
+        {
+            title: "The Fighter",
+            rating: 5
+        },
+        {
+            title: "The Vanishing",
+            rating: 5
+        },
+        {
+            title: "Brokeback Mountain",
+            rating: 8.5
+        },
+        {
+            title: "You Were Never Really Here",
+            rating: 4.5
+        },
+        {
+            title: "Slumdog Millionaire",
+            rating: 8
+        },
+        {
+            title: "Constantine",
+            rating: 6
+        },
+        {
+            title: "Voyeur",
+            rating: 3
+        },
+        {
+            title: "Assimilate",
+            rating: 4,
+            notes: "Don't remember too much."
+        },
+        {
+            title: "Spider-Man: Into the Spider-Verse",
+            rating: 6
+        },
+        {
+            title: "The Mothman Prophecies",
+            rating: 5
+        },
+        {
+            title: "Big Hero 6",
+            rating: 6
+        },
+        {
+            title: "Boyz n the Hood",
+            rating: 7.5
+        },
+        {
+            title: "Notoritous",
+            rating: 6.5
+        },
+        {
+            title: "The Highwaymen",
+            rating: 3.5
+        },
+        {
+            title: "The Disaster Artist",
+            rating: 6
+        },
+        {
+            title: "Fences",
+            rating: 5,
+            notes: "Don't remember too much."
+        },
+        {
+            title: "The SpongeBob SquarePants Movie (2004)",
+            rating: 6.5
+        },
+        {
+            title: "Jurassic World",
+            rating: 5
+        },
+        {
+            title: "Mean Streets",
+            rating: 5
+        },
+        {
+            title: "Fury",
+            rating: 6
+        },
+        {
+            title: "AlphaGo",
+            rating: 6.5
+        },
+        {
+            title: "History of the Eagles",
+            rating: 5
+        },
+        {
+            title: "Death Note",
+            rating: 3
+        },
+        {
+            title: "Magnus",
+            rating: 5
+        },
+        {
+            title: "Hostage to the Devil",
+            rating: 5,
+            notes: "Don't remember too much. Should re-watch."
+        },
+        {
+            title: "Little Witch Academia",
+            rating: 5
+        },
+        {
+            title: "MASH",
+            rating: 5,
+            notes: "I know the series well, but barely remember the movie."
+        },
+        {
+            title: "Lilo & Stitch",
+            rating: 5
+        },
+        {
+            title: "Transformers",
+            rating: 6
+        },
+        {
+            title: "Transformers: Revenge of the Fallen",
+            rating: 5
+        },
+        {
+            title: "Transformers: Dark of the Moon",
+            rating: 5
+        },
+        {
+            title: "Transformers: Age of Extinction",
+            rating: 5
+        },
+        {
+            title: "Mr Bean's Holiday",
+            rating: 5
+        },
+        {
+            title: "Terminator Genisys",
+            rating: 5
+        },
+        {
+            title: "Scooby-Doo",
+            rating: 5.5
+        },
+        {
+            title: "Pumping Iron",
+            rating: 5
+        },
+        {
+            title: "The Land Before Time",
+            rating: 5.5
+        },
+        {
+            title: "Indie Game: The Movie",
+            rating: 4
+        },
+        {
+            title: "Life of Pi",
+            rating: 7.5
+        },
+        {
+            title: "Kingsman: The Secret Service",
+            rating: 4.5
+        },
+        {
+            title: "TPB AFK: The Pirate Bay Away from Keyboard",
+            rating: 5.5
+        },
+        {
+            title: "Back in Time",
+            rating: 5
+        },
+        {
+            title: "Pirates of Silicon Valley",
+            rating: 5.5
+        },
+        {
+            title: "Beasts of No Nation",
+            rating: 6
+        },
+        {
+            title: "SMOSH: The Movie",
+            rating: 2
+        },
+        {
+            title: "Pacific Rim",
+            rating: 8
+        },
+        {
+            title: "Hot Girls Wanted",
+            rating: 4
+        },
+        {
+            title: "Kung Pow: Enter the Fist",
+            rating: 5
+        },
+        {
+            title: "The Raid: Redemption",
+            rating: 7.5
+        },
+        {
+            title: "Shaolin Soccer",
+            rating: 6
+        },
+        {
+            title: "The Kingdom of Dreams and Madness",
+            rating: 5.5
+        },
+        {
+            title: "End of Watch",
+            rating: 5
+        },
+        {
+            title: "Swearnet: The Movie",
+            rating: 1.5
+        },
+        {
+            title: "ATM",
+            rating: 1
+        },
+        {
+            title: "The Sacrament",
+            rating: 3
+        },
+        {
+            title: "We Steal Secrets: The Story of WikiLeaks",
+            rating: 5
+        },
+        {
+            title: "Web Junkie",
+            rating: 4
+        },
+        {
+            title: "Resident Evil: Apocalypse",
+            rating: 5.5
+        },
+        {
+            title: "Resident Evil: Extinction",
+            rating: 4
+        },
+        {
+            title: "Miracle on 34th Street",
+            rating: 5.5
+        },
+        {
+            title: "Cocaine Cowboys",
+            rating: 5
+        },
+        {
+            title: "Cocaine Cowboys 2",
+            rating: 5
+        },
+        {
+            title: "Crips and Bloods: Made in America",
+            rating: 5
+        },
+        {
+            title: "Video Games: The Movie",
+            rating: 4
+        },
+        {
+            title: "Knockaround Guys",
+            rating: 7
+        },
+        {
+            title: "The Truth About Webcam Girls",
+            rating: 5,
+        },
+        {
+            title: "K-11",
+            rating: 6
+        },
+        {
+            title: "Funeral Kings",
+            rating: 6
+        },
+        {
+            title: "Transcendent Man",
+            rating: 5
+        },
+        {
+            title: "The Kings of Summer",
+            rating: 5.5
+        },
+        {
+            title: "Bridge to Terabithia",
+            rating: 5
+        },
+        {
+            title: "Michael Jackson's This Is It",
+            rating: 5
+        },
+        {
+            title: "Travis Scott: Look Mom I Can Fly",
+            rating: 1,
+            notes: "I really hate this movie, becuase it was the most low effort cash grab i've ever seen."
+        },
+        {
+            title: "The ABCs of Death",
+            rating: 4
+        },
+        {
+            title: "Let's Make Money",
+            rating: 5
+        },
+        {
+            title: "Cheech & Chong's Hey Watch This",
+            rating: 4
+        },
+        {
+            title: "Up in Smoke",
+            rating: 3.5
+        },
+        {
+            title: "Domino",
+            rating: 5.5,
+            notes: "I remember liking this movie, but don't remember too much."
+        },
+        {
+            title: "Kung Fu Dunk",
+            rating: 4
+        },
+        {
+            title: "Killing Season",
+            rating: 5,
+            notes: "Don't remember too much."
+        },
+        {
+            title: "Youth in Revolt",
+            rating: 5
+        },
+        {
+            title: "MacGruber",
+            rating: 5
+        },
+        {
+            title: "I Give It a Year",
+            rating: 5
+        },
+        {
+            title: "21 & Over",
+            rating: 4
+        },
+        {
+            title: "Snakes on a Plane",
+            rating: 5.5
+        },
+        {
+            title: "Soul Plane",
+            rating: 5
+        },
+        {
+            title: "Walk Hard: The Dewey Cox Story",
+            rating: 4
+        },
+        {
+            title: "Immortals",
+            rating: 3.5
+        },
+        {
+            title: "The Hurt Locker",
+            rating: 5.5,
+            notes: "Don't remember too much. Should re-watch."
+        },
+        {
+            title: "The Hangover: Part II",
+            rating: 4
+        },
+        {
+            title: "The Awakening",
+            rating: 4
+        },
+        {
+            title: "The Faculty",
+            rating: 4,
+            notes: "Don't remember too much. Should re-watch."
+        },
+        {
+            title: "Biggie & Tupac",
+            rating: 5
+        },
+        {
+            title: "Brüno",
+            rating: 5
+        },
+        {
+            title: "Goon",
+            rating: 5
+        },
+        {
+            title: "Nitro Circus: The Movie",
+            rating: 5
+        },
+        {
+            title: "Super Troopers",
+            rating: 6
+        },
+        {
+            title: "Half Baked",
+            rating: 5
+        },
+        {
+            title: "Hot Rod",
+            rating: 5.5
+        },
+        {
+            title: "Beowulf",
+            rating: 4
+        },
+        {
+            title: "Hardflip",
+            rating: 5,
+            notes: "Don't remember too much."
+        },
+        {
+            title: "Degenerate Art: The Art and Culture of Glass Pipes",
+            rating: 3
+        },
+        {
+            title: "Waiting for Lightning",
+            rating: 5
+        },
+        {
+            title: "Usain Bolt: The Fastest Man Alive",
+            rating: 4
+        }
+
+    ]
+        .sort((a, b) => a.title.localeCompare(b.title))
+        .sort((a, b) => b.rating - a.rating);
+
+    function renderTable() {
+        const table = document.getElementById("table");
+        for (const movie of movies) {
+            const row = document.createElement("tr");
+            const title = document.createElement("td");
+            const rating = document.createElement("td");
+            const notes = document.createElement("td");
+
+            row.appendChild(title);
+            row.appendChild(rating);
+            row.appendChild(notes);
+
+            title.textContent = movie.title;
+            rating.textContent = movie.rating;
+            notes.textContent = movie.notes;
+
+            table.appendChild(row);
+        }
+    }
+
+    function renderComments() {
+        const commentsParent = document.getElementById("comments");
+        for (const comment of comments) {
+            const card = document.createElement("div");
+            const name = document.createElement("a");
+            const message = document.createElement("p");
+
+            card.appendChild(name);
+            card.appendChild(message);
+
+            name.innerText = comment.name;
+            name.href = comment.githubLink;
+            message.innerText = comment.comment;
+
+            commentsParent.appendChild(card);
+        }
+    }
+
+    function renderTotal() {
+        const total = document.getElementById("total");
+        total.innerText = movies.length;
+    }
+
+    renderTable();
+    renderComments();
+    renderTotal();
+</script>
+
+</body>
+</html>

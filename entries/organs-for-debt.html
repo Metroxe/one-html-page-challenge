@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're in Debt.</title>
+
+    <script>
+        // constants and global variables
+        const canvas = document.querySelector('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const mouse = {
+            x: innerWidth / 2,
+            y: innerHeight / 2
+        }
+
+    
+
+
+        // function checkWin()
+        // {
+        //         alert("Congratulations, you've paid off your debt! \nJust a couple organs and you're home free! \n You also can't afford a home.")
+        
+        // }
+
+        function sellHeart() 
+        {
+            document.getElementById("heartButton").disabled= true;
+            document.getElementById("liverButton").disabled= true;
+            document.getElementById("kidneyButton").disabled= true;
+            document.getElementById("skinButton").disabled= true;
+            document.getElementById("eyesButton").disabled= true;
+            document.getElementById("lungButton").disabled= true;
+            document.getElementById("bonesButton").disabled= true;
+            document.getElementById("soulButton").disabled= true;
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 999999;
+            document.getElementById("profitText").innerHTML = "+$999,999"
+            document.getElementById("messageText").innerHTML = "Debt dies with you anyway. What a waste. Refresh to retry."
+            document.getElementById("currentBalance").innerHTML = balance;
+        }
+        function sellLiver() 
+        {
+            document.getElementById("liverButton").disabled= true;
+            document.getElementById("profitText").innerHTML = "+$500,000"
+            document.getElementById("messageText").innerHTML = "Well you'll live for the next day or so without your liver."
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 500000;
+            document.getElementById("currentBalance").innerHTML = balance;
+        }
+        function sellKidney() 
+        {
+            document.getElementById("kidneyButton").disabled= true;
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 257000;
+            document.getElementById("currentBalance").innerHTML = balance;
+
+            document.getElementById("profitText").innerHTML = "+$257,000"
+            document.getElementById("messageText").innerHTML = "You've got another, tis but a flesh wound."
+        }
+        function sellSkin() 
+        {
+            document.getElementById("skinButton").disabled= true;
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 3000;
+            document.getElementById("currentBalance").innerHTML = balance;
+            document.getElementById("profitText").innerHTML = "+$3,000"
+            document.getElementById("messageText").innerHTML = "You now look like the colossal titan. nice?"
+        }
+        function sellEyes() 
+        {
+            document.getElementById("eyesButton").disabled= true;
+            
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 30000;
+            document.getElementById("currentBalance").innerHTML = balance;
+            document.getElementById("profitText").innerHTML = "+$30,000"
+            document.getElementById("messageText").innerHTML = "You're blind, you shouldn't be able to read this."
+            if (balance<=0) {
+                alert("You've Won! You're missing a lot of parts but what's better than education?")
+            }
+            document.body.innerHTML="";
+        }
+        function sellLung() 
+        {
+            document.getElementById("lungButton").disabled= true;
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 200000;
+            document.getElementById("currentBalance").innerHTML = balance;
+            document.getElementById("profitText").innerHTML = "+$200,000"
+            document.getElementById("messageText").innerHTML = "You were never an athlete, you'll survive with just the one."
+        }
+        function sellBones() 
+        {
+            document.getElementById("bonesButton").disabled= true;
+            var balance = parseInt(document.getElementById("currentBalance").innerHTML);
+            balance -= 10000;
+            document.getElementById("currentBalance").innerHTML = balance;
+            document.getElementById("profitText").innerHTML = "+$10,000"
+            document.getElementById("messageText").innerHTML = "You've always wondered what it was like to be a slug"
+        }
+        function sellSoul() 
+        {
+            document.getElementById("soulButton").disabled= true;
+            document.getElementById("profitText").innerHTML = "+$0"
+            document.getElementById("messageText").innerHTML = "Worthless, sorry"
+        }
+
+    </script>
+
+    <style type="text/css">
+        html,
+        body {
+            background-color: black;
+            height: 100%;
+            margin: 0;
+            text-align:center;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2vw;
+        }
+    </style>
+
+    <style>
+         header {
+            text-align: center;
+            margin-top: 5%;
+            margin-bottom: 0%;
+            margin-left: 10%;
+         }
+
+         h1 {
+            font-family: 'Courier New';
+            font-size: 4vw;
+
+         }
+
+         button {
+            font-family: 'Courier New';
+            margin: 1.15vw;
+            font-size: 2vw;
+            height: 4vw;
+            width: 10vw;
+            
+         }
+
+         button:hover {
+            border-radius:30px;
+            transition: 0.2s;
+         }
+
+         button:active {
+            font-weight: bold;
+         }
+
+         responses {
+            color:rgb(177, 177, 177); 
+            font-size: 2vw; 
+            max-width: 50vw;
+            margin-left: 20%;
+            margin-right: 20%
+         }
+
+         body {
+            margin-left: 10%;
+            margin-right: 10%;
+         }
+         
+    </style>
+
+</head>
+
+<body>
+    <header>
+        <h1 style="color:white">A Kind of Debt Forgiveness</h1>
+    </header>
+
+    <main>
+        <p style="color:white">You have $<span id="currentBalance">1000000</span> of student loan debt.</p>
+        <p style="color:white">What can you sell?</p>
+        <div id="message"></div>
+        <br/>
+        <button id='heartButton'; onclick ="sellHeart();">HEART</button>
+        <button id='liverButton'; onclick ="sellLiver()">LIVER</button>
+        <button id='kidneyButton'; onclick ="sellKidney()">KIDNEY</button>
+        <button id='skinButton'; onclick ="sellSkin()">SKIN</button>
+        <br/>
+        <button id='eyesButton'; onclick ="sellEyes()">EYES</button>
+        <button id='lungButton'; onclick ="sellLung()">LUNG</button>
+        <button id='bonesButton'; onclick ="sellBones();">BONES</button>
+        <button id='soulButton'; onclick ="sellSoul()">SOUL</button>
+        <br/>
+
+        <responses>
+            <p id="profitText" style="color:green"></p>
+            <p id="messageText"></p>
+
+        </responses>
+    </main>    
+
+    <canvas></canvas>
+    
+</body>
+</html>
