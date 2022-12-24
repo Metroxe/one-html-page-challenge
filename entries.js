@@ -51,6 +51,13 @@ const entries = [
 		github: "spencergray96",
 	},
 	{
+		title: "Simple counter",
+		filename: "simple-counter.html",
+		description: "This is a simple counter for 2023 new year with gradient color background!!",
+		author: "Israa Gargar",
+		github: "Esogargar",
+	}
+	{
 		title: "Fool's Mate",
 		filename: "fools-mate.html",
 		description: "In chess, Fool's Mate, also known as the Two-Move Checkmate, is the checkmate in the fewest possible number of moves from the start of the game. This play is created by animating grid rows and columns.",
