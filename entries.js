@@ -56,7 +56,7 @@ const entries = [
 		description: "This is a simple counter for 2023 new year with gradient color background!!",
 		author: "Israa Gargar",
 		github: "Esogargar",
-	}
+	},
 	{
 		title: "Fool's Mate",
 		filename: "fools-mate.html",
