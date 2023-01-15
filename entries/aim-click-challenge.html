@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Click Game</title>
+    <style>
+      #target {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Click the moving target as many times as you can in 30 seconds!</h1>
+    <div id="target"></div>
+    <p>Score: <span id="score">0</span></p>
+    <script>
+      var target = document.getElementById("target");
+      var score = document.getElementById("score");
+      var scoreCount = 0;
+      var timeLeft = 30;
+
+      target.addEventListener("click", function() {
+        scoreCount++;
+        score.innerHTML = scoreCount;
+      });
+
+      setInterval(function() {
+        var x = Math.floor(Math.random() * window.innerWidth);
+        var y = Math.floor(Math.random() * window.innerHeight);
+        target.style.left = x + "px";
+        target.style.top = y + "px";
+      }, 1000);
+
+      setInterval(function() {
+        timeLeft--;
+        if (timeLeft === 0) {
+          alert("Time's up! Your final score is: " + scoreCount);
+        }
+      }, 1000);
+    </script>
+  </body>
+</html>
