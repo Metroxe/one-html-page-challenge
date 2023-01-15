@@ -552,5 +552,12 @@ const entries = [
 		description: "This entry was coded completely by OpenAI using the prompt \"code me a game in one html file\".",
 		author: "OpenAI",
 		github: "openai"
+	},
+		{
+		title: "Click challenge",
+		filename: "aim-click-challenge.html",
+		description: "You basically click the square as many times as you can in 30 seconds",
+		author: "Abdullah Arafat",
+		github: "dolosarafat"
 	}
 ];
