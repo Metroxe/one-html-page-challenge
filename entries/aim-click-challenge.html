@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Click Game</title>
+    <style>
+      #target {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Click the moving target as many times as you can!</h1>
+    <div id="target"></div>
+    <p>Score: <span id="score">0</span></p>
+    <p>Time Left: <span id="time-left">30</span> seconds</p>
+    <p>
+      Move Interval: <input type="range" id="move-interval" min="100" max="2000" value="1000" step="100">
+    </p>
+    <p>
+      Target Width: <input type="range" id="target-width" min="10" max="100" value="50" step="10">
+    </p>
+    <p>
+      Target Height: <input type="range" id="target-height" min="10" max="100" value="50" step="10">
+    </p>
+    <p>
+      Time Limit: <input type="range" id="time-limit" min="10" max="60" value="30" step="5">
+    </p>
+    <button id="start-button" onclick="startGame()">Start</button>
+    <script>
+      var target = document.getElementById("target");
+      var score = document.getElementById("score");
+      var timeLeft = document.getElementById("time-left");
+      var moveInterval = document.getElementById("move-interval");
+      var targetWidth = document.getElementById("target-width");
+      var targetHeight = document.getElementById("target-height");
+      var timeLimit = document.getElementById("time-limit");
+      var scoreCount = 0;
+      var intervalId;
+      var timeId;
+
+      target.addEventListener("click", function() {
+        scoreCount++;
+        score.innerHTML = scoreCount;
+      });
+
+      function startGame() {
+        timeLeft.innerHTML = timeLimit.value;
+        target.style.width = targetWidth.value + "px";
+        target.style.height = targetHeight.value + "px";
+        intervalId = setInterval(function() {
+          var x = Math.floor(Math.random() * window.innerWidth);
+          var y = Math.floor(Math.random() * window.innerHeight);
+          target.style.left = x + "px";
+          target.style.top = y + "px";
+        }, moveInterval.value);
+
+        timeId = setInterval(function() {
+          timeLeft.innerHTML = --timeLeft.innerHTML;
+          if (timeLeft.innerHTML == 0) {
+            clearInterval(intervalId);
+            clearInterval(timeId);
+            alert("Time's up! Your final score is: " + scoreCount);        
+          }
+        }, 1000);
+        document.getElementById("start-button").disabled = true;
+      }
+    </script>
+  </body>
+</html>
