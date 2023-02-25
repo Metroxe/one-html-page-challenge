@@ -420,6 +420,13 @@ const entries = [
 		author: "Abhay Mourya (Abhay557)",
 		github: "Abhay557"
 	},
+        {
+		title: "Block Over It",
+		filename: "blockoverit.html",
+		description: "A Awesome Game Using-Javascript For One Page Html Challenge",
+		author: "Abhay Mourya (Abhay557)",
+		github: "Abhay557"
+	},
 	{
 		title: "Whack-a-mole",
 		filename: "whack-a-mole.html",
