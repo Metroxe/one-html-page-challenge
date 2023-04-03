@@ -566,5 +566,12 @@ const entries = [
 		description: "You basically click the square as many times as you can in 30 seconds",
 		author: "Abdullah Arafat",
 		github: "dolosarafat"
+	},
+	{
+		title: "Technical Documentation of Javascript",
+		filename: "Technical-Doc.html",
+		description: "The basic javascript documentation/cheatsheet",
+		author: "Gorakshnath Bhongal",
+		github: "gbb26"
 	}
 ];
