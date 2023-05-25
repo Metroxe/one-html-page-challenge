@@ -581,4 +581,11 @@ const entries = [
 		author: "Nithish Gajula",
 		github: "nithish-gajula"
 	},
+		{
+		title: "Ripples",
+		filename: "ripples.html",
+		description: "Pleasant rippling circles appearing on the page",
+		author: "Nicola Cerutti",
+		github: "ncerutti"
+	},
 ];
