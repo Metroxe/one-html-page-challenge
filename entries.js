@@ -581,4 +581,11 @@ const entries = [
 		author: "Nithish Gajula",
 		github: "nithish-gajula"
 	},
+	{
+		title: "Base64 to TXT Converter",
+		filename: "Base64toTXT.html",
+		description: "Convert any file to Base64 and download as TXT file",
+		author: "Rupesh Soni",
+		github: "rsoni124"
+	},
 ];
