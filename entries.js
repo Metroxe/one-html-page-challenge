@@ -587,5 +587,19 @@ const entries = [
 		description: "Convert any file to Base64 and download as TXT file",
 		author: "Rupesh Soni",
 		github: "rsoni124"
+  },
+  {
+		title: "Mandelbrot Fractal",
+		filename: "mandelbrot.html",
+		description: "Simple mandelbrot fractal viewer in WebGL. Zoom in and move around with the mouse.",
+		author: "Parkin Pham",
+		github: "P4GAN"
+  },
+	{
+		title: "Ripples",
+		filename: "ripples.html",
+		description: "Pleasant rippling circles appearing on the page",
+		author: "Nicola Cerutti",
+		github: "ncerutti"
 	},
 ];
