@@ -581,7 +581,14 @@ const entries = [
 		author: "Nithish Gajula",
 		github: "nithish-gajula"
 	},
-		{
+	{
+		title: "Mandelbrot Fractal",
+		filename: "mandelbrot.html",
+		description: "Simple mandelbrot fractal viewer in WebGL. Zoom in and move around with the mouse.",
+		author: "Parkin Pham",
+		github: "P4GAN"
+  },
+	{
 		title: "Ripples",
 		filename: "ripples.html",
 		description: "Pleasant rippling circles appearing on the page",
