@@ -582,6 +582,13 @@ const entries = [
 		github: "nithish-gajula"
 	},
 	{
+		title: "Base64 to TXT Converter",
+		filename: "Base64toTXT.html",
+		description: "Convert any file to Base64 and download as TXT file",
+		author: "Rupesh Soni",
+		github: "rsoni124"
+  },
+  {
 		title: "Mandelbrot Fractal",
 		filename: "mandelbrot.html",
 		description: "Simple mandelbrot fractal viewer in WebGL. Zoom in and move around with the mouse.",
