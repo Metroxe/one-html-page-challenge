@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ripples</title>
+    <style>
+        #canvas {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            animation: ripple 0.5s ease-out forwards;
+            pointer-events: none;
+            transform: scale(0);
+            opacity: 1;
+        }
+
+        .acknowledgment {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 24px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 7px solid;
+            display: flex;
+            justify-content: space-around;
+            width: 80%;
+        }
+
+        .acknowledgment a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0.4;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas"></div>
+    <div id="acknowledgment" class="acknowledgment">
+        <a href="https://github.com/Metroxe/one-html-page-challenge" target="_blank">Made by Nico for the one-html-page-challenge</a>&nbsp|&nbsp
+        <a href="https://github.com/ncerutti" target="_blank">Looking for friends: check out my GitHub page</a>&nbsp|&nbsp
+        <a href="https://www.linkedin.com/in/ncerutti/" target="_blank">and add me on LinkedIn!</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const acknowledgment = document.getElementById('acknowledgment');
+
+        canvas.addEventListener('click', function (event) {
+            let ripple = document.createElement('div');
+            ripple.className = 'ripple';
+
+            // Generate random color
+            let color = `rgba(${Math.random() * 256}, ${Math.random() * 256}, ${Math.random() * 256}, 0.4)`;
+            ripple.style.background = color;
+
+            // Change acknowledgment border color
+            acknowledgment.style.borderColor = color;
+
+            // Generate random size between 100 and 400
+            let size = Math.random() * 300 + 100;
+            ripple.style.width = `${size}px`;
+            ripple.style.height = `${size}px`;
+
+            ripple.style.top = `${event.clientY - size / 2}px`;
+            ripple.style.left = `${event.clientX - size / 2}px`;
+
+            canvas.appendChild(ripple);
+        });
+    </script>
+</body>
+</html>
