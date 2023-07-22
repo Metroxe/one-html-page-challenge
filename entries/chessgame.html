@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>One-File Chess</title>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+        }
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            background-color: #f0d9b5;
+        }
+        .cell.black {
+            background-color: #b58863;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const board = document.getElementById("board");
+            const letters = "abcdefgh";
+            const pieces = {
+                "k": "♚", "q": "♛", "r": "♜",
+                "n": "♞", "b": "♝", "p": "♟",
+                "K": "♔", "Q": "♕", "R": "♖",
+                "N": "♘", "B": "♗", "P": "♙"
+            };
+            let chessBoard = [];
+
+            // Initialize the chessboard with starting positions
+            function initializeBoard() {
+                chessBoard = [
+                    ["r", "n", "b", "q", "k", "b", "n", "r"],
+                    ["p", "p", "p", "p", "p", "p", "p", "p"],
+                    ["", "", "", "", "", "", "", ""],
+                    ["", "", "", "", "", "", "", ""],
+                    ["", "", "", "", "", "", "", ""],
+                    ["", "", "", "", "", "", "", ""],
+                    ["P", "P", "P", "P", "P", "P", "P", "P"],
+                    ["R", "N", "B", "Q", "K", "B", "N", "R"],
+                ];
+            }
+
+            // Render the chessboard
+            function renderBoard() {
+                board.innerHTML = "";
+                for (let i = 0; i < 8; i++) {
+                    for (let j = 0; j < 8; j++) {
+                        const cell = document.createElement("div");
+                        cell.className = "cell " + (i + j) % 2 === 0 ? "white" : "black";
+                        cell.textContent = pieces[chessBoard[i][j]];
+                        board.appendChild(cell);
+                    }
+                }
+            }
+
+            // Start a new game
+            function newGame() {
+                initializeBoard();
+                renderBoard();
+            }
+
+            // Run newGame() when the page loads
+            newGame();
+        });
+    </script>
+</body>
+</html>
