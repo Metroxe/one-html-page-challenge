@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Text-Based Football Game</title>
+</head>
+<body>
+  <h1>Text-Based Football Game</h1>
+  <pre id="output"></pre>
+  <button onclick="startGame()">Start New Game</button>
+
+  <script>
+    let team = {
+      name: "Your Team",
+      strength: 50,
+      goalsScored: 0,
+      goalsConceded: 0
+    };
+
+    let opponents = [
+      { name: "Opponent 1", strength: 40 },
+      { name: "Opponent 2", strength: 45 },
+      { name: "Opponent 3", strength: 55 }
+    ];
+
+    let output = document.getElementById("output");
+
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function playMatch(opponent) {
+      let yourGoals = getRandomNumber(0, team.strength);
+      let opponentGoals = getRandomNumber(0, opponent.strength);
+
+      team.goalsScored += yourGoals;
+      team.goalsConceded += opponentGoals;
+
+      output.innerHTML += `
+        ${team.name} ${yourGoals} - ${opponentGoals} ${opponent.name}\n
+      `;
+    }
+
+    function startGame() {
+      team.goalsScored = 0;
+      team.goalsConceded = 0;
+      output.innerHTML = `${team.name} starts a new season!\n\n`;
+
+      for (let i = 0; i < opponents.length; i++) {
+        output.innerHTML += `Matchday ${i + 1}:\n`;
+        playMatch(opponents[i]);
+      }
+
+      output.innerHTML += "\nSeason Summary:\n";
+      output.innerHTML += `${team.name} scored ${team.goalsScored} goals and conceded ${team.goalsConceded} goals.\n`;
+
+      if (team.goalsScored > team.goalsConceded) {
+        output.innerHTML += "Congratulations! You won the season!";
+      } else if (team.goalsScored < team.goalsConceded) {
+        output.innerHTML += "You lost the season. Better luck next time!";
+      } else {
+        output.innerHTML += "It's a draw! You did well!";
+      }
+    }
+  </script>
+</body>
+</html>
