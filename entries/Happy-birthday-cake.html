@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Cake</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+
+    .cake {
+      position: relative;
+      width: 200px;
+      height: 250px;
+      background-color: #a0522d; /* Chocolate color */
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .candle {
+      position: absolute;
+      width: 10px;
+      height: 80px;
+      background-color: #ff5733; /* Orange flame color */
+      bottom: 100%;
+      left: calc(50% - 5px);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .flame {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #f00;
+      bottom: 100%;
+      left: calc(50% - 10px);
+      border-radius: 50%;
+      opacity: 0;
+      animation: flicker 0.5s infinite alternate;
+    }
+
+    .chocolate-decoration {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #4b0082; /* Purple chocolate decoration color */
+      border-radius: 50%;
+      transform: rotate(45deg);
+    }
+
+    .chocolate-decoration.decoration-1 {
+      top: 20px;
+      left: 25px;
+    }
+
+    .chocolate-decoration.decoration-2 {
+      top: 35px;
+      left: 70px;
+    }
+
+    .chocolate-decoration.decoration-3 {
+      top: 20px;
+      right: 25px;
+    }
+
+    @keyframes flicker {
+      0% {
+        opacity: 0.7;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cake">
+    <div class="candle" onclick="lightCandle(1)">
+      <div class="flame"></div>
+    </div>
+    <div class="candle" onclick="lightCandle(2)">
+      <div class="flame"></div>
+    </div>
+    <div class="candle" onclick="lightCandle(3)">
+      <div class="flame"></div>
+    </div>
+    <!-- Chocolate decorations -->
+    <div class="chocolate-decoration decoration-1"></div>
+    <div class="chocolate-decoration decoration-2"></div>
+    <div class="chocolate-decoration decoration-3"></div>
+  </div>
+
+  <script>
+    function lightCandle(candleNumber) {
+      const candle = document.querySelector(`.candle:nth-child(${candleNumber}) .flame`);
+      candle.style.opacity = 1;
+    }
+  </script>
+</body>
+</html>
