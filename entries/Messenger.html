@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Messenger Clone</title>
+</head>
+<body>
+    <h1>Simple Messenger Clone</h1>
+    <div id="message-container"></div>
+    <input type="text" id="message-input" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        // Array to store messages
+        let messages = [];
+
+        // Function to send a message
+        function sendMessage() {
+            const inputElement = document.getElementById('message-input');
+            const messageText = inputElement.value.trim();
+
+            if (messageText !== '') {
+                const message = {
+                    text: messageText,
+                    sender: 'You',
+                    timestamp: new Date().toLocaleString()
+                };
+                messages.push(message);
+                inputElement.value = '';
+                displayMessages();
+            }
+        }
+
+        // Function to display all messages
+        function displayMessages() {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = '';
+
+            messages.forEach((message) => {
+                const messageDiv = document.createElement('div');
+                messageDiv.innerHTML = `<strong>${message.sender}:</strong> ${message.text} <span>${message.timestamp}</span>`;
+                messageContainer.appendChild(messageDiv);
+            });
+        }
+
+        // Initial display
+        displayMessages();
+    </script>
+</body>
+</html>
