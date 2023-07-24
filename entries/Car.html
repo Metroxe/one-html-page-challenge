@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Car</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    .car {
+      position: relative;
+      width: 300px;
+      height: 150px;
+      background-color: #007bff;
+      border-radius: 10px;
+    }
+    .roof {
+      position: absolute;
+      top: 0;
+      width: 80px;
+      height: 70px;
+      background-color: #0056b3;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .body {
+      position: absolute;
+      top: 70px;
+      width: 240px;
+      height: 80px;
+      background-color: #0056b3;
+      border-radius: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .wheel {
+      position: absolute;
+      bottom: 0;
+      width: 60px;
+      height: 60px;
+      background-color: #222;
+      border-radius: 50%;
+      left: 20px;
+    }
+    .wheel.right {
+      left: 220px;
+    }
+  </style>
+</head>
+<body>
+  <div class="car">
+    <div class="roof"></div>
+    <div class="body"></div>
+    <div class="wheel"></div>
+    <div class="wheel right"></div>
+  </div>
+</body>
+</html>
