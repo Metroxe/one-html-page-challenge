@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>StackOverflow Clone</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #questionForm {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .question {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>StackOverflow Clone</h1>
+  
+  <div id="questionForm">
+    <h3>Ask a question:</h3>
+    <form onsubmit="submitQuestion(event)">
+      <label for="questionTitle">Title:</label><br>
+      <input type="text" id="questionTitle" required><br><br>
+      <label for="questionBody">Body:</label><br>
+      <textarea id="questionBody" required></textarea><br><br>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  
+  <div id="questionsList">
+    <h2>Questions:</h2>
+    <div id="questions"></div>
+  </div>
+
+  <script>
+    function submitQuestion(event) {
+      event.preventDefault();
+
+      const title = document.getElementById("questionTitle").value;
+      const body = document.getElementById("questionBody").value;
+
+      if (!title || !body) {
+        alert("Please fill in both the title and body.");
+        return;
+      }
+
+      const question = document.createElement("div");
+      question.classList.add("question");
+      question.innerHTML = `
+        <h3>${title}</h3>
+        <p>${body}</p>
+      `;
+
+      document.getElementById("questions").appendChild(question);
+      document.getElementById("questionForm").reset();
+    }
+  </script>
+</body>
+</html>
