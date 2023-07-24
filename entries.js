@@ -81,6 +81,14 @@ const entries = [
 	},
 
 	{
+		title: "github clone",
+		filename: "github.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "Car",
 		filename: "Car.html",
 		description: "Submission to the One Html Page Challenge.",
