@@ -120,6 +120,14 @@ const entries = [
 	},
 
 	{
+		title: "Indeed clone",
+		filename: "Indeed.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "batman",
 		filename: "batman.html",
 		description: "Submission to the One Html Page Challenge.",
