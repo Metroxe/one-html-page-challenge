@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duolingo Clone</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1>Duolingo Clone</h1>
+        <div id="lesson">
+            <h2>Lesson Title</h2>
+            <p>Translate the following phrase:</p>
+            <p id="phrase">Bonjour, comment ça va?</p>
+            <input type="text" id="translationInput" placeholder="Your translation">
+            <button onclick="checkTranslation()">Check</button>
+            <p id="result"></p>
+            <button onclick="loadNextLesson()">Next Lesson</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample lesson data
+        const lessons = [
+            { phrase: "Bonjour, comment ça va?", translation: "Hello, how are you?" },
+            { phrase: "Je m'appelle", translation: "My name is" },
+            // Add more lessons here
+        ];
+
+        let currentLesson = 0;
+
+        function checkTranslation() {
+            const userInput = document.getElementById("translationInput").value;
+            const currentLessonData = lessons[currentLesson];
+            const correctTranslation = currentLessonData.translation;
+            const resultElement = document.getElementById("result");
+
+            if (userInput.toLowerCase() === correctTranslation.toLowerCase()) {
+                resultElement.textContent = "Correct! Good job!";
+            } else {
+                resultElement.textContent = "Incorrect. Try again.";
+            }
+        }
+
+        function loadNextLesson() {
+            currentLesson = (currentLesson + 1) % lessons.length;
+            const currentLessonData = lessons[currentLesson];
+            document.getElementById("phrase").textContent = currentLessonData.phrase;
+            document.getElementById("translationInput").value = "";
+            document.getElementById("result").textContent = "";
+        }
+    </script>
+</body>
+</html>
