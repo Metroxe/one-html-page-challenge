@@ -120,6 +120,14 @@ const entries = [
 	},
 
 	{
+		title: "playstation-website",
+		filename: "playstation-website.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "Indeed clone",
 		filename: "Indeed.html",
 		description: "Submission to the One Html Page Challenge.",
