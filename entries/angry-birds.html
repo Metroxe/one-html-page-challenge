@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detective Conan Cartoon</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #dfe6e9;
+    }
+
+    .detective-conan {
+      width: 120px;
+      height: 160px;
+      background-color: #2d3436;
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .head {
+      width: 100px;
+      height: 100px;
+      background-color: #f1c40f;
+      border-radius: 50%;
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .eye {
+      width: 25px;
+      height: 30px;
+      background-color: #fff;
+      position: absolute;
+      top: 45%;
+    }
+
+    .eye.left {
+      left: 25%;
+    }
+
+    .eye.right {
+      right: 25%;
+    }
+
+    .pupil {
+      width: 10px;
+      height: 12px;
+      background-color: #000;
+      position: absolute;
+      top: 50%;
+      border-radius: 50%;
+    }
+
+    .pupil.left {
+      left: 40%;
+    }
+
+    .pupil.right {
+      right: 40%;
+    }
+
+    .nose {
+      width: 5px;
+      height: 15px;
+      background-color: #e74c3c;
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .mouth {
+      width: 20px;
+      height: 5px;
+      background-color: #e74c3c;
+      position: absolute;
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 50% 50% 0 0;
+    }
+
+    .glasses {
+      width: 80px;
+      height: 20px;
+      background-color: #000;
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 5px;
+      z-index: 1;
+    }
+
+    .glasses::before,
+    .glasses::after {
+      content: "";
+      display: block;
+      width: 12px;
+      height: 12px;
+      background-color: #000;
+      position: absolute;
+      top: 4px;
+      border-radius: 50%;
+    }
+
+    .glasses::before {
+      left: 10px;
+    }
+
+    .glasses::after {
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="detective-conan">
+    <div class="head">
+      <div class="eye left">
+        <div class="pupil left"></div>
+      </div>
+      <div class="eye right">
+        <div class="pupil right"></div>
+      </div>
+      <div class="nose"></div>
+      <div class="mouth"></div>
+      <div class="glasses"></div>
+    </div>
+  </div>
+</body>
+</html>
