@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartoon Bird</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #87CEEB;
+    }
+
+    .bird {
+      width: 100px;
+      height: 100px;
+      background-color: #FFD700;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .head {
+      width: 40px;
+      height: 40px;
+      background-color: #F08080;
+      border-radius: 50%;
+      position: absolute;
+      top: 35%;
+      left: 40%;
+    }
+
+    .eye {
+      width: 10px;
+      height: 10px;
+      background-color: #000;
+      border-radius: 50%;
+      position: absolute;
+      top: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .beak {
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 30px solid #FFD700;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 50%);
+    }
+
+    .wing {
+      width: 50px;
+      height: 80px;
+      background-color: #F08080;
+      border-radius: 50% 50% 0 0;
+      position: absolute;
+      top: 60%;
+      left: 70%;
+      transform: rotate(-45deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="bird">
+    <div class="head">
+      <div class="eye"></div>
+    </div>
+    <div class="beak"></div>
+    <div class="wing"></div>
+  </div>
+</body>
+</html>

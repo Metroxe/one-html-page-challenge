@@ -96,6 +96,22 @@ const entries = [
 	},
 
 	{
+		title: "bird",
+		filename: "bird.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
+		title: "CHATGPT clone",
+		filename: "chatgpt.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "google clone",
 		filename: "google.html",
 		description: "Submission to the One Html Page Challenge.",
