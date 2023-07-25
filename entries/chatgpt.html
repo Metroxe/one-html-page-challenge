@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chatbot</title>
+</head>
+<body>
+    <h1>Simple Chatbot</h1>
+    <div id="chatbox">
+        <div class="message received">Hello! How can I help you?</div>
+    </div>
+    <input type="text" id="userInput" placeholder="Type your message...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const chatbox = document.getElementById("chatbox");
+        const userInput = document.getElementById("userInput");
+
+        function sendMessage() {
+            const userMessage = userInput.value.trim();
+            if (userMessage !== "") {
+                addUserMessage(userMessage);
+                handleResponse(userMessage);
+                userInput.value = "";
+            }
+        }
+
+        function addUserMessage(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message sent";
+            messageDiv.textContent = message;
+            chatbox.appendChild(messageDiv);
+        }
+
+        function addBotMessage(message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = "message received";
+            messageDiv.textContent = message;
+            chatbox.appendChild(messageDiv);
+        }
+
+        function handleResponse(userMessage) {
+            // Replace this function with your own logic or API call to provide responses
+            // For simplicity, let's just provide a predefined response here.
+            const botResponse = getBotResponse(userMessage);
+            addBotMessage(botResponse);
+        }
+
+        function getBotResponse(userMessage) {
+            // Replace this with more sophisticated logic or use a backend API for better responses
+            const responses = {
+                "hi": "Hello!",
+                "how are you": "I'm just a simple chatbot, but thanks for asking!",
+                "bye": "Goodbye!",
+                "default": "I'm sorry, I don't understand. Can you rephrase that?"
+            };
+
+            const lowerCaseMessage = userMessage.toLowerCase();
+            return responses[lowerCaseMessage] || responses["default"];
+        }
+
+        userInput.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
