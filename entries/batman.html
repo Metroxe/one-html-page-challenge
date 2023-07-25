@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batman Logo</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000;
+    }
+
+    .batman-logo {
+      width: 150px;
+      height: 100px;
+      background-color: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .batman-wing {
+      width: 80px;
+      height: 150px;
+      background-color: #fcd116;
+      position: absolute;
+      top: 0;
+    }
+
+    .batman-wing-left {
+      left: 25px;
+      border-radius: 0 120px 150px 0;
+      transform: rotate(-30deg);
+    }
+
+    .batman-wing-right {
+      right: 25px;
+      border-radius: 120px 0 0 150px;
+      transform: rotate(30deg);
+    }
+
+    .batman-oval {
+      width: 80px;
+      height: 100px;
+      background-color: #fcd116;
+      border-radius: 50%;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .batman-ears {
+      width: 40px;
+      height: 40px;
+      background-color: #000;
+      border-radius: 50%;
+      position: absolute;
+      top: 5px;
+    }
+
+    .batman-ear-left {
+      left: 30px;
+    }
+
+    .batman-ear-right {
+      right: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="batman-logo">
+    <div class="batman-wing batman-wing-left"></div>
+    <div class="batman-wing batman-wing-right"></div>
+    <div class="batman-oval"></div>
+    <div class="batman-ears batman-ear-left"></div>
+    <div class="batman-ears batman-ear-right"></div>
+  </div>
+</body>
+</html>
+
