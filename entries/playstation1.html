@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cartoon PlayStation 1 Simulator</title>
+</head>
+<body>
+    <style>
+        body {
+            background-color: #ededed;
+            text-align: center;
+        }
+
+        #screen {
+            width: 320px;
+            height: 240px;
+            border: 1px solid black;
+            font-family: monospace;
+            background-color: #000;
+            color: #00ff00;
+            padding: 10px;
+            margin: 20px auto;
+        }
+
+        #console {
+            width: 400px;
+            margin: 20px auto;
+            font-family: monospace;
+            white-space: pre;
+        }
+
+        #buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .gamepad {
+            width: 180px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+
+    <h1>Cartoon PlayStation 1 Simulator</h1>
+    <div id="console">
+        <pre>
+   ________
+ /         \
+|   PLAY   |
+ \_______/ 
+        </pre>
+    </div>
+
+    <div class="gamepad">
+        <div class="button" id="button-up">^</div>
+    </div>
+    <div id="buttons">
+        <div class="button" id="button-left">&lt;</div>
+        <div class="button" id="button-circle">O</div>
+        <div class="button" id="button-right">&gt;</div>
+    </div>
+    <div class="gamepad">
+        <div class="button" id="button-down">v</div>
+    </div>
+
+    <script>
+        // Emulate basic functionality
+        const gamepadButtons = ["Up", "Down", "Left", "Right", "Triangle", "Circle", "Cross", "Square"];
+
+        function pressButton(button) {
+            const btnElement = document.getElementById(`button-${button.toLowerCase()}`);
+            btnElement.style.backgroundColor = "#ccc";
+        }
+
+        function releaseButton(button) {
+            const btnElement = document.getElementById(`button-${button.toLowerCase()}`);
+            btnElement.style.backgroundColor = "#fff";
+        }
+
+        // Listen for keyboard events
+        document.addEventListener("keydown", (event) => {
+            const key = event.key;
+            if (gamepadButtons.includes(key)) {
+                pressButton(key);
+            }
+        });
+
+        document.addEventListener("keyup", (event) => {
+            const key = event.key;
+            if (gamepadButtons.includes(key)) {
+                releaseButton(key);
+            }
+        });
+    </script>
+</body>
+</html>

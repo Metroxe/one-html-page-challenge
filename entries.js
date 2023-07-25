@@ -104,6 +104,14 @@ const entries = [
 	},
 
 	{
+		title: "playstation1",
+		filename: "playstation1.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "duolingo",
 		filename: "duolingo.html",
 		description: "Submission to the One Html Page Challenge.",
