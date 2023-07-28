@@ -118,6 +118,13 @@ const entries = [
 		author: "Mohamed Mehdi Gara",
 		github: "mohamedmehdigara"
 	},
+	{
+		title: "battleships",
+		filename: "battleships.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
 
 	{
 		title: "datacamp website",

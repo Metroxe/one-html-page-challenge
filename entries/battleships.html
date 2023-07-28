@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battleships Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 30px);
+      gap: 1px;
+      margin: 20px auto;
+      border: 1px solid #333;
+      background-color: #ddd;
+      max-width: 310px;
+    }
+    .cell {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #333;
+      background-color: #aaa;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Battleships Game</h1>
+  <div class="grid" id="playerGrid"></div>
+  <div class="grid" id="opponentGrid"></div>
+
+  <script>
+    const playerGrid = document.getElementById('playerGrid');
+    const opponentGrid = document.getElementById('opponentGrid');
+    const playerBoard = Array.from({ length: 10 }, () => Array(10).fill(0));
+    const opponentBoard = Array.from({ length: 10 }, () => Array(10).fill(0));
+
+    // Function to render the grids
+    function renderGrid(grid, clickHandler) {
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+          cell.addEventListener('click', clickHandler);
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    // Function to handle player's click on opponent's grid
+    function handleOpponentClick(event) {
+      const row = parseInt(event.target.dataset.row);
+      const col = parseInt(event.target.dataset.col);
+
+      // You can implement the game logic here:
+      // - Check if it's a valid move
+      // - Check if it's a hit or a miss
+      // - Update the opponent grid accordingly
+    }
+
+    // Function to set up opponent's board (random placement for simplicity)
+    function setupOpponentBoard() {
+      // Randomly place ships on opponentBoard
+      // For simplicity, we'll assume a single 3-cell ship
+      const shipRow = Math.floor(Math.random() * 8); // Ensuring it fits the board
+      const shipCol = Math.floor(Math.random() * 8);
+      opponentBoard[shipRow][shipCol] = 1;
+      opponentBoard[shipRow][shipCol + 1] = 1;
+      opponentBoard[shipRow][shipCol + 2] = 1;
+
+      renderGrid(opponentGrid, handleOpponentClick);
+    }
+
+    // Function to handle player's click on their own grid (placement phase)
+    function handlePlayerClick(event) {
+      const row = parseInt(event.target.dataset.row);
+      const col = parseInt(event.target.dataset.col);
+
+      // For simplicity, we'll assume a single 3-cell ship placement
+      playerBoard[row][col] = 1;
+      playerBoard[row][col + 1] = 1;
+      playerBoard[row][col + 2] = 1;
+
+      event.target.removeEventListener('click', handlePlayerClick);
+
+      // Check if the player has placed all ships
+      const remainingShips = playerBoard.flat().filter((cell) => cell === 1).length;
+      if (remainingShips === 3) {
+        setupOpponentBoard();
+      }
+    }
+
+    // Start the game by rendering the player's grid and setting up the placement phase
+    renderGrid(playerGrid, handlePlayerClick);
+  </script>
+</body>
+</html>
