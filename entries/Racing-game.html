@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Racing Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <script>
+    // Get the canvas and context
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Define the car properties
+    const carWidth = 50;
+    const carHeight = 100;
+    let carX = canvas.width / 2 - carWidth / 2;
+    const carY = canvas.height - carHeight - 10;
+    const carSpeed = 5;
+
+    // Define the game properties
+    let startTime = 0;
+    let isGameOver = false;
+    let isGameStarted = false;
+
+    // Event listeners to control the car
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+
+    // Key codes for arrow keys
+    const LEFT_ARROW = 37;
+    const RIGHT_ARROW = 39;
+
+    let leftKeyPressed = false;
+    let rightKeyPressed = false;
+
+    function handleKeyDown(event) {
+      if (event.keyCode === LEFT_ARROW) {
+        leftKeyPressed = true;
+      } else if (event.keyCode === RIGHT_ARROW) {
+        rightKeyPressed = true;
+      }
+    }
+
+    function handleKeyUp(event) {
+      if (event.keyCode === LEFT_ARROW) {
+        leftKeyPressed = false;
+      } else if (event.keyCode === RIGHT_ARROW) {
+        rightKeyPressed = false;
+      }
+    }
+
+    // Draw the car
+    function drawCar() {
+      ctx.fillStyle = "red";
+      ctx.fillRect(carX, carY, carWidth, carHeight);
+    }
+
+    // Clear the canvas
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Update the car position based on key presses
+    function updateCarPosition() {
+      if (leftKeyPressed && carX > 0) {
+        carX -= carSpeed;
+      } else if (rightKeyPressed && carX < canvas.width - carWidth) {
+        carX += carSpeed;
+      }
+    }
+
+    // Draw the game over screen
+    function drawGameOver() {
+      ctx.fillStyle = "black";
+      ctx.font = "30px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("Game Over", canvas.width / 2, canvas.height / 2);
+    }
+
+    // Draw the elapsed time during the game
+    function drawElapsedTime() {
+      const currentTime = Date.now();
+      const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+      ctx.fillStyle = "black";
+      ctx.font = "20px Arial";
+      ctx.textAlign = "left";
+      ctx.fillText("Time: " + elapsedTime + "s", 10, 30);
+    }
+
+    // Game loop
+    function gameLoop() {
+      if (!isGameOver) {
+        clearCanvas();
+        drawCar();
+        updateCarPosition();
+        if (isGameStarted) {
+          drawElapsedTime();
+        }
+        requestAnimationFrame(gameLoop);
+      } else {
+        drawGameOver();
+      }
+    }
+
+    // Start the game when the user clicks the canvas
+    canvas.addEventListener("click", function () {
+      if (!isGameStarted) {
+        isGameStarted = true;
+        startTime = Date.now();
+        gameLoop();
+      }
+    });
+  </script>
+</body>
+</html>
