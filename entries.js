@@ -118,6 +118,13 @@ const entries = [
 		author: "Mohamed Mehdi Gara",
 		github: "mohamedmehdigara"
 	},
+	{
+		title: "Frogger",
+		filename: "Frogger.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
 
 	{
 		title: "racing game",

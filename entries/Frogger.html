@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Frogger Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+  <script>
+    // Get the canvas and its context
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Constants
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+    const playerSize = 30;
+    const playerSpeed = 5;
+    const enemySpeed = 3;
+    const enemySpacing = 100;
+    const riverSpacing = 50;
+    const numRows = 5;
+    const playerColor = "green";
+    const enemyColor = "red";
+
+    // Game state
+    let playerX = canvasWidth / 2 - playerSize / 2;
+    let playerY = canvasHeight - playerSize;
+    let enemies = [];
+
+    // Function to draw the player
+    function drawPlayer() {
+      ctx.fillStyle = playerColor;
+      ctx.fillRect(playerX, playerY, playerSize, playerSize);
+    }
+
+    // Function to draw the enemies
+    function drawEnemies() {
+      ctx.fillStyle = enemyColor;
+      for (let enemy of enemies) {
+        ctx.fillRect(enemy.x, enemy.y, playerSize, playerSize);
+      }
+    }
+
+    // Function to move the player
+    function movePlayer(dx, dy) {
+      const newX = playerX + dx;
+      const newY = playerY + dy;
+
+      if (newX >= 0 && newX <= canvasWidth - playerSize) {
+        playerX = newX;
+      }
+
+      if (newY >= 0 && newY <= canvasHeight - playerSize) {
+        playerY = newY;
+      }
+    }
+
+    // Function to update the game state
+    function update() {
+      // Move enemies
+      for (let enemy of enemies) {
+        enemy.x += enemySpeed;
+        if (enemy.x > canvasWidth) {
+          enemy.x = -playerSize;
+        }
+      }
+
+      // Check for collisions with enemies
+      for (let enemy of enemies) {
+        if (
+          playerX < enemy.x + playerSize &&
+          playerX + playerSize > enemy.x &&
+          playerY < enemy.y + playerSize &&
+          playerY + playerSize > enemy.y
+        ) {
+          // Player collided with an enemy, reset position
+          playerX = canvasWidth / 2 - playerSize / 2;
+          playerY = canvasHeight - playerSize;
+          break;
+        }
+      }
+
+      // Check if player reached the river
+      if (playerY < riverSpacing) {
+        // Player reached the river, reset position
+        playerX = canvasWidth / 2 - playerSize / 2;
+        playerY = canvasHeight - playerSize;
+      }
+    }
+
+    // Function to render the game
+    function render() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the player and enemies
+      drawPlayer();
+      drawEnemies();
+    }
+
+    // Function to handle key press events
+    function handleKeyPress(event) {
+      switch (event.key) {
+        case "ArrowUp":
+          movePlayer(0, -playerSpeed);
+          break;
+        case "ArrowDown":
+          movePlayer(0, playerSpeed);
+          break;
+        case "ArrowLeft":
+          movePlayer(-playerSpeed, 0);
+          break;
+        case "ArrowRight":
+          movePlayer(playerSpeed, 0);
+          break;
+      }
+    }
+
+    // Initialize the game
+    function init() {
+      // Create enemies
+      for (let row = 0; row < numRows; row++) {
+        for (let x = 0; x < canvasWidth; x += enemySpacing) {
+          enemies.push({ x, y: row * (canvasHeight / numRows) });
+        }
+      }
+
+      // Attach key press event listener
+      window.addEventListener("keydown", handleKeyPress);
+
+      // Start the game loop
+      setInterval(() => {
+        update();
+        render();
+      }, 1000 / 60); // 60 FPS
+    }
+
+    // Start the game
+    init();
+  </script>
+</body>
+</html>
