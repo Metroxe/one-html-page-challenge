@@ -120,6 +120,14 @@ const entries = [
 	},
 
 	{
+		title: "datacamp website",
+		filename: "datacamp.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+
+	{
 		title: "yahoo clone",
 		filename: "yahoo.html",
 		description: "Submission to the One Html Page Challenge.",
