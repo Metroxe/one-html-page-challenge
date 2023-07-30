@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Code Editor</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .editor {
+      display: flex;
+      font-family: monospace;
+    }
+
+    .line-numbers {
+      counter-reset: line;
+      flex: 0 0 30px;
+      text-align: right;
+      user-select: none;
+    }
+
+    .line-numbers span {
+      counter-increment: line;
+      display: block;
+      padding-right: 5px;
+    }
+
+    .code-area {
+      flex: 1;
+      padding: 5px;
+    }
+
+    .code-area textarea {
+      resize: none;
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      background-color: #f8f8f8;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor">
+    <div class="line-numbers">
+      <span></span>
+    </div>
+    <div class="code-area">
+      <textarea spellcheck="false" autofocus>
+// Write your code here...
+      </textarea>
+    </div>
+  </div>
+</body>
+</html>
