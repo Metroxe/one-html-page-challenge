@@ -119,6 +119,13 @@ const entries = [
 		github: "mohamedmehdigara"
 	},
 	{
+		title: "bus",
+		filename: "bus.html",
+		description: "Submission to the One Html Page Challenge.",
+		author: "Mohamed Mehdi Gara",
+		github: "mohamedmehdigara"
+	},
+	{
 		title: "Frogger",
 		filename: "Frogger.html",
 		description: "Submission to the One Html Page Challenge.",

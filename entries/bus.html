@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cartoon Bus</title>
+  <style>
+    body {
+      background-color: #87CEEB; /* Light blue */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .bus {
+      width: 200px;
+      height: 100px;
+      background-color: #FFD700; /* Gold */
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+    .front-window {
+      width: 50px;
+      height: 40px;
+      background-color: #000080; /* Navy blue */
+      position: absolute;
+      top: 30px;
+      left: 10px;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .front-window:before {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 2px;
+      background-color: #FFF;
+      position: absolute;
+      top: 50%;
+      left: 5px;
+      transform: translateY(-50%);
+    }
+    .front-window:after {
+      content: "";
+      display: block;
+      width: 2px;
+      height: 30px;
+      background-color: #FFF;
+      position: absolute;
+      top: 10px;
+      left: 25px;
+    }
+    .front-bumper {
+      width: 10px;
+      height: 10px;
+      background-color: #FF4500; /* OrangeRed */
+      position: absolute;
+      top: 70px;
+      left: 25px;
+      border-radius: 50%;
+      z-index: 2;
+    }
+    .bus-body {
+      width: 180px;
+      height: 80px;
+      background-color: #FFD700; /* Gold */
+      position: absolute;
+      top: 10px;
+      left: 50px;
+    }
+    .bus-body:before {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 80px;
+      background-color: #000080; /* Navy blue */
+      position: absolute;
+      top: 0;
+      left: -10px;
+    }
+    .bus-roof {
+      width: 200px;
+      height: 20px;
+      background-color: #FF4500; /* OrangeRed */
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 5px 5px 0 0;
+    }
+    .bus-windows {
+      width: 140px;
+      height: 50px;
+      background-color: #FFFFFF; /* White */
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .bus-windows .window {
+      width: 20px;
+      height: 30px;
+      background-color: #000080; /* Navy blue */
+      border-radius: 5px;
+    }
+    .bus-wheels {
+      width: 150px;
+      height: 20px;
+      position: absolute;
+      bottom: 10px;
+      left: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .bus-wheels .wheel {
+      width: 20px;
+      height: 20px;
+      background-color: #000;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <div class="bus">
+    <div class="front-window"></div>
+    <div class="front-bumper"></div>
+    <div class="bus-body"></div>
+    <div class="bus-roof"></div>
+    <div class="bus-windows">
+      <div class="window"></div>
+      <div class="window"></div>
+      <div class="window"></div>
+      <div class="window"></div>
+    </div>
+    <div class="bus-wheels">
+      <div class="wheel"></div>
+      <div class="wheel"></div>
+    </div>
+  </div>
+</body>
+</html>
