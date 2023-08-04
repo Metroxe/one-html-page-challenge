@@ -602,4 +602,11 @@ const entries = [
 		author: "Nicola Cerutti",
 		github: "ncerutti"
 	},
+	{
+		title: "Minecraft",
+		filename:"goddamnit.html";,
+		description: "goddamnit why can't i stop making minecraft clones",
+		author:"Safin Salahuddin",
+		github:"safingames123"
+	}
 ];
