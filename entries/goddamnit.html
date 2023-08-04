@@ -1,0 +1,49 @@
+<!--GODDAMNIT WHY CAN'T I STOP-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft</title>
+  <style>
+    *{
+      text-align: center;
+    }
+    p{
+      font-family: 'minecrafter alt';
+      font-size: 74px;
+    }
+    button{
+      height: 36px;
+      width: 300px;
+    }
+    iframe{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <p class="logo">Minecraft</p>
+  <div>
+    <button onclick="play()">Start</button>
+  </div>
+  <button onclick="window.close()">Quit</button>
+</body>
+<script>
+  function play(){
+    addhtml('<iframe src="https://guckstift.github.io/voxel-game-js/index.html" frameborder="0"></iframe>')
+  }
+  function addhtml(html){
+    document.body.innerHTML = document.body.innerHTML + html
+  }
+</script>
+</html>
