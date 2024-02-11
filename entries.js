@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "BMI Calculator",
+		filename: "BMI-Calculator.html",
+		description: "Calculates Body Mass Index based on your weigth and heigth",
+		author: "Alexis Ortiz",
+		github: "AlexiusOL"
+	},
 ];
