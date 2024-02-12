@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>One HTML Page Challenge</title>
 
         <!-- Icons -->
@@ -63,6 +64,11 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 
         <style>
+            .container {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+
             .jumbotron {
                 text-align: center;
             }
@@ -99,8 +105,6 @@
     </head>
     <body>
         <div class="container">
-            <br />
-
             <div class="card">
                 <div class="card-body">
                     <div class="jumbotron">
@@ -112,7 +116,7 @@
                         </p>
                         <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge/blob/master/README.md#how-to-submit" role="button" target="_blank">Submit an Entry</a>
                         <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge" role="button" target="_blank">Github</a>
-                        
+
                     </div>
                     <div class="input-group flex-nowrap">
                         <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="addon-wrapping" id="search" oninput="searchOnInput()" />
@@ -124,7 +128,6 @@
                 </div>
             </div>
         </div>
-        <br />
 
         <script src="./entries.js"></script>
         <script>
