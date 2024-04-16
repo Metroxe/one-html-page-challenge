@@ -609,4 +609,46 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+	        title: "ArtPlayer",
+		filename: "ArtPlayer Loacl.html",
+                description: "A local video player using the artplayer library",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
+	{
+	        title: "PDF viewer",
+		filename: "PDF viewer.html",
+                description: "Official demo single file version of pdf.js library",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
+	{
+	        title: "TXT reader",
+		filename: "TXT reader.html",
+                description: "A txt file reader",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
+	{
+	        title: "Run code online (drag and drop upload)",
+		filename: "在线运行代码（拖拽上传）.html",
+                description: "Run front-end code online (drag and drop to upload files)",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
+	{
+	        title: "Generate bin files of any size",
+		filename: "生成随意大小文件.html",
+                description: "Can generate bin files of any size",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
+	{
+	        title: "music player",
+		filename: "音乐播放器.html",
+                description: "A local music file player using the 'aplayer' library",
+		author: "xzyl4303",
+		github: "xzyl4303"
+	},
 ];
