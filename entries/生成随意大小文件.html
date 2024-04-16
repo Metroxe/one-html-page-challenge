@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生成随意大小文件</title>
+</head>
+<body>
+    <h1>生成随意大小文件</h1>
+    <label for="fileSize">文件大小:</label>
+    <input type="number" id="fileSize" min="1" step="1" value="100">
+    <select id="sizeUnit">
+        <option value="B">B</option>
+        <option value="KB">KB</option>
+        <option value="MB" selected>MB</option>
+        <option value="GB">GB</option>
+    </select>
+    <button onclick="generateAndTestFile()">生成随意大小文件</button>
+    <div id="result"></div>
+
+    <script>
+        function generateAndTestFile() {
+            var fileSize = document.getElementById("fileSize").value;
+            var sizeUnit = document.getElementById("sizeUnit").value;
+            var fileSizeInBytes = convertToBytes(fileSize, sizeUnit);
+            var buffer = new ArrayBuffer(fileSizeInBytes);
+            var uint8View = new Uint8Array(buffer);
+
+            // 填充数组
+            for (var i = 0; i < fileSizeInBytes; i++) {
+                uint8View[i] = Math.floor(Math.random() * 256);
+            }
+
+            // 将数组转换为Blob
+            var blob = new Blob([buffer], { type: 'application/octet-stream' });
+
+            // 计时开始
+            var startTime = performance.now();
+
+            // 创建一个a标签，模拟点击下载
+            var link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = 'testfile.bin';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 计时结束
+            var endTime = performance.now();
+
+            // 计算下载速度
+            var durationInSeconds = (endTime - startTime) / 1000;
+            var speedMbps = (fileSizeInBytes * 8 / (1024 * 1024) / durationInSeconds).toFixed(2);
+
+            displayResult(speedMbps);
+        }
+
+        function convertToBytes(size, unit) {
+            switch (unit) {
+                case "B":
+                    return size;
+                case "KB":
+                    return size * 1024;
+                case "MB":
+                    return size * 1024 * 1024;
+                case "GB":
+                    return size * 1024 * 1024 * 1024;
+                default:
+                    return size;
+            }
+        }
+
+    </script>
+</body>
+</html>

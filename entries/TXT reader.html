@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本阅读器</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #content {
+            font-size: 16px;
+            width: 90%;
+            margin: auto;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            height: 700px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        #buttonContainer {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        #buttonContainer button {
+            margin: 0 5px;
+        }
+
+        #importFileContainer {
+            display: inline-block;
+        }
+
+        #importFile {
+            display: none;
+        }
+
+        #importButton {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        #fullscreenButton {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        #settingsButton {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+       button {
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        #settingsMenu {
+            display: none;
+            position: absolute;
+            top: 30px;
+            right: 10px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            padding: 10px;
+        }
+
+        #settingsMenu label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+
+<style>
+    #footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 5px;
+    }
+
+
+</style>
+
+</head>
+<body>
+    <input type="file" id="fileUpload" accept=".txt">
+    <div id="buttonContainer">
+        <button onclick="changePage(-5)">上一页</button>
+        <button onclick="changePage(5)">下一页</button>
+       <span id="pageInfo"></span>
+        <label for="pageInput">跳转到第</label>
+        <input type="number" id="pageInput" min="1" max="1" value="1">
+        <label for="pageInput">页</label>
+        <button onclick="jumpToPage()">跳转</button>
+        <button onclick="toggleFullscreen()" id="fullscreenButton">全屏</button>
+     <button onclick="saveProgress()">保存阅读进度</button>
+        <div id="importFileContainer">
+            <input type="file" id="importFile" accept=".json" onchange="handleFileChange()">
+            <label for="importFile" id="importButton">导入阅读进度</label>
+        <button onclick="toggleSettingsMenu()" id="settingsButton">⚙️设置</button>
+        <div id="settingsMenu">
+            <label for="fontFamily">字体:</label>
+            <select id="fontFamily" onchange="changeFontFamily()">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Times New Roman, serif">Times New Roman</option>
+                <option value="Courier New, monospace">Courier New</option>
+            </select>
+        <button onclick="changeFontSize(-1)">减小字体</button>
+        <button onclick="changeFontSize(1)">增大字体</button>
+    <label for="theme">主题:</label>
+    <select id="theme" onchange="changeTheme()">
+        <option value="light">明亮</option>
+        <option value="dark">暗黑</option>
+    </select>
+</div>
+        </div>
+        </div>
+    </div>
+    <div id="content"></div>
+<div id="footer">
+    <span id="currentTime"></span>
+</div>
+<div id="settingsContainer">
+    <div id="settingsMenu">
+        <label for="fontFamily">字体:</label>
+        <select id="fontFamily" onchange="changeFontFamily()">
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Times New Roman, serif">Times New Roman</option>
+            <option value="Courier New, monospace">Courier New</option>
+            <option value="Georgia, serif">Georgia</option>
+            <!-- 添加更多字体选项 -->
+        </select>
+
+        <label for="fontColor">字体颜色:</label>
+        <input type="color" id="fontColor" onchange="changeFontColor()">
+
+        <label for="bgColor">背景颜色:</label>
+        <input type="color" id="bgColor" onchange="changeBgColor()">
+
+        <label for="theme">主题:</label>
+        <select id="theme" onchange="changeTheme()">
+            <option value="light">明亮</option>
+            <option value="dark">暗黑</option>
+        </select>
+
+        <button onclick="closeSettings()">关闭</button>
+    </div>
+</div>
+    <script>
+        var fileUpload = document.getElementById('fileUpload');
+        var content = document.getElementById('content');
+        var pageInfo = document.getElementById('pageInfo');
+        var pageInput = document.getElementById('pageInput');
+        var importFile = document.getElementById('importFile');
+        var fullscreenButton = document.getElementById('fullscreenButton');
+        var settingsButton = document.getElementById('settingsButton');
+        var settingsMenu = document.getElementById('settingsMenu');
+        var text = '';
+        var pageSize = 1000;
+        var currentPage = 0;
+        var bookTitle = '';
+
+        fileUpload.addEventListener('change', function(e) {
+            var file = e.target.files[0];
+            if (!file) {
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                text = e.target.result.split('\n').join('\n\n');
+                if (text.trim() === "") {
+                    alert("文本文件为空，请选择其他文件。");
+                    return;
+                }
+                // 在加载新书时，重置书名和当前页码
+                bookTitle = file.name.replace(/\.[^/.]+$/, ''); // 提取文件名（不含扩展名）作为书名
+                currentPage = 0;
+                displayPage(currentPage);
+            };
+            reader.readAsText(file);
+        });
+
+        function displayPage(page) {
+            var start = page * pageSize;
+            var end = Math.min(start + pageSize, text.length);
+            content.textContent = text.slice(start, end);
+
+            // 设置内容区域滚动到顶部
+            content.scrollTop = 0;
+
+            // 更新页码信息
+            pageInfo.textContent = "第 " + (page + 1) + " 页 / 共 " + Math.ceil(text.length / pageSize) + " 页";
+            // 更新跳转输入框的最大值
+            pageInput.max = Math.ceil(text.length / pageSize);
+        }
+
+        function changeFontSize(delta) {
+            var style = window.getComputedStyle(content);
+            var fontSize = parseFloat(style.fontSize);
+            content.style.fontSize = (fontSize + delta) + 'px';
+        }
+
+        function changeFontFamily() {
+            var fontFamily = document.getElementById('fontFamily').value;
+            content.style.fontFamily = fontFamily;
+        }
+
+
+        function changePage(delta) {
+            var maxPage = Math.ceil(text.length / pageSize) - 1;
+            if (delta === 1 && currentPage === maxPage) {
+                alert("已经是最后一页！");
+            } else {
+                currentPage = Math.max(0, Math.min(maxPage, currentPage + delta));
+                displayPage(currentPage);
+            }
+        }
+
+
+        function jumpToPage() {
+            var requestedPage = parseInt(pageInput.value) - 1; // 用户输入的页码从1开始，转换为数组索引从0开始
+            if (requestedPage >= 0 && requestedPage <= Math.ceil(text.length / pageSize) - 1) {
+                currentPage = requestedPage;
+                displayPage(currentPage);
+            } else {
+                alert("无效的页码，请输入有效范围内的页码。");
+            }
+        }
+
+        function saveProgress() {
+            var progress = {
+                bookTitle: bookTitle,
+                currentPage: currentPage
+            };
+
+            var blob = new Blob([JSON.stringify(progress)], { type: 'application/json' });
+            var currentDate = new Date();
+            var fileName =bookTitle + '_' + currentDate.toISOString() + '.json';
+
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function importProgress() {
+            var importFileInput = document.getElementById('importFile');
+            var importFile = importFileInput.files[0];
+
+            if (importFile) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    try {
+                        var importedData = JSON.parse(e.target.result);
+                        if (importedData && importedData.bookTitle === bookTitle && typeof importedData.currentPage === 'number') {
+                            currentPage = importedData.currentPage;
+                            displayPage(currentPage);
+                        } else {
+                            alert('无效的进度文件，书名不匹配或者文件格式错误。');
+                        }
+                    } catch (error) {
+                        alert('无法解析进度文件。');
+                    }
+                };
+                reader.readAsText(importFile);
+            } else {
+                alert('请选择要导入的进度文件。');
+            }
+        }
+
+        function handleFileChange() {
+            var importFileInput = document.getElementById('importFile');
+            importProgress(importFileInput.files);
+        }
+
+        function toggleFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        function toggleSettingsMenu() {
+            if (settingsMenu.style.display === 'block') {
+                settingsMenu.style.display = 'none';
+            } else {
+                settingsMenu.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                changePage(1);
+            } else if (e.key === 'ArrowLeft') {
+                changePage(-1);
+            }
+        });
+    </script>
+<script>
+
+ var fontFamilySelect = document.getElementById('fontFamily');
+    var themeSelect = document.getElementById('theme');
+
+    function updateTheme(theme) {
+        if (theme === 'dark') {
+            document.body.style.backgroundColor = '#333';
+            document.body.style.color = '#fff';
+        } else {
+            document.body.style.backgroundColor = '#fff';
+            document.body.style.color = '#333';
+        }
+    }
+
+    function changeTheme() {
+        var selectedTheme = themeSelect.value;
+        updateTheme(selectedTheme);
+    }
+
+    // 在脚本初始化时应用主题
+    changeTheme();
+
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var ampm = (hours >= 12) ? 'PM' : 'AM';
+
+        // 转换为 12 小时制
+        hours = (hours % 12) || 12;
+
+        // 添加前导零
+        hours = (hours < 10) ? '0' + hours : hours;
+        minutes = (minutes < 10) ? '0' + minutes : minutes;
+        seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+        var currentTimeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+        document.getElementById('currentTime').textContent = currentTimeString;
+
+        // 更新间隔为 1 秒
+        setTimeout(updateClock, 1000);
+    }
+
+    // 初始调用一次
+    updateClock();
+</script>
+</body>
+</html>

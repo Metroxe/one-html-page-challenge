@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线运行HTML代码</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .buttons-container {
+            margin-bottom: 10px;
+        }
+
+        .buttons-container input[type="file"] {
+            margin-right: 10px;
+        }
+
+        .code-container {
+            width: 100%;
+            height: 700px;
+            border: 1px solid #ffffff;
+            margin-bottom: 20px;
+        }
+
+        #html-code {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>在线运行HTML代码</h1>
+
+    <div class="buttons-container">
+        <input type="file" id="fileInput" style="display: none;">
+        <button onclick="runCode()">运行</button>
+        <button onclick="saveCode()">保存</button>
+        <button onclick="clearCode()">清空</button>
+    </div>
+
+    <div class="code-container" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+        <textarea id="html-code" placeholder="或在这里输入你的HTML代码"></textarea>
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            var fileInput = event.target;
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var fileContent = event.target.result;
+                document.getElementById('html-code').value = fileContent;
+            };
+            reader.readAsText(file);
+        });
+
+        function runCode() {
+            var htmlCode = document.getElementById('html-code').value;
+            var newWindow = window.open();
+            newWindow.document.open();
+            newWindow.document.write(htmlCode);
+            newWindow.document.close();
+        }
+
+        function saveCode() {
+            var htmlCode = document.getElementById('html-code').value;
+            
+            // 弹出输入框，让用户输入文件名
+            var fileName = prompt("请输入文件名（包括后缀）", "index.html");
+
+            // 如果用户点击取消按钮，则不保存文件
+            if (fileName === null) {
+                return;
+            }
+
+            // 创建Blob对象并保存文件
+            var blob = new Blob([htmlCode], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearCode() {
+            document.getElementById('html-code').value = '';
+            document.getElementById('fileInput').value = '';
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+
+            var file = event.dataTransfer.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var fileContent = event.target.result;
+                document.getElementById('html-code').value = fileContent;
+            };
+
+            reader.readAsText(file);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+        }
+    </script>
+</body>
+
+</html>
