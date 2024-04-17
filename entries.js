@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+	        title: "Guess the color",
+		filename: "GuessTheColor.html",
+                description: "Try to guess the color",
+		author: "Eshaan Ahuja",
+		github: "ahujaesh"
+	},
 ];
