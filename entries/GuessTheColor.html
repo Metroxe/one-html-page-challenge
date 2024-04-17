@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guess the color</title>
+  <style>
+    html {
+      background-color: #8DCFEC;
+    }
+  </style>
+</head>
+<body>
+  <h1>Guess the color</h1>
+  <p>The color is in HEX, and you need to include the # and it needs to be in all caps. Ex: #FFFFFF. </p>
+  <form id="form">
+    <input type="text" id="color"></input>
+    <button type="submit">Submit</button>
+  </form>
+  <p>Stuck? Hit CTRL + SHIFT + I and read the JS</p>
+  <p>By Eshaan Ahuja</p>
+  <script>
+    document.getElementById('form').addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const color = document.getElementById('color').value.toUpperCase(); // Retrieve input value and convert to uppercase
+      if (color === "#8DCFEC") {
+        alert("You did it!");
+      } else {
+        alert("Wrong!");
+      }
+    });
+  </script>
+</body>
+</html>
