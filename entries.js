@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+	        title: "Go Game",
+		filename: "go.html",
+                description: "Play to go game",
+		author: "Geun Lim",
+		github: "shing100"
+	},
 ];
