@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "solar system",
+		filename: "solar-system.html",
+		description: "A moving solar system with actual relative speed of planets",
+		author: "Aryan Kapoor",
+		github: "Aryankpoor"
+	},
 ];
