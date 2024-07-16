@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Rock Paper Scissors",
+		filename: "RockPaperScissors.html",
+		description: "Just a simple rock paper scissors game.",
+		author: "Alfonso Caio Espino",
+		github: "Alfonsoce11"
+	},
 ];
