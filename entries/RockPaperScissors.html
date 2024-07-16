@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Rock Paper Scissors</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        body {
+            text-align: center;
+            background: black;
+            padding: 70px 0;
+            overflow: hidden;
+        }
+        * {
+            text-align: center;
+        }
+        #theGame {
+            border-radius: 25px;
+            background: #333;
+            margin: auto;
+            display: inline-block;
+            padding: 20px;
+        }
+        h1, p {
+            color: white;
+        }
+        #getScore {
+            
+        }
+
+        .rock, .paper, .scissors {
+            cursor: pointer;
+            display: inline-block;
+            color: white;
+            padding: 5px;
+        }
+        #choice1, #choice2, #choice3 {
+            border-radius: 50%;
+            border-color: white;
+            display: inline-block;
+            background: #444;
+        }
+        button {
+            border-radius: 4px;
+            background-color: #444;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="theGame">
+      <h1>Rock Paper Scissors</h1>
+      <br />
+      
+      <div id='choice1' class="rock">
+        <p class="rock" id="rock">Use rock</p>
+      </div>
+      
+      <div id='choice2' class="paper">
+        <p class="paper" id="paper">Use Paper</p>
+      </div>
+      
+      <div id='choice3' class="scissors">
+        <p id="scissors" class="scissors">Use scissors</p>
+      </div>
+
+    <p id="result"></p><br>
+
+    <button id="reset" style="display: none">Play again</button>
+
+    <button id="getScore">See The Score</button><br>
+    </div>
+    <script>
+      getNum();
+
+      function getNum() {
+        return Math.floor(Math.random() * 3);
+      }
+
+      let theChoice = getNum();
+
+      let wins = 0;
+      let loses = 0;
+      let ties = 0;
+
+      document.getElementById("getScore").addEventListener("click", showScore);
+
+      function showScore() {
+        alert(`Wins: ${wins}
+loses: ${loses}
+ties: ${ties}`);
+      }
+
+      document.getElementById("reset").addEventListener("click", resetGame);
+
+      function resetGame() {
+        theChoice = getNum();
+        document.getElementById("reset").style.display = "none";
+        document.getElementById("result").innerHTML = " ";
+        document.getElementById("choice1").style.display = "inline-block";
+        document.getElementById("choice2").style.display = "inline-block";
+        document.getElementById("choice3").style.display = "inline-block";
+      }
+
+      function hideButtons() {
+          document.getElementById("choice1").style.display = "none";
+          document.getElementById("choice2").style.display = "none";
+          document.getElementById("choice3").style.display = "none";
+      }
+
+      document.getElementById("choice1").addEventListener("click", rock);
+
+      function rock() {
+        if (theChoice === 0) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose rock. It's a tie.`;
+          ties++;
+          hideButtons();
+        } else if (theChoice === 1) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose paper. You lose.`;
+          loses++;
+          hideButtons();
+        } else if (theChoice === 2) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose scissors. You win.`;
+          wins++;
+          hideButtons();
+        }
+        document.getElementById("reset").style.display = "inline";
+      }
+
+      document.getElementById("choice2").addEventListener("click", paper);
+
+      function paper() {
+        if (theChoice === 0) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose rock. You win.`;
+          wins++;
+          hideButtons();
+        } else if (theChoice === 1) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose paper. It's a tie`;
+          ties++;
+          hideButtons();
+        } else if (theChoice === 2) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose scissors. You lose.`;
+          loses++;
+          hideButtons();
+        }
+        document.getElementById("reset").style.display = "inline";
+      }
+
+      document.getElementById("choice3").addEventListener("click", scissors);
+
+      function scissors() {
+        if (theChoice === 0) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose rock. You lose.`;
+          loses++;
+          hideButtons();
+        } else if (theChoice === 1) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose paper. You win.`;
+          wins++;
+          hideButtons();
+        } else if (theChoice === 2) {
+          document.getElementById(
+            "result"
+          ).innerHTML = `The computer chose scissors. It's a tie`;
+          ties++;
+          hideButtons();
+        }
+        document.getElementById("reset").style.display = "inline";
+      }
+    </script>
+  </body>
+</html>
