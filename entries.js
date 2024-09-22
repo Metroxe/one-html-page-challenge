@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Maze Escape",
+		filename: "maze_escape_raycaster.html",
+		description: "A game where you have to escape from a maze. Works by using raycasting.",
+		author: "Jerry George",
+		github: "jrygeorge"
+	}
 ];
