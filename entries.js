@@ -603,6 +603,13 @@ const entries = [
 		github: "ncerutti"
 	},
 	{
+		title: "FLAMES",
+		filename: "Flames.html",
+		description: "Find out the relationship between you and your partner",
+		author: "Excelsior",
+		github: "SandeepBalivada"
+	},
+	{
 	        title: "Image To Base64 Converter | PiXELCONVERTOR",
 		filename: "PiXELCONVERTOR.html",
                 description: "Convert Images to Base64",
