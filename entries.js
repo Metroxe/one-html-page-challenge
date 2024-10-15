@@ -604,7 +604,7 @@ const entries = [
 	},
 	{
 		title: "FLAMES",
-		filename: "Flames.html",
+		filename: "FLAMES.html",
 		description: "Find out the relationship between you and your partner",
 		author: "Excelsior",
 		github: "SandeepBalivada"
