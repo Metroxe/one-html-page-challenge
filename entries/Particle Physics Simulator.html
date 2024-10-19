@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Physics Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #canvas-container {
+            position: relative;
+        }
+        
+        canvas {
+            display: block;
+        }
+        
+        #control-panel {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(184, 184, 184, 0.9);
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+        
+        #control-panel.open {
+            left: 0;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+        }
+        
+        button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 5px;
+        }
+        
+        #toggle-menu {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1001;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="canvas-container"></div>
+    <button id="toggle-menu">☰ Menu</button>
+    <div id="control-panel">
+        <h2>Simulation Controls</h2>
+        <div class="control-group">
+            <label for="gravity">Gravity: <span id="gravity-value">1</span></label>
+            <input type="range" id="gravity" min="-2" max="2" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+            <label for="particleCount">Particle Count: <span id="particleCount-value">50</span></label>
+            <input type="range" id="particleCount" min="1" max="500" step="1" value="50">
+        </div>
+        <div class="control-group">
+            <label for="particleSize">Particle Size: <span id="particleSize-value">10</span></label>
+            <input type="range" id="particleSize" min="1" max="50" step="1" value="10">
+        </div>
+        <div class="control-group">
+            <label for="restitution">Restitution: <span id="restitution-value">0.8</span></label>
+            <input type="range" id="restitution" min="0" max="1" step="0.1" value="0.8">
+        </div>
+        <div class="control-group">
+            <label for="friction">Friction: <span id="friction-value">0.005</span></label>
+            <input type="range" id="friction" min="0" max="1" step="0.01" value="0.005">
+        </div>
+        <div class="control-group">
+            <label for="airFriction">Air Friction: <span id="airFriction-value">0.001</span></label>
+            <input type="range" id="airFriction" min="0" max="0.1" step="0.001" value="0.001">
+        </div>
+        <div class="control-group">
+            <label for="colorScheme">Color Scheme:</label>
+            <select id="colorScheme">
+                <option value="blue">Blue</option>
+                <option value="rainbow">Rainbow</option>
+                <option value="grayscale">Grayscale</option>
+                <option value="random">Random</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>
+                <input type="checkbox" id="enableWalls">
+                Enable Walls
+            </label>
+        </div>
+        <button id="resetSimulation">Reset Simulation</button>
+        <button id="addParticle">Add Particle</button>
+        <button id="addHeavyParticle">Add Heavy Particle</button>
+        <button id="applyForce">Apply Random Force</button>
+    </div>
+    <script>
+        // Module aliases
+        var Engine = Matter.Engine,
+            Render = Matter.Render,
+            Runner = Matter.Runner,
+            Bodies = Matter.Bodies,
+            Composite = Matter.Composite,
+            Mouse = Matter.Mouse,
+            MouseConstraint = Matter.MouseConstraint,
+            Body = Matter.Body;
+
+        // Create an engine
+        var engine = Engine.create();
+
+        // Create a renderer
+        var render = Render.create({
+            element: document.getElementById('canvas-container'),
+            engine: engine,
+            options: {
+                width: window.innerWidth,
+                height: window.innerHeight,
+                wireframes: false,
+                background: '#f0f0f0'
+            }
+        });
+
+        // Variables
+        var particles = [];
+        var walls = [];
+        var ground;
+
+        // Configuration object
+        var config = {
+            gravity: 1,
+            particleCount: 50,
+            particleSize: 10,
+            restitution: 0.8,
+            friction: 0.005,
+            airFriction: 0.001,
+            colorScheme: 'blue',
+            enableWalls: false
+        };
+
+        // Function to create particles
+        function createParticles() {
+            for (var i = 0; i < config.particleCount; i++) {
+                var particle = Bodies.circle(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight / 2,
+                    config.particleSize, {
+                        restitution: config.restitution,
+                        friction: config.friction,
+                        frictionAir: config.airFriction,
+                        render: {
+                            fillStyle: getParticleColor(i)
+                        }
+                    }
+                );
+                particles.push(particle);
+            }
+            Composite.add(engine.world, particles);
+        }
+
+        // Function to get particle color based on color scheme
+        function getParticleColor(index) {
+            switch (config.colorScheme) {
+                case 'rainbow':
+                    return `hsl(${index * 360 / config.particleCount}, 100%, 50%)`;
+                case 'grayscale':
+                    var shade = Math.floor(index * 255 / config.particleCount);
+                    return `rgb(${shade}, ${shade}, ${shade})`;
+                case 'random':
+                    return `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+                default:
+                    return '#4285F4';
+            }
+        }
+
+        // Function to create walls
+        function createWalls() {
+            var wallOptions = {
+                isStatic: true,
+                render: {
+                    fillStyle: '#888'
+                }
+            };
+            walls = [
+                Bodies.rectangle(window.innerWidth / 2, window.innerHeight, window.innerWidth, 60, wallOptions),
+                Bodies.rectangle(0, window.innerHeight / 2, 60, window.innerHeight, wallOptions),
+                Bodies.rectangle(window.innerWidth, window.innerHeight / 2, 60, window.innerHeight, wallOptions),
+                Bodies.rectangle(window.innerWidth / 2, 0, window.innerWidth, 60, wallOptions)
+            ];
+            ground = walls[0];
+            Composite.add(engine.world, walls);
+        }
+
+        // Function to remove walls
+        function removeWalls() {
+            Composite.remove(engine.world, walls.slice(1));
+            walls = [ground];
+        }
+
+        // Function to reset simulation
+        function resetSimulation() {
+            Composite.clear(engine.world);
+            particles = [];
+            createParticles();
+            createWalls();
+            if (!config.enableWalls) {
+                removeWalls();
+            }
+            updateSimulation();
+        }
+
+        // Function to update simulation based on configuration
+        function updateSimulation() {
+            engine.world.gravity.y = config.gravity;
+            particles.forEach((particle, index) => {
+                Body.setMass(particle, config.particleSize * 0.1);
+                Body.setInertia(particle, Infinity);
+                particle.restitution = config.restitution;
+                particle.friction = config.friction;
+                particle.frictionAir = config.airFriction;
+                particle.render.fillStyle = getParticleColor(index);
+            });
+        }
+
+        // Function to add a new particle
+        function addParticle() {
+            var particle = Bodies.circle(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight / 2,
+                config.particleSize, {
+                    restitution: config.restitution,
+                    friction: config.friction,
+                    frictionAir: config.airFriction,
+                    render: {
+                        fillStyle: getParticleColor(particles.length)
+                    }
+                }
+            );
+            particles.push(particle);
+            Composite.add(engine.world, particle);
+        }
+
+        // Function to add a heavy particle
+        function addHeavyParticle() {
+            var heavyParticle = Bodies.circle(
+                Math.random() * window.innerWidth,
+                Math.random() * window.innerHeight / 2,
+                config.particleSize * 2, {
+                    restitution: config.restitution,
+                    friction: config.friction,
+                    frictionAir: config.airFriction,
+                    density: 0.1,
+                    render: {
+                        fillStyle: '#FF0000'
+                    }
+                }
+            );
+            particles.push(heavyParticle);
+            Composite.add(engine.world, heavyParticle);
+        }
+
+        // Function to apply random force to all particles
+        function applyRandomForce() {
+            particles.forEach(particle => {
+                Body.applyForce(particle, particle.position, {
+                    x: (Math.random() - 0.5) * 0.1,
+                    y: (Math.random() - 0.5) * 0.1
+                });
+            });
+        }
+
+        // Initialize simulation
+        createWalls();
+        createParticles();
+        if (!config.enableWalls) {
+            removeWalls();
+        }
+
+        // Add mouse control
+        var mouse = Mouse.create(render.canvas);
+        var mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+
+        Composite.add(engine.world, mouseConstraint);
+
+        // Keep the mouse in sync with rendering
+        render.mouse = mouse;
+
+        // Run the engine
+        Engine.run(engine);
+
+        // Run the renderer
+        Render.run(render);
+
+        // Event listeners for controls
+        document.getElementById('gravity').addEventListener('input', function(e) {
+            config.gravity = parseFloat(e.target.value);
+            document.getElementById('gravity-value').textContent = config.gravity;
+            updateSimulation();
+        });
+
+        document.getElementById('particleCount').addEventListener('input', function(e) {
+            config.particleCount = parseInt(e.target.value);
+            document.getElementById('particleCount-value').textContent = config.particleCount;
+            resetSimulation();
+        });
+
+        document.getElementById('particleSize').addEventListener('input', function(e) {
+            config.particleSize = parseInt(e.target.value);
+            document.getElementById('particleSize-value').textContent = config.particleSize;
+            updateSimulation();
+        });
+
+        document.getElementById('restitution').addEventListener('input', function(e) {
+            config.restitution = parseFloat(e.target.value);
+            document.getElementById('restitution-value').textContent = config.restitution;
+            updateSimulation();
+        });
+
+        document.getElementById('friction').addEventListener('input', function(e) {
+            config.friction = parseFloat(e.target.value);
+            document.getElementById('friction-value').textContent = config.friction;
+            updateSimulation();
+        });
+
+        document.getElementById('airFriction').addEventListener('input', function(e) {
+            config.airFriction = parseFloat(e.target.value);
+            document.getElementById('airFriction-value').textContent = config.airFriction;
+            updateSimulation();
+        });
+
+        document.getElementById('colorScheme').addEventListener('change', function(e) {
+            config.colorScheme = e.target.value;
+            updateSimulation();
+        });
+
+        document.getElementById('enableWalls').addEventListener('change', function(e) {
+            config.enableWalls = e.target.checked;
+            if (config.enableWalls) {
+                createWalls();
+            } else {
+                removeWalls();
+            }
+        });
+
+        document.getElementById('resetSimulation').addEventListener('click', resetSimulation);
+        document.getElementById('addParticle').addEventListener('click', addParticle);
+        document.getElementById('addHeavyParticle').addEventListener('click', addHeavyParticle);
+        document.getElementById('applyForce').addEventListener('click', applyRandomForce);
+
+        // Toggle menu
+        document.getElementById('toggle-menu').addEventListener('click', function() {
+            document.getElementById('control-panel').classList.toggle('open');
+        });
+
+        // Prevent interactions with UI elements from affecting the simulation
+        document.getElementById('control-panel').addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+        });
+
+        document.getElementById('toggle-menu').addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+        });
+
+        // Resize canvas when window is resized
+        window.addEventListener('resize', function() {
+            render.canvas.width = window.innerWidth;
+            render.canvas.height = window.innerHeight;
+            if (config.enableWalls) {
+                removeWalls();
+                createWalls();
+            } else {
+                Body.setPosition(ground, Matter.Vector.create(window.innerWidth / 2, window.innerHeight));
+            }
+        });
+    </script>
+    <script type='text/javascript' src="https://github.com/benji-pooh/particle-physics-simulator"></script>
+</body>
+
+</html>
