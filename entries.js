@@ -22,6 +22,13 @@ const entries = [
 		github: "Metroxe"
 	},
 	{
+		title: "Particle Physics Simulator",
+		filename: "Particle Physics Simulator.html",
+		description: "Particle Physics Simulator",
+		author: "ben",
+		github: "benji-pooh"
+	},
+	{
 		title: "Ant Colony",
 		filename: "ant_colony.html",
 		description: "Simulation of an ant colony creating a never ending underground colony. The 'Q' represents a queen that can giver birth to ants 'A'. Food sources are represented by the numbers 9 - 1. (Currently only works in desktop Chrome)",
