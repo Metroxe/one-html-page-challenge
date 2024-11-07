@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Mind Math",
+		filename: "Mind_Math.html",
+		description: "A simple math game of two numbers",
+		author: "Jayanth",
+		github: "jayanth-7"
+	}
 ];
