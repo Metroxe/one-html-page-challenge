@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Prim's Maze",
+		filename: "PrimsMaze.html",
+                description: "A maze randomly generated using Prim's Algorithm.",
+		author: "Inparsian",
+		github: "inparsian"
+	}
 ];
