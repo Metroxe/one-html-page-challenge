@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Resume Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* =============================================================================
+        CSS Custom Properties (Variables)
+        ========================================================================== */
+        :root {
+            /* Colors */
+            --color-primary: #3b82f6;
+            --color-secondary: #64748b;
+            --color-background: #f1f5f9;
+            --color-text: #0f172a;
+
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 2.5rem;
+
+            /* Typography */
+            --font-size-h1: 24px;
+            --font-size-h2: 20px;
+            --font-size-h3: 18px;
+            --font-size-base: 16px;
+
+            /* Layout */
+            --border-radius: 0.5rem;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --sidebar-width: 300px;
+            --max-content-width: 1200px;
+        }
+
+        /* =============================================================================
+        Reset & Base Styles
+        ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+        }
+
+        /* =============================================================================
+        Layout Components
+        ========================================================================== */
+        .app {
+            max-width: var(--max-content-width);
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            gap: var(--space-lg);
+            min-height: 600px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        /* =============================================================================
+        Sidebar Components
+        ========================================================================== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: var(--space-sm);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .title {
+            align-self: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .component-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .component {
+            padding: var(--space-sm);
+            background: var(--color-background);
+            border-radius: var(--border-radius);
+            cursor: move;
+            user-select: none;
+        }
+
+        /* =============================================================================
+        Drag and Drop Functionality
+        ========================================================================== */
+        .dropped-component {
+            position: relative;
+            width: 100%;
+        }
+
+        .drag-handle {
+            position: absolute;
+            left: -45px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--color-primary);
+            border: 1px solid var(--color-primary);
+            border-radius: 4px;
+            cursor: move;
+            color: white;
+            padding: 8px;
+            opacity: 0;
+            transition: all 0.2s;
+            z-index: 10;
+            width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drag-handle:hover {
+            background: #2563eb;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .drag-handle svg {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        .dropped-component {
+            padding-left: 10px;
+        }
+
+        .dropped-component:hover {
+            outline: 2px dashed var(--color-secondary);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        .dropped-component:hover .drag-handle,
+        .dropped-component:hover .remove-btn {
+            opacity: 1;
+        }
+
+        .dropped-component:hover .drag-handle {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .drop-target {
+            transition: transform 0.2s;
+        }
+
+        .drop-indicator {
+            pointer-events: none;
+        }
+
+        /* =============================================================================
+        Preview Section
+        ========================================================================== */
+        .preview {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            min-width: 800px;
+            width: 100%;
+            background: white;
+            padding: var(--space-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            min-height: 100%;
+        }
+
+        .drop-zone {
+            min-height: 1123px;
+            border: 2px dashed var(--color-secondary);
+            border-radius: var(--border-radius);
+            padding: var(--space-xl) 4.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+
+        .drop-zone.dragover {
+            background: var(--color-background);
+            border-color: var(--color-primary);
+        }
+
+        /* =============================================================================
+        Resume Sections
+        ========================================================================== */
+        .resume-section {
+            margin-bottom: var(--space-md);
+            padding: 0 0 0 var(--space-sm);
+            border-left: 3px solid rgba(100, 116, 139, 0.2);
+            opacity: 0.8;
+            font-size: var(--font-size-base);
+        }
+
+        .resume-section.no-vertical-line {
+            border-left: none !important;
+            padding-left: 0 !important;
+        }
+
+        .resume-section.header-section {
+            text-align: center;
+            margin-bottom: var(--space-lg);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--color-primary);
+            border-left: none !important;
+        }
+
+        /* Resume Typography */
+        .resume-section.header-section h1 {
+            font-size: var(--font-size-h1);
+        }
+
+        .resume-section.header-section p,
+        .resume-section p,
+        .resume-section ul,
+        .resume-section li {
+            font-size: var(--font-size-base);
+        }
+
+        .resume-section h2 {
+            font-size: var(--font-size-h2);
+        }
+
+        .resume-section h3 {
+            font-size: var(--font-size-h3);
+        }
+
+        .resume-section ul {
+            padding-left: 1.2rem;
+            list-style-position: outside;
+        }
+
+        /* =============================================================================
+        UI Elements
+        ========================================================================== */
+        .actions {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+
+        .btn {
+            padding: var(--space-xs) var(--space-sm);
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            background: var(--color-primary);
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .placeholder-text {
+            color: var(--color-secondary);
+            opacity: 0.7;
+        }
+
+        /* =============================================================================
+        Settings Panel
+        ========================================================================== */
+        .settings-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--color-secondary);
+        }
+
+        .setting-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .setting-label select {
+            margin-top: var(--space-xs);
+            width: 100%;
+            padding: var(--space-xs);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--color-secondary);
+        }
+
+        /* =============================================================================
+        Print Styles
+        ========================================================================== */
+        @media print {
+            .app {
+                padding: 0;
+            }
+
+            .header,
+            .sidebar,
+            .actions {
+                display: none;
+            }
+
+            .workspace {
+                display: block;
+            }
+
+            .preview {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            .drop-zone {
+                border: none;
+            }
+
+            .remove-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header class="header">
+        <h1>Interactive Resume Builder</h1>
+        <p>Drag and drop components to create your perfect resume</p>
+    </header>
+
+    <main class="workspace">
+        <aside class="sidebar">
+            <h2 class="title">Components</h2>
+            <div class="component-list">
+                <div class="component" draggable="true" data-type="header">
+                    Header Section
+                </div>
+                <div class="component" draggable="true" data-type="experience">
+                    Experience Section
+                </div>
+                <div class="component" draggable="true" data-type="skills">
+                    Skills Section
+                </div>
+                <div class="component" draggable="true" data-type="education">
+                    Education Section
+                </div>
+                <div class="component" draggable="true" data-type="projects">
+                    Projects Section
+                </div>
+                <div class="component" draggable="true" data-type="gap">
+                    Spacing Gap
+                </div>
+                <div class="component" draggable="true" data-type="divider">
+                    Divider Line
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3>Settings</h3>
+
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="showVerticalLine">
+                        Show Vertical Line
+                    </label>
+
+                    <label class="setting-label" id="verticalColorContainer">
+                        Vertical Line Color:
+                        <select id="verticalLineColor">
+                            <option value="rgba(0, 0, 0, 0.8)">Black</option>
+                            <option value="rgba(100, 116, 139, 0.2)" selected>Light Gray</option>
+                            <option value="#3b82f6">Blue</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="setting-group">
+                    <label class="setting-label">
+                        <input type="checkbox" id="showHeaderLine" checked>
+                        Show Header Line
+                    </label>
+
+                    <label class="setting-label" id="headerColorContainer">
+                        Header Line Color:
+                        <select id="headerLineColor">
+                            <option value="rgba(0, 0, 0, 0.8)">Black</option>
+                            <option value="rgba(100, 116, 139, 0.2)">Light Gray</option>
+                            <option value="#3b82f6" selected>Blue</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <section class="preview">
+            <h2 class="title">Resume Preview</h2>
+            <div class="drop-zone" id="resumeDropZone">
+                <span class="placeholder-text">Drop components here</span>
+            </div>
+            <div class="actions">
+                <button class="btn" id="clearBtn">Clear All</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    /* =============================================================================
+    Constants and State
+    ========================================================================== */
+    // Constants
+    const STYLE_CONSTANTS = {
+        fontSizes: {
+            h1: "24px",
+            h2: "20px",
+            h3: "18px",
+            base: "16px"
+        },
+        spacing: {
+            sectionMargin: "1.5rem",
+            listPadding: "1.2rem"
+        }
+    };
+
+    // The different component templates
+    const templates = {
+        header: `
+            <div class="resume-section header-section">
+                <h1 contenteditable="true">Your Name</h1>
+                <p contenteditable="true">Professional Title</p>
+                <p contenteditable="true">Contact Information</p>
+            </div>
+        `,
+        experience: `
+            <div class="resume-section">
+                <h2 contenteditable="true">Experience</h2>
+                <div contenteditable="true">
+                    <p><b>Company 1</b></p>
+                    <p>Professional Time Traveler • [Date Range]</p>
+                    <ul>
+                        <li>Juggled yesterday’s deadlines, today’s tasks, and tomorrow’s panic attacks.</li>
+                        <li>Made the impossible happen… usually five minutes before it was due.</li>
+                    </ul>
+                    <br>
+                    <p><b>Company 2</b></p>
+    <p>Corporate Juggler • [Date Range]</p>
+    <ul>
+        <li>Balanced 47 tasks simultaneously, with only minimal chaos.</li>
+        <li>Excelled at crafting last-minute PowerPoint presentations, complete with animations, charts, and "inspirational" stock photos.</li>
+        <li>Became a trusted fire extinguisher for urgent tasks, regularly saving the day with calm efficiency and caffeine-powered resolve.</li>
+    </ul>
+                    <br>
+                    <p><b>Company 3</b></p>
+                    <p>Professional Meeting Attendee • [Date Range]</p>
+                    <ul>
+                        <li>Survived countless "quick syncs" that were anything but quick.</li>
+                        <li>Set a record for keeping a straight face in 3-hour brainstorming sessions.</li>
+                        <li>Earned the unofficial title of "Meeting Whisperer" for diffusing tangents and keeping discussions (mostly) on topic.</li>
+                    </ul>
+
+                </div>
+            </div>
+        `,
+        skills: `
+            <div class="resume-section">
+                <h2 contenteditable="true">Skills</h2>
+                <div contenteditable="true">
+                    <ul>
+                        <li>Skill Category 1: Describe your skillz</li>
+                        <li>Skill Category 2: You're doing great</li>
+                        <li>Skill Category 3: Slay</li>
+                        <li>Skill Category 4 </li>
+                        <li>Skill Category 5 </li>
+                    </ul>
+                </div>
+            </div>
+        `,
+        education: `
+            <div class="resume-section">
+                <h2 contenteditable="true">Education</h2>
+                <div contenteditable="true">
+                    <p><b>University of Overpriced Enlightenment</b></p>
+<p>Fancy Piece of Paper • Date You Finally Escaped</p>
+<p>Survived caffeine-fueled nights, questionable group projects, and existential dread</p>
+                </div>
+            </div>
+        `,
+        gap: `
+            <div class="resume-section no-vertical-line" style="height: 2rem;">
+            </div>
+        `,
+        divider: `
+            <div class="resume-section no-vertical-line">
+                <div style="height: 1rem;"></div>
+                <hr style="border: none; height: 1px; background: var(--color-secondary); opacity: 0.3;">
+                <div style="height: 1rem;"></div>
+            </div>
+        `,
+        projects: `
+            <div class="resume-section">
+                <h2 contenteditable="true">Projects</h2>
+                <div contenteditable="true">
+                    <p><b>Project Name</b></p>
+                    <p>Technologies Used</p>
+                    <ul>
+                        <li>Key Feature 1</li>
+                        <li>Key Feature 2</li>
+                    </ul>
+                </div>
+            </div>
+        `
+    };
+
+    // State Management
+    const state = {
+        components: [],
+        draggedComponent: null,
+        settings: {
+            showVerticalLine: false,
+            verticalLineColor: "rgba(100, 116, 139, 0.2)",
+            showHeaderLine: true,
+            headerLineColor: "#3b82f6"
+        }
+    };
+
+    // Drop zone for components
+    let dropZone = document.getElementById("resumeDropZone");
+
+    // Location at which we want to insert the component
+    let insertionIndex = null;
+
+    /* =============================================================================
+    Utility Functions
+    ========================================================================== */
+    const styleUtils = {
+        applyFontSizes(section) {
+            const elementStyles = {
+                "h1": {fontSize: STYLE_CONSTANTS.fontSizes.h1},
+                "h2": {fontSize: STYLE_CONSTANTS.fontSizes.h2},
+                "h3": {fontSize: STYLE_CONSTANTS.fontSizes.h3},
+                "p": {fontSize: STYLE_CONSTANTS.fontSizes.base},
+                "ul": {
+                    fontSize: STYLE_CONSTANTS.fontSizes.base,
+                    paddingLeft: STYLE_CONSTANTS.spacing.listPadding
+                },
+                "li": {fontSize: STYLE_CONSTANTS.fontSizes.base}
+            };
+
+            Object.entries(elementStyles).forEach(([tag, styles]) => {
+                section.querySelectorAll(tag).forEach(element => {
+                    Object.assign(element.style, styles);
+                });
+            });
+        },
+
+        applySectionStyles(section, settings) {
+            const baseStyles = {
+                marginBottom: STYLE_CONSTANTS.spacing.sectionMargin
+            };
+
+            if (section.classList.contains("header-section")) {
+                Object.assign(baseStyles, {
+                    borderBottom: settings.showHeaderLine ?
+                        `2px solid ${settings.headerLineColor}` : "none",
+                    paddingBottom: settings.showHeaderLine ?
+                        STYLE_CONSTANTS.spacing.sectionMargin : "0",
+                    borderLeft: "none",
+                    paddingLeft: "0"
+                });
+            } else if (!section.classList.contains("no-vertical-line")) {
+                Object.assign(baseStyles, {
+                    borderLeft: settings.showVerticalLine ?
+                        `3px solid ${settings.verticalLineColor}` : "none",
+                    paddingLeft: settings.showVerticalLine ? "1rem" : "0"
+                });
+            }
+
+            Object.assign(section.style, baseStyles);
+        },
+
+        applyStyles() {
+            const components = document.querySelectorAll(".dropped-component");
+            components.forEach(component => {
+                const section = component.querySelector(".resume-section");
+                if (section) {
+                    styleUtils.applySectionStyles(section, state.settings);
+                }
+            });
+        }
+    };
+
+    const uiUtils = {
+        // Checks if content fits within PDF page limits
+        async checkContentHeight(dropZone) {
+            const tempWrapper = document.createElement("div");
+            tempWrapper.style.cssText = `
+            width: 595px;
+            background: white;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
+            position: absolute;
+            left: -9999px;
+            visibility: hidden;
+        `;
+
+            const clonedContent = dropZone.cloneNode(true);
+            clonedContent.querySelector(".placeholder-text")?.remove();
+            tempWrapper.appendChild(clonedContent);
+            document.body.appendChild(tempWrapper);
+
+            const contentHeight = tempWrapper.offsetHeight;
+            document.body.removeChild(tempWrapper);
+
+            const maxAllowedHeight = 1380;
+
+            return {
+                isValid: contentHeight <= maxAllowedHeight,
+                actualHeight: contentHeight,
+                maxHeight: maxAllowedHeight
+            };
+        },
+
+        showHeightWarning(exceedingBy) {
+            const existingWarning = document.querySelector(".height-warning");
+            existingWarning?.remove();
+
+            const warning = document.createElement("div");
+            warning.className = "height-warning";
+            warning.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+            max-width: 400px;
+            text-align: center;
+        `;
+
+            warning.innerHTML = `
+            <p><strong>Content Too Long!</strong></p>
+            <p>Your content exceeds the maximum page height by approximately ${Math.round(exceedingBy)}px.</p>
+            <p>Please reduce content or make sections more concise.</p>
+            <button onclick="this.parentElement.remove()" style="
+                margin-top: 0.5rem;
+                padding: 0.25rem 0.5rem;
+                background: #991b1b;
+                color: white;
+                border: none;
+                border-radius: 0.25rem;
+                cursor: pointer;
+            ">Dismiss</button>
+        `;
+
+            document.body.appendChild(warning);
+        },
+        updateDropIndicator(e, targetComponent, forceBottom = false, forceTop = false) {
+            // Remove any existing indicators
+            dropZone.querySelectorAll(".drop-indicator").forEach(indicator => indicator.remove());
+
+            const dropZoneRect = dropZone.getBoundingClientRect();
+            const targetRect = targetComponent.getBoundingClientRect();
+            const mouseY = e.clientY;
+
+            // Decide if we want the line above or below this component
+            const relativeY = mouseY - targetRect.top;
+            const isUpperHalf = relativeY < targetRect.height / 2;
+
+            // If forced or if in upper half, we consider “this gap” to be between
+            // the *previous sibling* and `targetComponent`.
+            // Otherwise, we consider “this gap” to be between `targetComponent`
+            // and the *next sibling*.
+            const useAbove = (isUpperHalf || forceTop);
+
+            // Let’s figure out which DOM elements we are spanning between:
+            let firstNode = useAbove
+                ? targetComponent.previousElementSibling
+                : targetComponent;
+            let secondNode = useAbove
+                ? targetComponent
+                : targetComponent.nextElementSibling;
+
+            // If there's no firstNode, treat the top of the dropZone
+            // as the start. If there's no secondNode, we treat the bottom of dropZone
+            // as the end (the big “full gap” between 2 components)
+            const firstRect = firstNode ? firstNode.getBoundingClientRect() : null;
+            const secondRect = secondNode ? secondNode.getBoundingClientRect() : null;
+
+            // topPosition is the bottom edge of the first node (or 0 if none)
+            const topPosition = firstRect
+                ? (firstRect.bottom - dropZoneRect.top)
+                : 0;
+
+            // bottomPosition is the top edge of the second node (or the entire dropZone height if none)
+            const bottomPosition = secondRect
+                ? (secondRect.top - dropZoneRect.top)
+                : (dropZoneRect.height);
+
+            // The "thicker" gap height is just the difference
+            let gapHeight = bottomPosition - topPosition;
+            // Edge case: if gap is negative or zero, just show a minimal line
+            if (gapHeight < 8) {
+                gapHeight = 8;
+            }
+
+            // Create the “drop-indicator” div
+            const indicator = document.createElement("div");
+            indicator.className = "drop-indicator";
+            indicator.style.cssText = `
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: ${topPosition}px;
+    height: ${gapHeight}px;
+    background: var(--color-primary);
+    pointer-events: none;
+    opacity: 0.3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+            dropZone.appendChild(indicator);
+        }
+    }
+
+    /* =============================================================================
+    Component Management
+    ========================================================================== */
+    const componentUtils = {
+        createComponentWrapper(template, state) {
+            const wrapper = document.createElement("div");
+            wrapper.className = "dropped-component";
+            wrapper.innerHTML = template;
+            wrapper.style.position = "relative";
+
+            const section = wrapper.querySelector(".resume-section");
+            if (section) {
+                styleUtils.applySectionStyles(section, state.settings);
+            }
+
+            wrapper.appendChild(componentUtils.createDragHandle());
+            wrapper.appendChild(componentUtils.createRemoveButton());
+
+            return wrapper;
+        },
+        // Create the drag handle for re-arranging the components in the preview
+        createDragHandle() {
+            const dragHandle = document.createElement("button");
+            dragHandle.className = "drag-handle";
+            dragHandle.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="9" cy="6" r="1.5"/>
+                <circle cx="9" cy="12" r="1.5"/>
+                <circle cx="9" cy="18" r="1.5"/>
+                <circle cx="15" cy="6" r="1.5"/>
+                <circle cx="15" cy="12" r="1.5"/>
+                <circle cx="15" cy="18" r="1.5"/>
+            </svg>
+        `;
+            dragHandle.setAttribute("title", "Drag to reorder");
+            return dragHandle;
+        },
+        createRemoveButton() {
+            const removeBtn = document.createElement("button");
+            removeBtn.textContent = "×";
+            removeBtn.className = "remove-btn";
+            removeBtn.style.cssText = `
+        position: absolute;
+        top: 0;
+        right: -8px;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--color-secondary);
+        padding: 0.25rem 0.5rem;
+        transition: color 0.2s;
+    `;
+
+            removeBtn.addEventListener("click", handleRemoveComponent);
+            return removeBtn;
+        },
+        // Populates initial page load components
+        prePopulateComponents() {
+            const placeholder = dropZone.querySelector(".placeholder-text");
+            if (placeholder) {
+                placeholder.remove();
+            }
+
+            // List of components to add on page load (in order top to bottom)
+            const componentsToAdd = ["header", "experience", "divider", "education", "divider", "skills"];
+
+            componentsToAdd.forEach(type => {
+                if (templates[type]) {
+                    const wrapper = componentUtils.createComponentWrapper(templates[type], state);
+                    dropZone.appendChild(wrapper);
+                    state.components.push({type, position: state.components.length});
+                }
+            });
+        },
+        setupDraggedComponent(component) {
+            const oldClone = component.cloneNode(true);
+            component.replaceWith(oldClone);
+            component = oldClone;
+
+            component.addEventListener("dragstart", (e) => {
+                e.stopPropagation();
+                state.draggedComponent = component;
+                e.dataTransfer.effectAllowed = "move";
+                component.style.opacity = "0.5";
+
+                // Add drop target class to other components
+                dropZone.querySelectorAll(".dropped-component").forEach(target => {
+                    if (target !== component) {
+                        target.classList.add("drop-target");
+                    }
+                });
+            });
+
+            component.addEventListener("dragend", () => {
+                component.style.opacity = "1";
+                component.draggable = false;
+                dropZone.querySelectorAll(".drop-target").forEach(target => {
+                    target.classList.remove("drop-target");
+                });
+                state.draggedComponent = null;
+            });
+        },
+    }
+
+    /* =============================================================================
+    Event Handlers
+    ========================================================================== */
+    // Handle removing a component
+    function handleRemoveComponent(e) {
+        const wrapper = e.target.closest(".dropped-component");
+        dropZone = wrapper.parentElement;
+        wrapper.remove();
+
+        if (!dropZone.querySelector(".dropped-component")) {
+            dropZone.innerHTML = '<span class="placeholder-text">Drop components here</span>';
+        }
+    }
+
+    // Dragover event
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = state.draggedComponent ? "move" : "copy";
+        dropZone.classList.add("dragover");
+
+        // Remove existing indicators
+        dropZone.querySelectorAll(".drop-indicator").forEach(indicator => indicator.remove());
+
+        const mouseY = e.clientY;
+        const dropZoneRect = dropZone.getBoundingClientRect();
+        const components = Array.from(dropZone.querySelectorAll(".dropped-component"));
+
+        // Default: if no components, insertionIndex = 0
+        if (components.length === 0) {
+            insertionIndex = 0;
+            return;
+        }
+
+        // We'll keep track if we've placed the insertionIndex or not
+        let placedIndex = false;
+
+        // Loop over the components
+        for (let i = 0; i < components.length; i++) {
+            const component = components[i];
+            const rect = component.getBoundingClientRect();
+
+            // If the mouse is "above" this component
+            if (mouseY < rect.top) {
+                // We'll insert before this component
+                insertionIndex = i;
+                uiUtils.updateDropIndicator(e, component, false, true);
+                placedIndex = true;
+                break;
+            }
+
+            // If the mouse is "inside" the vertical span of this component
+            if (mouseY >= rect.top && mouseY <= rect.bottom) {
+                // Decide if top half or bottom half
+                const relativeY = mouseY - rect.top;
+                const isUpperHalf = relativeY < rect.height / 2;
+                insertionIndex = isUpperHalf ? i : i + 1;
+                uiUtils.updateDropIndicator(e, component, !isUpperHalf, isUpperHalf);
+                placedIndex = true;
+                break;
+            }
+        }
+
+        // If we never placed the index, it means the mouse is below the last component
+        if (!placedIndex) {
+            insertionIndex = components.length;
+            // For bottom-most position, we can show the indicator under the last component
+            const lastComponent = components[components.length - 1];
+            uiUtils.updateDropIndicator(e, lastComponent, true, false);
+        }
+    }
+
+    function handleDragLeave(e) {
+        if (!dropZone.contains(e.relatedTarget)) {
+            dropZone.classList.remove("dragover");
+            dropZone.querySelectorAll(".drop-indicator").forEach(indicator => indicator.remove());
+        }
+    }
+
+    function handleDragEnd() {
+        dropZone.classList.remove("dragover");
+        dropZone.querySelectorAll(".drop-indicator").forEach(indicator => indicator.remove());
+        if (state.draggedComponent) {
+            state.draggedComponent.style.opacity = "1";
+            state.draggedComponent = null;
+        }
+    }
+
+    function handleMouseDown(e) {
+        const dragHandle = e.target.closest(".drag-handle");
+        if (!dragHandle) return;
+
+        const droppedComponent = dragHandle.closest(".dropped-component");
+        if (droppedComponent) {
+            droppedComponent.draggable = true;
+            componentUtils.setupDraggedComponent(droppedComponent);
+        }
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        dropZone.querySelectorAll(".drop-indicator").forEach(indicator => indicator.remove());
+
+        const placeholder = dropZone.querySelector(".placeholder-text");
+        if (placeholder) placeholder.remove();
+
+        // If dragging an existing component
+        if (state.draggedComponent) {
+            // Insert at insertionIndex
+            const allChildren = Array.from(dropZone.children);
+
+            // Because the .placeholder-text or other non-.dropped-component elements
+            // might exist, let's filter to only .dropped-component
+            const droppedComponents = allChildren.filter(el => el.classList.contains("dropped-component"));
+
+            // If insertionIndex >= droppedComponents.length, append at bottom
+            if (insertionIndex >= droppedComponents.length) {
+                dropZone.appendChild(state.draggedComponent);
+            } else {
+                // Find the actual DOM element we insert before
+                const targetNode = droppedComponents[insertionIndex];
+                dropZone.insertBefore(state.draggedComponent, targetNode);
+            }
+
+            // Clean up
+            state.draggedComponent.style.opacity = "1";
+            state.draggedComponent.draggable = false;
+            state.draggedComponent = null;
+            insertionIndex = null; // reset
+            return;
+        }
+
+        // If dropping a NEW component from the sidebar
+        const type = e.dataTransfer.getData("text/plain");
+        if (type && templates[type]) {
+            const wrapper = componentUtils.createComponentWrapper(templates[type], state);
+
+            const allChildren = Array.from(dropZone.children);
+            const droppedComponents = allChildren.filter(el => el.classList.contains("dropped-component"));
+
+            if (insertionIndex === null) {
+                // If we never set insertionIndex for some reason, just append at bottom
+                dropZone.appendChild(wrapper);
+            } else if (insertionIndex >= droppedComponents.length) {
+                dropZone.appendChild(wrapper);
+            } else {
+                const targetNode = droppedComponents[insertionIndex];
+                dropZone.insertBefore(wrapper, targetNode);
+            }
+
+            state.components.push({type, position: state.components.length});
+            insertionIndex = null; // reset
+        }
+    }
+
+    /* =============================================================================
+    PDF Export
+    ========================================================================== */
+    async function exportToPDF() {
+        const heightCheck = await uiUtils.checkContentHeight(dropZone);
+
+        if (!heightCheck.isValid) {
+            uiUtils.showHeightWarning(heightCheck.actualHeight - heightCheck.maxHeight);
+            return;
+        }
+
+        const container = prepareContentForPDF(dropZone, state);
+        document.body.appendChild(container);
+
+        const opt = {
+            margin: 0,
+            filename: "resume.pdf",
+            image: {type: "jpeg", quality: 0.98},
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                logging: true,
+                windowWidth: 595,
+                windowHeight: 842,
+                x: 0,
+                y: 0,
+                scrollX: 0,
+                scrollY: 0
+            },
+            jsPDF: {
+                unit: "pt",
+                format: "a4",
+                orientation: "portrait",
+                hotfixes: ["px_scaling"],
+                compress: true
+            },
+            pagebreak: {mode: ["avoid-all"]}
+        };
+
+        try {
+            await html2pdf().from(container).set(opt).save();
+        } catch (error) {
+            console.error("PDF generation failed:", error);
+            alert("Failed to generate PDF. Please try again.");
+        } finally {
+            container.remove();
+        }
+    }
+
+    function prepareContentForPDF(dropZone, state) {
+        const container = document.createElement("div");
+        container.style.cssText = `
+        width: 635px;
+        min-height: 842px;
+        overflow: visible;
+        margin: 0 auto;
+        padding: 0;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        box-sizing: border-box;
+    `;
+
+        const wrapper = document.createElement("div");
+        wrapper.style.cssText = `
+        width: 635px;
+        margin: 40px auto 0;
+        background: white;
+        font-family: system-ui, -apple-system, sans-serif;
+        padding: 0;
+        box-sizing: border-box;
+        line-height: 1.5;
+    `;
+
+        const clonedContent = dropZone.cloneNode(true);
+        clonedContent.querySelector(".placeholder-text")?.remove();
+        clonedContent.querySelectorAll(".remove-btn").forEach(btn => btn.remove());
+
+        clonedContent.style.cssText = `
+        margin: 0;
+        padding: 0;
+        border: none;
+        background: white;
+        width: 100%;
+        font-size: 16px;
+        line-height: 1.5;
+    `;
+
+        clonedContent.querySelectorAll(".resume-section").forEach(section => {
+            styleUtils.applyFontSizes(section);
+            styleUtils.applySectionStyles(section, state.settings);
+        });
+
+        wrapper.appendChild(clonedContent);
+        container.appendChild(wrapper);
+        return container;
+    }
+
+    /* =============================================================================
+    Initialization
+    ========================================================================== */
+    // Sets up drag and drop functionality
+    function setupDragAndDrop() {
+        const components = document.querySelectorAll(".component");
+
+        components.forEach(component => {
+            component.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("text/plain", component.dataset.type);
+                e.dataTransfer.effectAllowed = "copy";
+            });
+        });
+
+        dropZone.addEventListener("dragover", handleDragOver);
+        dropZone.addEventListener("dragleave", handleDragLeave);
+        dropZone.addEventListener("dragend", handleDragEnd);
+        dropZone.addEventListener("mousedown", handleMouseDown);
+        dropZone.addEventListener("drop", handleDrop);
+    }
+
+    function setupSettings() {
+        const settings = {
+            vertical: {
+                show: document.getElementById("showVerticalLine"),
+                color: document.getElementById("verticalLineColor"),
+                container: document.getElementById("verticalColorContainer")
+            },
+            header: {
+                show: document.getElementById("showHeaderLine"),
+                color: document.getElementById("headerLineColor"),
+                container: document.getElementById("headerColorContainer")
+            }
+        };
+
+        // Setup vertical line settings
+        settings.vertical.show.addEventListener("change", (e) => {
+            state.settings.showVerticalLine = e.target.checked;
+            settings.vertical.container.style.opacity = e.target.checked ? "1" : "0.5";
+            styleUtils.applyStyles();
+        });
+
+        settings.vertical.color.addEventListener("change", (e) => {
+            state.settings.verticalLineColor = e.target.value;
+            styleUtils.applyStyles();
+        });
+
+        // Setup header line settings
+        settings.header.show.addEventListener("change", (e) => {
+            state.settings.showHeaderLine = e.target.checked;
+            settings.header.container.style.opacity = e.target.checked ? "1" : "0.5";
+            styleUtils.applyStyles();
+        });
+
+        settings.header.color.addEventListener("change", (e) => {
+            state.settings.headerLineColor = e.target.value;
+            styleUtils.applyStyles();
+        });
+    }
+
+    function setupButtons() {
+        // Export button
+        const exportBtn = document.createElement("button");
+        exportBtn.className = "btn";
+        exportBtn.textContent = "Export PDF";
+        document.querySelector(".actions").appendChild(exportBtn);
+        exportBtn.addEventListener("click", exportToPDF);
+
+        // Clear button
+        const clearBtn = document.getElementById("clearBtn");
+        clearBtn.addEventListener("click", () => {
+            dropZone.innerHTML = '<span class="placeholder-text">Drop components here</span>';
+            state.components = [];
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        setupDragAndDrop();
+        setupButtons();
+        setupSettings();
+        componentUtils.prePopulateComponents();
+        styleUtils.applyStyles();
+    });
+</script>
+</body>
+</html>
