@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+	        title: "Interactive Resume Builder",
+		filename: "interactiveResumeBuilder.html",
+                description: "Effortlessly craft your ideal resume with this interactive builder featuring a drag-and-drop interface and premade, fully editable sections. Arrange components with ease, then export as a PDF.",
+		author: "Jenny Hwang",
+		github: "jennyunh"
+	},
 ];
