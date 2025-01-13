@@ -355,7 +355,7 @@
 <div class="app">
     <header class="header">
         <h1>Interactive Resume Builder</h1>
-        <p>Drag and drop components to create your perfect resume</p>
+        <p>Drag and drop components to create your perfect resume. <br> Created for the <a style="font-weight: 600; color: orange;" target="_blank" href="https://github.com/Metroxe/one-html-page-challenge">1 HTML Page Challenge</a> </p>
     </header>
 
     <main class="workspace">
@@ -433,7 +433,11 @@
         </section>
     </main>
 
-    <main class="footer"><a target="_blank" href="https://www.jennyhwang.ca">Development by Jenny H.</a></main>
+    <main class="footer">
+        <a target="_blank" href="https://www.jennyhwang.ca">Development by Jenny H. ©
+            <span id="year"></span>
+        </a>
+    </main>
 </div>
 
 <script>
@@ -560,6 +564,9 @@
 
     // Location at which we want to insert the component
     let insertionIndex = null;
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
 
     /* =============================================================================
     Utility Functions
