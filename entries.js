@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "RiskyStakes",
+		filename: "RiskyStakes.html",
+		description: "A game of careful financial risk and management, where an account you deposit money in randomly goes up and down each turn.",
+		author: "96",
+		github: "ma007rio"
+	},
 ];
