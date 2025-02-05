@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Resume Builder</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* =============================================================================
         CSS Custom Properties (Variables)
@@ -24,10 +23,10 @@
             --space-xl: 2.5rem;
 
             /* Typography */
-            --font-size-h1: 24px;
-            --font-size-h2: 20px;
-            --font-size-h3: 18px;
-            --font-size-base: 16px;
+            --font-size-h1: 22px;
+            --font-size-h2: 18px;
+            --font-size-h3: 16px;
+            --font-size-base: 14px;
 
             /* Layout */
             --border-radius: 0.5rem;
@@ -188,11 +187,11 @@
         }
 
         .drop-zone {
-            min-height: 1123px;
+            min-height: 1000px;
             border: 2px dashed var(--color-secondary);
             border-radius: var(--border-radius);
-            padding: var(--space-xl) 4.5rem;
-            max-width: 800px;
+            padding: var(--space-xl) 3rem;
+            max-width: 1080px;
             margin: 0 auto;
             width: 100%;
             position: relative;
@@ -209,7 +208,7 @@
         .resume-section {
             margin-bottom: var(--space-md);
             padding: 0 0 0 var(--space-sm);
-            border-left: 3px solid rgba(100, 116, 139, 0.2);
+            border-left: 2px solid rgba(100, 116, 139, 0.2);
             opacity: 0.8;
             font-size: var(--font-size-base);
         }
@@ -355,7 +354,13 @@
 <div class="app">
     <header class="header">
         <h1>Interactive Resume Builder</h1>
-        <p>Drag and drop components to create your perfect resume. <br> Created for the <a style="font-weight: 600; color: orange;" target="_blank" href="https://github.com/Metroxe/one-html-page-challenge">1 HTML Page Challenge</a> </p>
+        <p>Drag and drop components to create your perfect resume.
+            <br>
+            Print your resume directly, or export as a PDF.
+            <br>
+            A4 size is recommended, optimized for the Chrome browser.
+            <br>
+            Created for the <a style="font-weight: 600; color: orange;" target="_blank" href="https://github.com/Metroxe/one-html-page-challenge">1 HTML Page Challenge</a> </p>
     </header>
 
     <main class="workspace">
@@ -434,7 +439,7 @@
     </main>
 
     <main class="footer">
-        <a target="_blank" href="https://www.jennyhwang.ca">Development by Jenny H. ©
+        <a target="_blank" href="https://www.jennyhwang.ca">Development by Jenny H ©
             <span id="year"></span>
         </a>
     </main>
@@ -505,8 +510,6 @@
                         <li>Skill Category 1: Describe your skillz</li>
                         <li>Skill Category 2: You're doing great</li>
                         <li>Skill Category 3: Slay</li>
-                        <li>Skill Category 4 </li>
-                        <li>Skill Category 5 </li>
                     </ul>
                 </div>
             </div>
@@ -527,9 +530,9 @@
         `,
         divider: `
             <div class="resume-section no-vertical-line">
-                <div style="height: 1rem;"></div>
+                <div style="height: var(--space-sm);"></div>
                 <hr style="border: none; height: 1px; background: var(--color-secondary); opacity: 0.3;">
-                <div style="height: 1rem;"></div>
+                <div style="height: var(--space-sm);"></div>
             </div>
         `,
         projects: `
@@ -597,6 +600,7 @@
                 marginBottom: STYLE_CONSTANTS.spacing.sectionMargin
             };
 
+            // Header-specific styles
             if (section.classList.contains("header-section")) {
                 Object.assign(baseStyles, {
                     borderBottom: settings.showHeaderLine ?
@@ -609,14 +613,14 @@
             } else if (!section.classList.contains("no-vertical-line")) {
                 Object.assign(baseStyles, {
                     borderLeft: settings.showVerticalLine ?
-                        `3px solid ${settings.verticalLineColor}` : "none",
+                        `2px solid ${settings.verticalLineColor}` : "none",
                     paddingLeft: settings.showVerticalLine ? "1rem" : "0"
                 });
             }
 
             Object.assign(section.style, baseStyles);
         },
-
+        // Apply styles to dropped components
         applyStyles() {
             const components = document.querySelectorAll(".dropped-component");
             components.forEach(component => {
@@ -651,7 +655,7 @@
             const contentHeight = tempWrapper.offsetHeight;
             document.body.removeChild(tempWrapper);
 
-            const maxAllowedHeight = 1380;
+            const maxAllowedHeight = 1080;
 
             return {
                 isValid: contentHeight <= maxAllowedHeight,
@@ -716,7 +720,7 @@
             // and the *next sibling*.
             const useAbove = (isUpperHalf || forceTop);
 
-            // Let’s figure out which DOM elements we are spanning between:
+            // Figure out which DOM elements we are spanning between:
             let firstNode = useAbove
                 ? targetComponent.previousElementSibling
                 : targetComponent;
@@ -751,18 +755,18 @@
             const indicator = document.createElement("div");
             indicator.className = "drop-indicator";
             indicator.style.cssText = `
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: ${topPosition}px;
-    height: ${gapHeight}px;
-    background: var(--color-primary);
-    pointer-events: none;
-    opacity: 0.3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: ${topPosition}px;
+            height: ${gapHeight}px;
+            background: var(--color-primary);
+            pointer-events: none;
+            opacity: 0.3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            `;
             dropZone.appendChild(indicator);
         }
     }
@@ -831,7 +835,7 @@
                 placeholder.remove();
             }
 
-            // List of components to add on page load (in order top to bottom)
+            // List of components to add on page load (in order from top to bottom)
             const componentsToAdd = ["header", "experience", "divider", "education", "divider", "skills"];
 
             componentsToAdd.forEach(type => {
@@ -1013,7 +1017,7 @@
             const droppedComponents = allChildren.filter(el => el.classList.contains("dropped-component"));
 
             if (insertionIndex === null) {
-                // If we never set insertionIndex for some reason, just append at bottom
+                // Just append at bottom
                 dropZone.appendChild(wrapper);
             } else if (insertionIndex >= droppedComponents.length) {
                 dropZone.appendChild(wrapper);
@@ -1028,102 +1032,227 @@
     }
 
     /* =============================================================================
-    PDF Export
-    ========================================================================== */
+   PDF Export (LEGGOO MORE JAANKK!)
+   ========================================================================== */
+    // Use browser for pdf export. Optimized for Chrome (looks bad on Safari but why are u even using Safari *ew*)
+    const PDFExport = {
+        async exportToPDF(dropZone, settings) {
+            const heightCheck = await uiUtils.checkContentHeight(dropZone);
+
+            if (!heightCheck.isValid) {
+                uiUtils.showHeightWarning(heightCheck.actualHeight - heightCheck.maxHeight);
+                return;
+            }
+
+            const iframe = document.createElement("iframe");
+            iframe.style.cssText = "position: absolute; width: 800px; height: 1123px; left: -9999px;";
+            document.body.appendChild(iframe);
+
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+            if (!iframeDoc) {
+                document.body.removeChild(iframe);
+                throw new Error("Failed to create iframe document");
+            }
+
+            const clonedDropZone = dropZone.cloneNode(true);
+            clonedDropZone.querySelectorAll(".placeholder-text, .remove-btn, .drag-handle, .drop-indicator").forEach(el => el.remove());
+
+            clonedDropZone.style.cssText = `
+            border: none;
+            padding: 48px;
+            margin: 0 auto;
+            background: white;
+            width: 670px;
+            min-height: auto;
+        `;
+
+            // Apply styles to specific sections
+            clonedDropZone.querySelectorAll(".resume-section").forEach(section => {
+                styleUtils.applyFontSizes(section);
+                styleUtils.applySectionStyles(section, settings);
+
+                if (section.classList.contains("header-section")) {
+                    section.style.lineHeight = "1.2";
+
+                    // Fix header title spacing
+                    const h1 = section.querySelector("h1");
+                    if (h1) {
+                        h1.style.margin = "0";
+                        h1.style.marginBottom = "0.35rem";
+                    }
+
+                    // Fix paragraph spacing in header
+                    section.querySelectorAll("p").forEach(p => {
+                        p.style.margin = "0";
+                        p.style.marginBottom = "0.25rem";
+                        p.style.padding = "0";
+                        p.style.lineHeight = "1.2";
+                    });
+                } else {
+                    // Handle non-header sections
+                    section.querySelectorAll("h2").forEach(h2 => {
+                        h2.style.margin = "0";
+                        h2.style.marginBottom = "0.25rem";
+                    });
+
+                    section.querySelectorAll("p").forEach(p => {
+                        p.style.margin = "0";
+                        p.style.marginBottom = "0";
+                    });
+
+                    // Remove margin from last paragraph in each section
+                    const lastP = section.querySelector("p:last-of-type");
+                    if (lastP) lastP.style.marginBottom = "0";
+
+                    // Handle lists
+                    section.querySelectorAll("ul").forEach(ul => {
+                        ul.style.margin = "0";
+                        ul.style.marginBottom = "0.25rem";
+                        ul.style.paddingLeft = "1.2rem";
+                    });
+                }
+            });
+
+            iframeDoc.write(`
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Resume</title>
+                    <style>
+                        @page {
+                            size: A4;
+                            margin: 0;
+                        }
+                        :root {
+                            --color-primary: #3b82f6;
+                            --color-secondary: #64748b;
+                            --color-background: #f1f5f9;
+                            --color-text: #0f172a;
+                            --space-xs: 0.5rem;
+                            --space-sm: 1rem;
+                            --space-md: 1.5rem;
+                            --space-lg: 2rem;
+                            --space-xl: 2.5rem;
+                        }
+
+                        body {
+                            margin: 0;
+                            width: 210mm; /* A4 width */
+                            min-height: 297mm; /* A4 height */
+                            -webkit-print-color-adjust: exact;
+                            print-color-adjust: exact;
+                            background: white;
+                            font-family: system-ui, -apple-system, sans-serif;
+                            display: flex;
+                            justify-content: center;
+                            line-height: 1.5;
+                        }
+
+                        /* Generated PDF font sizes */
+                        h1 {
+                            font-size: 18px;
+                        }
+
+                        h2 {
+                            font-size: 14px;
+                        }
+
+                        p, ul, li {
+                            font-size: 11px;
+                        }
+
+                        /* Reset default margins */
+                        h1, h2, p, ul, li {
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        /* Base spacing */
+                        h2 {
+                            margin-bottom: 0.5rem;
+                        }
+
+                        p {
+                            margin-bottom: 0.25rem;
+                        }
+
+                        ul {
+                            margin: 0.25rem 0;
+                            padding-left: 1.2rem;
+                        }
+
+                        /* Resume sections */
+                        .resume-section {
+                            margin-bottom: var(--space-md);
+                            opacity: 0.8;
+                        }
+
+                        .resume-section.header-section {
+                            text-align: center;
+                            margin-bottom: var(--space-lg);
+                            padding-bottom: var(--space-sm);
+                            line-height: 1.2;
+                        }
+
+                        .resume-section.header-section h1 {
+                            margin: 0 0 0.25rem 0;
+                            line-height: 1.2;
+                        }
+
+                        .resume-section.header-section p {
+                            margin: 0;
+                            padding: 0;
+                            line-height: 1.2;
+                        }
+
+                        .resume-section ul {
+                            list-style-position: outside;
+                        }
+
+                        .resume-section.no-vertical-line hr {
+                            display: block;
+                            visibility: visible;
+                            margin: 0;
+                        }
+
+                        .resume-section:not(.header-section):not(.no-vertical-line) {
+                        border-left: 2px solid var(--color-secondary);
+                        padding-left: 1rem;
+                        }
+
+                        #resumeDropZone {
+                        transform: scale(0.96);
+                            max-width: 210mm !important;
+                            overflow: hidden;
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${clonedDropZone.outerHTML}
+                </body>
+            </html>
+        `);
+            iframeDoc.close();
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            try {
+                iframe.contentWindow?.print();
+            } finally {
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 1000);
+            }
+        }
+    };
+
     async function exportToPDF() {
-        const heightCheck = await uiUtils.checkContentHeight(dropZone);
-
-        if (!heightCheck.isValid) {
-            uiUtils.showHeightWarning(heightCheck.actualHeight - heightCheck.maxHeight);
-            return;
-        }
-
-        const container = prepareContentForPDF(dropZone, state);
-        document.body.appendChild(container);
-
-        const opt = {
-            margin: 0,
-            filename: "resume.pdf",
-            image: {type: "jpeg", quality: 0.98},
-            html2canvas: {
-                scale: 2,
-                useCORS: true,
-                logging: true,
-                windowWidth: 595,
-                windowHeight: 842,
-                x: 0,
-                y: 0,
-                scrollX: 0,
-                scrollY: 0
-            },
-            jsPDF: {
-                unit: "pt",
-                format: "a4",
-                orientation: "portrait",
-                hotfixes: ["px_scaling"],
-                compress: true
-            },
-            pagebreak: {mode: ["avoid-all"]}
-        };
-
         try {
-            await html2pdf().from(container).set(opt).save();
+            await PDFExport.exportToPDF(dropZone, state.settings);
         } catch (error) {
-            console.error("PDF generation failed:", error);
-            alert("Failed to generate PDF. Please try again.");
-        } finally {
-            container.remove();
+            console.error("PDF export failed:", error);
+            alert("Failed to export PDF. Please try again.");
         }
-    }
-
-    function prepareContentForPDF(dropZone, state) {
-        const container = document.createElement("div");
-        container.style.cssText = `
-        width: 635px;
-        min-height: 842px;
-        overflow: visible;
-        margin: 0 auto;
-        padding: 0;
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        box-sizing: border-box;
-    `;
-
-        const wrapper = document.createElement("div");
-        wrapper.style.cssText = `
-        width: 635px;
-        margin: 40px auto 0;
-        background: white;
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 0;
-        box-sizing: border-box;
-        line-height: 1.5;
-    `;
-
-        const clonedContent = dropZone.cloneNode(true);
-        clonedContent.querySelector(".placeholder-text")?.remove();
-        clonedContent.querySelectorAll(".remove-btn").forEach(btn => btn.remove());
-
-        clonedContent.style.cssText = `
-        margin: 0;
-        padding: 0;
-        border: none;
-        background: white;
-        width: 100%;
-        font-size: 16px;
-        line-height: 1.5;
-    `;
-
-        clonedContent.querySelectorAll(".resume-section").forEach(section => {
-            styleUtils.applyFontSizes(section);
-            styleUtils.applySectionStyles(section, state.settings);
-        });
-
-        wrapper.appendChild(clonedContent);
-        container.appendChild(wrapper);
-        return container;
     }
 
     /* =============================================================================
@@ -1190,7 +1319,7 @@
         // Export button
         const exportBtn = document.createElement("button");
         exportBtn.className = "btn";
-        exportBtn.textContent = "Export PDF";
+        exportBtn.textContent = "Print / Export PDF";
         document.querySelector(".actions").appendChild(exportBtn);
         exportBtn.addEventListener("click", exportToPDF);
 
