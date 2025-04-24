@@ -15,6 +15,13 @@
 
 const entries = [
 	{
+		title: "botblitz",
+		filename: "botblitz.html",
+		description: "A never ending war against bot's A Fast-paced robot battles await youc change mode play fast or or slow make a high score and challenge your friends to if they beat you no problem tell them you made the high score in hard mode or just beat them again(Currently only works in desktop)",
+		author: "JDot",
+		github: "JDot555"
+	},
+	{
 		title: "Dancing Man",
 		filename: "dancing_man.html",
 		description: "The first submission to the One HTML Page Challenge. It is a simple ASCII man starting the dance from Napoleon Dynamite.",
