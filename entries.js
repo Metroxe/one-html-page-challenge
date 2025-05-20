@@ -22,12 +22,12 @@ const entries = [
 		github: "Metroxe"
 	},
 	{
-		title: "Shape Dodge Frenzy"
-		filename: "shape-dodge-frenzy.html"
-		description: "A cool and simple game where you(a shape) try to dodge other falling shapes."
-		author: "Abhi (d2crashout)"
+		title: "Shape Dodge Frenzy",
+		filename: "shape-dodge-frenzy.html",
+		description: "A cool and simple game where you(a shape) try to dodge other falling shapes.",
+		author: "Abhi (d2crashout)",
 		github: "d2crashout"
-	}
+	},
 	{
 		title: "Ant Colony",
 		filename: "ant_colony.html",
