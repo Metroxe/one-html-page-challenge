@@ -609,4 +609,12 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Chaos in Modified HTML 2.0",
+		filename: "chaosinonepage.html",
+		description: "A webpage loving HTML2.0, with a custom DTD, hate for HTML 5, and using &lt;center&gt; all while still \"Working\" in modern browsers.",
+		author: "Tech Geek United(Joshua Thayer)",
+		github: "jtrofficial",
+		compatibleBrowsers: ["Chrome Desktop", "Firefox Desktop", "Chrome Mobile", "Firefox Mobile", "Netscape Navigator", "Internet Explorer", "Opera 12.x", "Lynx Text browser"]
+	}
 ];
