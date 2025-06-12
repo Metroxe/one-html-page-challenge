@@ -1,0 +1,296 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0 extrasbyTGUnonstandard//EN" "https://tgua.dev/dtd/html2-extras.dtd">
+<head>
+  <title>Necromancy.css example</title>
+<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jtrofficial/necromancy.css@master/necromancyV0.4.css"> Moved inline-->
+<style>
+  /* === RESURRECTED DEPRECATED TAG STYLESHEET necromancy.css V0.4, see latest version @ https://cdn.jsdelivr.net/gh/jtrofficial/necromancy.css@master/ === */
+
+/* 1. <blink> — rapid flashing */
+blink {
+  animation: blink-animation 0.6s steps(1, start) infinite;
+}
+@keyframes blink-animation {
+  0%, 100% { visibility: hidden; }
+  50% { visibility: visible; }
+}
+
+/* 2. <marquee> — faux scrolling animation (commented out due to all browsers still supporting at time of writing: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/marquee#browser_compatibility)
+marquee {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: marquee-animation 10s linear infinite;
+}
+*/
+@keyframes marquee-animation {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* 3. <center> — center block elements */
+center {
+  display: block;
+  text-align: center;
+}
+
+/* 4. <font> — mimic font color and face */
+font[color] {
+  color: attr(color);
+}
+font[face] {
+  font-family: attr(face);
+}
+font[size="1"] { font-size: x-small; }
+font[size="2"] { font-size: small; }
+font[size="3"] { font-size: medium; }
+font[size="4"] { font-size: large; }
+font[size="5"] { font-size: x-large; }
+font[size="6"] { font-size: xx-large; }
+font[size="7"] { font-size: 3rem; }
+
+/* 5. <big> — increase font size */
+big {
+  font-size: larger;
+}
+
+/* 6. <small> — already supported but reinforcing */
+small {
+  font-size: smaller;
+}
+
+/* 7. <tt> — teletype style (monospaced) */
+tt {
+  font-family: monospace;
+}
+
+/* 8. <strike>, <s>, <del> — all strike-through */
+strike, s, del {
+  text-decoration: line-through;
+}
+
+/* 9. <u> — underline (reinstated in HTML5, still styling) */
+u {
+  text-decoration: underline;
+}
+
+/* 10. <nobr> — no line break */
+nobr {
+  white-space: nowrap;
+}
+
+/* 11. <acronym>, <abbr> — tooltip styling */
+acronym[title], abbr[title] {
+  border-bottom: 1px dotted #666;
+  cursor: help;
+}
+
+/* 12. <bgsound> — audio replacement for fun */
+bgsound::after {
+  content: "🎵 (bgsound placeholder)";
+  display: block;
+  color: gray;
+  font-style: italic;
+}
+
+/* 13. <isindex> — just a styled input imitation */
+isindex::before {
+  content: "Search: ";
+}
+isindex {
+  display: inline-block;
+  border: 1px solid #999;
+  padding: 4px;
+  font-family: sans-serif;
+}
+
+/* 14. <applet> — legacy Java notice */
+applet::before {
+  content: "⚠️ [Java Applet Placeholder]";
+  color: red;
+  font-weight: bold;
+  display: block;
+}
+applet {
+  display: block;
+  border: 1px dashed red;
+  padding: 1em;
+}
+
+/* Bonus: Typographic ghosting effect for nostalgia */
+.deprecated-glow {
+  color: #fff;
+  text-shadow: 0 0 4px #f0f, 0 0 8px #f0f, 0 0 12px #0ff;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Without?
+a[antistandard-txtdecor="none"] {
+  text-decoration: none;
+}
+a {
+  color: inherit; Yes to not adhering to standards
+}
+*/
+
+/*I seriously have no idea what this is, but it's supposed to be something like UL in teletype and small*/
+dir{
+  font-family: monospace;
+  font-size: small;
+}
+dir::before{
+  content: "   •   ";
+}
+
+/*Supposed to be similar to dir, so we'll just.. use the same code, but not small?*/
+menu{
+  font-family: monospace;
+}
+menu::before{
+  content: "   •   ";
+}
+
+/*Yes, text coloring pagewide without <font>*/
+body[basefont-color] {
+    color: attr(basefont-color);
+}
+body[basefont-face] {
+    font-family: attr(basefont-face);
+}
+
+
+/*Hmm? HTML DOM parsing error due to unmatched closing tag? don't care*/
+plaintext {
+    display: block;
+    white-space: pre-wrap;
+    font-family: monospace;
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 1em;
+    border: 1px solid #ccc;
+}
+
+listing{
+  white-space: pre;
+  font-family: monospace;
+  padding: 1vh;
+}
+
+div[align="left"], h1[align="left"], /* etc. */ { text-align: left; }
+div[align="center"], h1[align="center"], /* etc. */ { text-align: center; }
+div[align="right"], h1[align="right"], /* etc. */ { text-align: right; }
+img[align="left"] { float: left; margin-right: 1em; } /* Simulating image wrap */
+
+tgu {
+  display: block;
+  text-align: center;
+  background-color: #ebcc94;
+  margin: auto;
+  width: 100%;
+  padding: 10px;
+}
+/* external crap not allowed here
+tgu > sep {
+  display: block;
+  background-image: url("https://tgua.dev/sep.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center;
+  height: 10px;
+  width: 100%;
+}
+*/
+tgu > g {
+  text-shadow: 0 0 4px #a1a1a1, 0 0 8px #a1a1a1, 0 0 12px #a1a1a1;
+}
+cf {
+  display: block;
+  font-family: monospace;
+  background: #111;
+  color: #0f0;
+  padding: 1em;
+  border: 2px dashed #0f0;
+  margin: 1em 0;
+  white-space: pre-wrap;
+}
+</style>
+<meta charset="UTF-8">
+</head>
+  <div style="background-color: #7e8580;">
+  <marquee><blink>
+    Fun time, such a fun time, drop a bucket on it's head an call it "HTML 5" Time
+</blink></marquee>
+</div>
+<body bgcolor="black">
+  <font color="#00ff00">
+  <marquee><blink>WTF is this?<br>Who cares?</blink></marquee>
+</font>
+    <A NAME="MD">
+  <font size="6" color="#ff0000">
+    <center>
+  <em>Help</em> <strong>Me</strong>
+  <P>RAW MD IS FUN, RAW HTML IS FUNNER</P>
+</center>
+</font>
+  </A>
+  <A NAME="BODY">
+  <font color="#00ff00">
+  <center><font size="6">Welcome</font> to <tt>Web 1</tt><br><nobr><big><s>Don't</s> like it? <small><u>No one</u> cares</nobr>
+    <applet code="HelloApplet.class" width="300" height="100">Crap, try IE, your Browser doesn't support Applets Idiot</applet>
+   <br><a class="deprecated-glow" href="https://html.spec.whatwg.org/" target="_blank" rel="noopener noreferrer">Fine you heretic</a></small><br>  
+
+   <p><font size="3">This page isn't <em>really</em> parody, it's a fair critiqúe of modern web practices and the overreliance on Javascript and Cascading Style Sheets on "HTML" pages & the "hate" of cool and interesting HTML tags like &lt;center>, NAME="" for bodies, &lt;font>, &lt;marquee>, and &lt;blink>; and don't even get me started on the hate for using &lt;!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">.</p><p>Oh, and fun little fact, due to some iframe hackery this page is <em>Technically</em> <a href="https://validator.w3.org/nu/?showsource=yes&showoutline=yes&doc=https%3A%2F%2Fhot.tgua.dev%2Fhelpme" target="_blank" rel="noopener noreferrer">Validified HTML</a>Furthermore as a wise degenerate once spoke:<br> <tt>"Heresy, thy Cascading Style sheets art dunderpluff in the context of this very righteous modified Hypertext Markup Language 2.0 standard webpage.<br>So I curse upon thee for thy crops to be dead, fields dry, and harvest low; for this heresey is deadly to all that is known and formulated to (non)standard."</tt><br><br>
+    So pickup thy pitchfork- *Clears throat* Oh wait, where was I? Oh yeah, the "standards" thing. Webstandards like <abbr title="Some shit I don't care about">HTML5</abbr> serve only to deprecate our fair webpages and serve the interests of overengineered boilerplate Interactive Corporate Webportals from companies that have money to <abbr title="What should be done to Javascript and Cascading Style Sheets">burn</abbr> on unneeded code.</p>
+</font>
+
+    <br><br><big>A Representation of Textual Information and MetaInformation for Retrieval and Interchange</big><br><br>
+    <font size="5">Abstract</font><br><br>
+<font size="1">
+   HyperText Markup Language (HTML) can be used to represent<br><br>
+   
+      Hypertext news, mail, online documentation, and collaborative
+      hypermedia;<br><br>
+      
+      Menus of  options;
+      
+      Database query results;<br><br>
+      
+      Simple structured documents with inlined graphics.<br><br>
+      
+      Hypertext views of existing bodies of information<br><br>
+      
+   The World Wide Web (W3) initiative links related information
+   throughout the globe.  HTML provides one simple format for
+   providing linked information, and  all W3 compatible programs are
+   required to be capable of handling HTML.<br><br>    
+
+   W3 uses an Internet protocol (Hypertext Transfer Protocol, HTTP), which allows transfer
+   representations to be negotiated between client and server, the
+   result being returned in an extended MIME message.  HTML is
+   therefore just one, but an important one, of the representations
+   used with W3.<br><br>
+   
+   HTML is proposed as a  MIME content type.<br><br>
+   
+   HTML refers to the URL specification of RFCxxxx.<br><br>
+   
+   Implementations of HTML parsers and generators can be found in the
+   various W3 servers and browsers, in the public domain W3 code, and
+   may also be built using various public domain SGML parsers such as
+   [SGMLS] .  HTML is an SGML document type with fairly generic
+   semantics appropriate for representing information from a wide
+   range of applications.  It is more generic than many specific SGML
+   applications, but is still completely device-independent.<br><br></font></font>
+    <blink><font color="#0000ff">!~<a href="https://www.w3.org/MarkUp/draft-ietf-iiir-html-01.txt" target="_blank" rel="noopener noreferrer">YAY</a>~!</font></blink>
+  </big>
+  <font color="#00ff00">
+  <p><strong>Oh</strong> and while they might not know simple HTML like &lt;body bgcolor="blue">, go look at <a href="https://twitter.com/kyrylosilin" target="_blank" rel="noopener noreferrer">This guy</a><!--Used twitter.com instead of x.com to fuck with people--> @ <a href="https://justfuckingusehtml.com/" target="_blank" rel="noopener noreferrer">justfuckingusehtml.com</a></p>
+  <div><h3>Find this page interesting?</h3>
+    <p>Use necromancy.css in your next project with <code>&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jtrofficial/necromancy.css@master/necromancyV0.4.css"&gt;&lt;script src="https://cdn.jsdelivr.net/gh/jtrofficial/necromancy.css@master/necromancyV0.4.js"&gt;&lt;/script&gt;
+</code></p>
+    </div>
+  <br><p><abbr title="Legal shit: This is a joke, Copyleft intended">CopyEcchi</abbr> <abbr title="[Insert aggressive profanities]er The current year">2025</abbr> <abbr title="Shut up, for the last time, this is NOT a joke, it's my actual username, or one of them, find me @ Techgeekunited also"><a href="mailto:degeneratebuddy@gmail.com">Tech Geek United</a></abbr> <abbr title="Do I really have to say? Fine... 'Under means in compliance with, or in accordance with, the provisions of the specified rule, form, or statute.' --- https://www.lawinsider.com/dictionary/under">under</abbr> <abbr title="You can use my stuff, just don't try to make money off it, give me credit, and whatever you make with it has to be just as free for others to use as my original work."><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a></abbr></p>
+  <!--https://tgua.dev/help modified for One HTML page challenge-->
+  </center>
+  </font>
+  </A>
+  </body>
