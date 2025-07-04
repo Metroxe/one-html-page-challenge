@@ -37,6 +37,13 @@ const entries = [
 		github: "Metroxe"
 	},
 	{
+	        title: "64x64 Maze Game",
+		filename: "maze.html",
+                description: "A 64x64 maze game where you have to finish in order to get confetti. W A S D.",
+		author: "Alex Manochio",
+		github: "ajm19826"
+	},
+	{
 		title: "Building Price Estimate",
 		filename: "building.html",
 		description: "Drag the top right corner on the building. Price increases as building gets bigger.",
@@ -609,4 +616,5 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	
 ];
