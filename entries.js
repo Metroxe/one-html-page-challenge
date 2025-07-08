@@ -609,4 +609,11 @@ const entries = [
 		author: "Rupesh Soni",
 		github: "rsoni124"
 	},
+	{
+		title: "Calendar",
+		filename: "calendar.html",
+		description: "A venture into the intricacies of date management in the web browser.",
+		author: "Vincent Lejtzén",
+		github: "lejtzen",
+	},
 ];
