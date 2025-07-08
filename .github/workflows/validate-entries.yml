@@ -1,0 +1,121 @@
+name: Validate One HTML Page Challenge Entries
+
+on:
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to test'
+        required: true
+        type: number
+
+jobs:
+  validate-entries:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+        ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/pull/{0}/merge', github.event.inputs.pr_number) || github.ref }}
+    
+    - name: Check if only entries files changed
+      id: check-files
+      run: |
+        # Get all changed files
+        changed_files=$(git diff --name-only HEAD~1 HEAD)
+        echo "All changed files:"
+        echo "$changed_files"
+        
+        # Check if all changed files are in allowed paths
+        allowed=true
+        while IFS= read -r file; do
+          if [[ ! "$file" =~ ^entries/ ]] && [[ "$file" != "entries.js" ]]; then
+            echo "❌ Non-entries file found: $file"
+            allowed=false
+          fi
+        done <<< "$changed_files"
+        
+        if [ "$allowed" = true ]; then
+          echo "✅ All changed files are entries-related"
+          echo "should_run=true" >> $GITHUB_OUTPUT
+        else
+          echo "🚫 PR contains non-entries changes, skipping validation"
+          echo "should_run=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Set up Node.js
+      if: steps.check-files.outputs.should_run == 'true'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+    
+    - name: Install dependencies
+      if: steps.check-files.outputs.should_run == 'true'
+      run: |
+        npm install jsdom cheerio
+    
+    - name: Get changed files
+      if: steps.check-files.outputs.should_run == 'true'
+      id: changed-files
+      run: |
+        echo "files=$(git diff --name-only HEAD~1 HEAD | grep -E '^entries/.*\.html?$|^entries\.js$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+    
+    - name: Run validation script
+      if: steps.check-files.outputs.should_run == 'true'
+      run: node .github/scripts/validate-entries.js
+      env:
+        CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
+    
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      if: failure() && steps.check-files.outputs.should_run == 'true'
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 🚫 Entry Validation Failed\n\n';
+          
+          if (fs.existsSync('validation-results.json')) {
+            const results = JSON.parse(fs.readFileSync('validation-results.json', 'utf8'));
+            
+            comment += '### Issues Found:\n\n';
+            for (const [file, issues] of Object.entries(results)) {
+              if (issues.length > 0) {
+                comment += `**${file}:**\n`;
+                issues.forEach(issue => {
+                  comment += `- ❌ ${issue}\n`;
+                });
+                comment += '\n';
+              }
+            }
+          }
+          
+          comment += '### Rules Reminder:\n';
+          comment += '1. ✅ File must be less than 1MB\n';
+          comment += '2. ✅ All code must be in a single HTML file\n';
+          comment += '3. ✅ No external file imports (images, CSS, JS)\n';
+          comment += '4. ✅ No network requests\n';
+          comment += '5. ✅ Libraries must be hardcoded in script tags\n';
+          comment += '6. ✅ Entry must be added to entries.js\n\n';
+          comment += 'Please fix the issues and update your pull request.';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+    
+    - name: Comment success on PR
+      uses: actions/github-script@v7
+      if: success() && steps.check-files.outputs.should_run == 'true'
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '## ✅ Entry Validation Passed\n\nAll entries meet the One HTML Page Challenge requirements! 🎉'
+          }); 
