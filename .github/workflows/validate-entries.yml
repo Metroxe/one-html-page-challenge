@@ -9,6 +9,11 @@ on:
         description: 'PR number to test'
         required: true
         type: number
+      dry_run:
+        description: 'Dry run - skip commenting on PR'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   validate-entries:
@@ -71,7 +76,7 @@ jobs:
     
     - name: Comment on PR
       uses: actions/github-script@v7
-      if: failure() && steps.check-files.outputs.should_run == 'true'
+      if: failure() && steps.check-files.outputs.should_run == 'true' && github.event.inputs.dry_run != 'true'
       with:
         script: |
           const fs = require('fs');
@@ -101,8 +106,11 @@ jobs:
           comment += '6. ✅ Entry must be added to entries.js\n\n';
           comment += 'Please fix the issues and update your pull request.';
           
+          // Determine which PR to comment on
+          const issueNumber = context.issue.number || '${{ github.event.inputs.pr_number }}';
+          
           github.rest.issues.createComment({
-            issue_number: context.issue.number,
+            issue_number: issueNumber,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: comment
@@ -110,11 +118,14 @@ jobs:
     
     - name: Comment success on PR
       uses: actions/github-script@v7
-      if: success() && steps.check-files.outputs.should_run == 'true'
+      if: success() && steps.check-files.outputs.should_run == 'true' && github.event.inputs.dry_run != 'true'
       with:
         script: |
+          // Determine which PR to comment on
+          const issueNumber = context.issue.number || '${{ github.event.inputs.pr_number }}';
+          
           github.rest.issues.createComment({
-            issue_number: context.issue.number,
+            issue_number: issueNumber,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: '## ✅ Entry Validation Passed\n\nAll entries meet the One HTML Page Challenge requirements! 🎉'
