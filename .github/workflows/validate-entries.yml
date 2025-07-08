@@ -60,7 +60,7 @@ jobs:
     - name: Install dependencies
       if: steps.check-files.outputs.should_run == 'true'
       run: |
-        npm install jsdom cheerio
+        npm install jsdom cheerio @octokit/rest
     
     - name: Get changed files
       if: steps.check-files.outputs.should_run == 'true'
@@ -75,75 +75,10 @@ jobs:
         CHANGED_FILES: ${{ steps.changed-files.outputs.files }}
     
     - name: Comment on PR
-      uses: actions/github-script@v7
-      if: (success() || failure()) && steps.check-files.outputs.should_run == 'true' && github.event.inputs.dry_run != 'true'
-      with:
-        script: |
-          const fs = require('fs');
-          let results = {};
-          let hasErrors = false;
-          
-          if (fs.existsSync('validation-results.json')) {
-            results = JSON.parse(fs.readFileSync('validation-results.json', 'utf8'));
-            hasErrors = Object.values(results).some(issues => issues.length > 0);
-          }
-          
-          // Determine overall status
-          const status = hasErrors ? '🚫 Entry Validation Failed' : '✅ Entry Validation Passed';
-          let comment = `## ${status}\n\n`;
-          
-          // Add requirements checklist
-          comment += '### Requirements Checklist:\n\n';
-          
-          // Check each requirement across all files
-          let fileSizePass = true;
-          let htmlStructurePass = true;
-          let noExternalImportsPass = true;
-          let noNetworkRequestsPass = true;
-          let htmlSyntaxPass = true;
-          let entryRegisteredPass = true;
-          
-          for (const [file, issues] of Object.entries(results)) {
-            issues.forEach(issue => {
-              if (issue.includes('File size') && issue.includes('exceeds')) fileSizePass = false;
-              if (issue.includes('File must have') || issue.includes('HTML structure')) htmlStructurePass = false;
-              if (issue.includes('External') && (issue.includes('stylesheet') || issue.includes('script') || issue.includes('image') || issue.includes('resource'))) noExternalImportsPass = false;
-              if (issue.includes('network request')) noNetworkRequestsPass = false;
-              if (issue.includes('HTML syntax') || issue.includes('Unclosed')) htmlSyntaxPass = false;
-              if (issue.includes('Entry not found') || issue.includes('entries.js')) entryRegisteredPass = false;
-            });
-          }
-          
-          comment += `- ${fileSizePass ? '✅' : '❌'} File must be less than 1MB\n`;
-          comment += `- ${htmlStructurePass ? '✅' : '❌'} Valid HTML file structure\n`;
-          comment += `- ${noExternalImportsPass ? '✅' : '❌'} No external file imports (images, CSS, JS)\n`;
-          comment += `- ${noNetworkRequestsPass ? '✅' : '❌'} No network requests\n`;
-          comment += `- ${htmlSyntaxPass ? '✅' : '❌'} Valid HTML syntax\n`;
-          comment += `- ${entryRegisteredPass ? '✅' : '❌'} Entry registered in entries.js\n\n`;
-          
-          // Add detailed issues if any exist
-          if (hasErrors) {
-            comment += '### Issues Found:\n\n';
-            for (const [file, issues] of Object.entries(results)) {
-              if (issues.length > 0) {
-                comment += `**${file}:**\n`;
-                issues.forEach(issue => {
-                  comment += `- ${issue}\n`;
-                });
-                comment += '\n';
-              }
-            }
-            comment += 'Please fix the issues above and update your pull request.';
-          } else {
-            comment += 'All entries meet the One HTML Page Challenge requirements! 🎉';
-          }
-          
-          // Determine which PR to comment on
-          const issueNumber = context.issue.number || '${{ github.event.inputs.pr_number }}';
-          
-          github.rest.issues.createComment({
-            issue_number: issueNumber,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: comment
-          }); 
+      if: (success() || failure()) && steps.check-files.outputs.should_run == 'true'
+      run: node .github/scripts/comment-on-pr.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+        DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }} 
