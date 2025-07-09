@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="github" content="shing100">
+    <meta name="description" content="Play to go game">
+    <meta name="author" content="Geun Lim">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #board {
+            display: grid;
+            grid-template-columns: repeat(15, 30px);
+            grid-template-rows: repeat(15, 30px);
+            gap: 1px;
+            background-color: #dcb35c;
+            border: 2px solid #000;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+        .stone {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            margin: 2px;
+        }
+        .black {
+            background-color: #000;
+        }
+        .white {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="board"></div>
+
+    <script>
+        const board = document.getElementById('board');
+        const size = 15;
+        let currentPlayer = 'black';
+        let gameBoard = Array(size).fill().map(() => Array(size).fill(null));
+
+        function createBoard() {
+            for (let i = 0; i < size * size; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.row = Math.floor(i / size);
+                cell.dataset.col = i % size;
+                cell.addEventListener('click', handleClick);
+                board.appendChild(cell);
+            }
+        }
+
+        function handleClick(e) {
+            const row = parseInt(e.target.dataset.row);
+            const col = parseInt(e.target.dataset.col);
+
+            if (gameBoard[row][col]) return;
+
+            placeStone(row, col);
+            if (checkWin(row, col)) {
+                alert(`${currentPlayer.charAt(0).toUpperCase() + currentPlayer.slice(1)} Player Win!`);
+                resetGame();
+            } else {
+                currentPlayer = currentPlayer === 'black' ? 'white' : 'black';
+            }
+        }
+
+        function placeStone(row, col) {
+            const cell = board.children[row * size + col];
+            const stone = document.createElement('div');
+            stone.className = `stone ${currentPlayer}`;
+            cell.appendChild(stone);
+            gameBoard[row][col] = currentPlayer;
+        }
+
+        function checkWin(row, col) {
+            const directions = [
+                [1, 0], [0, 1], [1, 1], [1, -1]
+            ];
+
+            for (const [dx, dy] of directions) {
+                let count = 1;
+                count += countDirection(row, col, dx, dy);
+                count += countDirection(row, col, -dx, -dy);
+                if (count >= 5) return true;
+            }
+            return false;
+        }
+
+        function countDirection(row, col, dx, dy) {
+            let count = 0;
+            let x = row + dx;
+            let y = col + dy;
+
+            while (x >= 0 && x < size && y >= 0 && y < size && gameBoard[x][y] === currentPlayer) {
+                count++;
+                x += dx;
+                y += dy;
+            }
+
+            return count;
+        }
+
+        function resetGame() {
+            board.innerHTML = '';
+            gameBoard = Array(size).fill().map(() => Array(size).fill(null));
+            currentPlayer = 'black';
+            createBoard();
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
