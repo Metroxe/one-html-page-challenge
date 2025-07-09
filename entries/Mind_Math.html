@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Math</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            flex-direction: column;
+            margin: 0;
+        }
+        .content {
+            text-align: center;
+        }
+        .action-button {
+            position: absolute;
+            bottom: 300px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #006070;
+            border: none;
+            color: white;
+            padding: 17px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 50%; /* Add border-radius for round shape */
+            cursor: pointer;
+        }
+        h1, h2 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        h1 {
+            top: 40px;
+        }
+        h2 {
+            top: 100px;
+        }
+        nav {
+            background-color: #333;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        nav ul li {
+            display: inline;
+        }
+        nav ul li a {
+            display: inline-block;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #575757;
+        }
+        /* Active link styling */
+        nav ul li a.active {
+            background-color: #006070;
+        }
+        .app-name {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Mobile-first responsiveness */
+        @media screen and (max-width: 768px) {
+            .action-button {
+                padding: 15px 12px;
+                font-size: 14px;
+            }
+            /* Make numbers larger on mobile */
+            h1, h2 {
+                font-size: 28px; /* Larger number for better readability */
+            }
+            nav ul {
+                padding: 10px 0;
+                text-align: left;
+            }
+            nav ul li {
+                display: block;
+                margin: 5px 0;
+            }
+            nav ul li a {
+                display: block;
+                padding: 10px 15px;
+                text-align: left;
+            }
+        }
+
+        /* For very small devices (portrait phones) */
+        @media screen and (max-width: 480px) {
+            .action-button {
+                padding: 14px 10px;
+                font-size: 12px;
+            }
+
+            /* Make numbers larger for very small devices */
+            h1 {
+                font-size: 32px; /* Even larger font size for very small screens */
+            }
+            h2 {
+                font-size: 24px; /* Larger font for the answer */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="content">
+        <h1 id="displayNumbers">0 + 0</h1>
+        <h2 id="answer">ans: 0</h2>
+        <div>
+            <button id="actionButton" class="action-button">Go!</button>
+        </div>
+    </div>
+
+    <div>
+        <nav>
+            <div class="app-name">Mind Math</div>
+            <ul>
+                <li><a href="#" id="additionLink" class="active">Addition</a></li>
+                <li><a href="#" id="subtractionLink">Subtraction</a></li>
+                <li><a href="#" id="multiplicationLink">Multiplication</a></li>
+                <li><a href="#" id="divisionLink">Division</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        let num1 = 0;
+        let num2 = 0;
+        let show = true;
+        let functionality = true; // True - Generate, False - Toggle Result
+        let currentPage = 'addition'; // Track which operation page is active
+
+        const randomNumInRange = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        const handleClick = () => {
+            if (functionality) {
+                // Generate Functionality
+                num1 = randomNumInRange(50, 100);
+                num2 = randomNumInRange(1, 50);
+                show = false;
+            } else {
+                // Toggle Sum, Difference, Product, or Quotient
+                show = !show;
+            }
+            // Update the display
+            updateDisplay();
+            // Switch functionality for next click
+            functionality = !functionality;
+        };
+
+        const updateDisplay = () => {
+            if (currentPage === 'addition') {
+                document.getElementById('displayNumbers').innerText = `${num1} + ${num2}`;
+                document.getElementById('answer').innerText = show ? `ans: ${num1 + num2}` : '';
+            } else if (currentPage === 'subtraction') {
+                document.getElementById('displayNumbers').innerText = `${num1} - ${num2}`;
+                document.getElementById('answer').innerText = show ? `ans: ${num1 - num2}` : '';
+            } else if (currentPage === 'multiplication') {
+                document.getElementById('displayNumbers').innerText = `${num1} * ${num2}`;
+                document.getElementById('answer').innerText = show ? `ans: ${num1 * num2}` : '';
+            } else if (currentPage === 'division') {
+                document.getElementById('displayNumbers').innerText = `${num1} ÷ ${num2}`;
+                document.getElementById('answer').innerText = show ? `ans: ${(num1 / num2).toFixed(2)}` : ''; // Round to 2 decimal places
+            }
+        };
+
+        // Event listeners for operation navigation
+        document.getElementById('additionLink').addEventListener('click', () => {
+            currentPage = 'addition';
+            setActivePage('addition');
+            updateDisplay();
+        });
+
+        document.getElementById('subtractionLink').addEventListener('click', () => {
+            currentPage = 'subtraction';
+            setActivePage('subtraction');
+            updateDisplay();
+        });
+
+        document.getElementById('multiplicationLink').addEventListener('click', () => {
+            currentPage = 'multiplication';
+            setActivePage('multiplication');
+            updateDisplay();
+        });
+
+        document.getElementById('divisionLink').addEventListener('click', () => {
+            currentPage = 'division';
+            setActivePage('division');
+            updateDisplay();
+        });
+
+        const setActivePage = (page) => {
+            document.querySelectorAll('nav ul li a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById(`${page}Link`).classList.add('active');
+        };
+
+        // Button click listener
+        document.getElementById('actionButton').addEventListener('click', handleClick);
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
