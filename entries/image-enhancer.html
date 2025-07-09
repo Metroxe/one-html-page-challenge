@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Enhancer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1a1a2e; /* Dark background */
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #8be9fd;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(139, 233, 253, 0.3);
+        }
+
+        .container {
+            background-color: #2a2a4a;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 900px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #a0a0a0;
+            font-size: 0.9em;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            background: #444;
+            border-radius: 5px;
+            outline: none;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #8be9fd;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(139, 233, 253, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #8be9fd;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(139, 233, 253, 0.5);
+        }
+
+        button {
+            background-color: #6272a4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #44475a;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        input[type="file"] {
+            display: none; /* Hide default file input */
+        }
+
+        .upload-button {
+            background-color: #50fa7b;
+            color: #282a36;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-button:hover {
+            background-color: #3bfa65;
+            transform: translateY(-2px);
+        }
+
+        canvas {
+            border: 2px dashed #44475a;
+            max-width: 100%; /* Ensure canvas scales down if too big */
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            background-color: #333; /* Placeholder background for canvas */
+            image-rendering: pixelated; /* For sharper pixel scaling in browser preview */
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .download-button {
+            background-color: #ff79c6;
+            margin-top: 25px;
+            padding: 12px 25px;
+        }
+
+        .download-button:hover {
+            background-color: #ff52b2;
+        }
+
+        .message {
+            margin-top: 15px;
+            color: #ffb86c;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>✨ Pure JS Image Enhancer with 2x Scaling ✨</h1>
+
+    <div class="container">
+        <input type="file" id="imageUpload" accept="image/*">
+        <label for="imageUpload" class="upload-button">Upload Image</label>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="grayscale">Grayscale</label>
+                <input type="range" id="grayscale" min="0" max="100" value="0">
+            </div>
+            <div class="control-group">
+                <label for="sepia">Sepia</label>
+                <input type="range" id="sepia" min="0" max="100" value="0">
+            </div>
+            <div class="control-group">
+                <label for="brightness">Brightness</label>
+                <input type="range" id="brightness" min="0" max="200" value="100">
+            </div>
+            <div class="control-group">
+                <label for="contrast">Contrast</label>
+                <input type="range" id="contrast" min="0" max="200" value="100">
+            </div>
+        </div>
+
+        <div>
+            <button id="applyFilters">Apply Filters & Scale 2x</button>
+            <button id="resetFilters">Reset</button>
+        </div>
+
+        <canvas id="imageCanvas"></canvas>
+        <button id="downloadImage" class="download-button" style="display:none;">Download Enhanced Image</button>
+        <p class="message" id="statusMessage"></p>
+    </div>
+
+    <script>
+        const imageUpload = document.getElementById('imageUpload');
+        const imageCanvas = document.getElementById('imageCanvas');
+        const ctx = imageCanvas.getContext('2d');
+        const grayscaleSlider = document.getElementById('grayscale');
+        const sepiaSlider = document.getElementById('sepia');
+        const brightnessSlider = document.getElementById('brightness');
+        const contrastSlider = document.getElementById('contrast');
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        const downloadImageBtn = document.getElementById('downloadImage');
+        const statusMessage = document.getElementById('statusMessage');
+
+        let originalImage = new Image();
+        let originalImageData = null; // Store the original image data (1x resolution)
+
+        // Set initial canvas dimensions (will be resized to scaled image)
+        imageCanvas.width = 600;
+        imageCanvas.height = 400;
+
+        // --- Event Listeners ---
+
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    originalImage.onload = () => {
+                        // Temporarily draw original image to get its pixel data
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        tempCanvas.width = originalImage.width;
+                        tempCanvas.height = originalImage.height;
+                        tempCtx.drawImage(originalImage, 0, 0);
+
+                        // Store the original pixel data at 1x resolution
+                        originalImageData = tempCtx.getImageData(0, 0, originalImage.width, originalImage.height);
+
+                        // Reset sliders and apply immediately with no filters (just scaling)
+                        resetSliders();
+                        applyAllFiltersAndScale();
+                        downloadImageBtn.style.display = 'block';
+                        statusMessage.textContent = 'Image loaded and scaled 2x. Adjust sliders and click "Apply Filters & Scale 2x".';
+                    };
+                    originalImage.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                statusMessage.textContent = 'Please select an image file.';
+            }
+        });
+
+        applyFiltersBtn.addEventListener('click', () => {
+            if (originalImageData) {
+                applyAllFiltersAndScale();
+                statusMessage.textContent = 'Filters applied and image scaled 2x!';
+            } else {
+                statusMessage.textContent = 'Please upload an image first.';
+            }
+        });
+
+        resetFiltersBtn.addEventListener('click', () => {
+            if (originalImageData) {
+                resetSliders();
+                applyAllFiltersAndScale(); // Re-apply without filters, just 2x scaling
+                statusMessage.textContent = 'Filters reset to original, image remains 2x scaled.';
+            } else {
+                statusMessage.textContent = 'No image or filters to reset.';
+            }
+        });
+
+        downloadImageBtn.addEventListener('click', () => {
+            if (originalImageData) {
+                const dataURL = imageCanvas.toDataURL('image/png'); // Can be 'image/jpeg'
+                const a = document.createElement('a');
+                a.href = dataURL;
+                a.download = `enhanced_${originalImageData.width * 2}x${originalImageData.height * 2}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                statusMessage.textContent = 'Image downloaded!';
+            } else {
+                statusMessage.textContent = 'Nothing to download. Please upload and enhance an image.';
+            }
+        });
+
+        // --- Filter and Scaling Logic ---
+
+        function applyAllFiltersAndScale() {
+            if (!originalImageData) return;
+
+            const originalWidth = originalImageData.width;
+            const originalHeight = originalImageData.height;
+            const scaledWidth = originalWidth * 2;
+            const scaledHeight = originalHeight * 2;
+
+            // Prepare a new ImageData object for the scaled and filtered image
+            const scaledImageData = ctx.createImageData(scaledWidth, scaledHeight);
+            const originalPixels = originalImageData.data;
+            const scaledPixels = scaledImageData.data;
+
+            const grayscaleVal = parseInt(grayscaleSlider.value);
+            const sepiaVal = parseInt(sepiaSlider.value);
+            const brightnessVal = parseInt(brightnessSlider.value);
+            const contrastVal = parseInt(contrastSlider.value);
+
+            // Loop through the NEW, SCALED image dimensions
+            for (let y = 0; y < scaledHeight; y++) {
+                for (let x = 0; x < scaledWidth; x++) {
+                    // Calculate corresponding pixel in the ORIGINAL image (Nearest Neighbor)
+                    // (x / 2) and (y / 2) because we are taking each pixel from the original and
+                    // applying it to a 2x2 block in the scaled image.
+                    const originalX = Math.floor(x / 2);
+                    const originalY = Math.floor(y / 2);
+
+                    // Get the index of the original pixel
+                    const originalIndex = (originalY * originalWidth + originalX) * 4;
+
+                    let r = originalPixels[originalIndex];
+                    let g = originalPixels[originalIndex + 1];
+                    let b = originalPixels[originalIndex + 2];
+                    let a = originalPixels[originalIndex + 3]; // Alpha channel
+
+                    // --- Apply Filters to the pixel from original image ---
+
+                    // Grayscale
+                    if (grayscaleVal > 0) {
+                        let avg = (r + g + b) / 3;
+                        r = r + (avg - r) * (grayscaleVal / 100);
+                        g = g + (avg - g) * (grayscaleVal / 100);
+                        b = b + (avg - b) * (grayscaleVal / 100);
+                    }
+
+                    // Sepia
+                    if (sepiaVal > 0) {
+                        const tr = (r * 0.393 + g * 0.769 + b * 0.189);
+                        const tg = (r * 0.349 + g * 0.686 + b * 0.168);
+                        const tb = (r * 0.272 + g * 0.534 + b * 0.131);
+
+                        r = r + (tr - r) * (sepiaVal / 100);
+                        g = g + (tg - g) * (sepiaVal / 100);
+                        b = b + (tb - b) * (sepiaVal / 100);
+                    }
+
+                    // Brightness
+                    let brightnessAdjust = (brightnessVal - 100);
+                    r += brightnessAdjust;
+                    g += brightnessAdjust;
+                    b += brightnessAdjust;
+
+                    // Contrast
+                    let contrastAdjust = (contrastVal / 100);
+                    r = ((r - 128) * contrastAdjust) + 128;
+                    g = ((g - 128) * contrastAdjust) + 128;
+                    b = ((b - 128) * contrastAdjust) + 128;
+
+                    // Clamp values to 0-255
+                    r = Math.max(0, Math.min(255, r));
+                    g = Math.max(0, Math.min(255, g));
+                    b = Math.max(0, Math.min(255, b));
+
+
+                    // --- Set the pixel in the SCALED image data ---
+                    const scaledIndex = (y * scaledWidth + x) * 4;
+                    scaledPixels[scaledIndex] = r;
+                    scaledPixels[scaledIndex + 1] = g;
+                    scaledPixels[scaledIndex + 2] = b;
+                    scaledPixels[scaledIndex + 3] = a; // Keep original alpha
+                }
+            }
+
+            // Update canvas dimensions and draw the new scaled and filtered image
+            imageCanvas.width = scaledWidth;
+            imageCanvas.height = scaledHeight;
+            ctx.putImageData(scaledImageData, 0, 0);
+        }
+
+        function resetSliders() {
+            grayscaleSlider.value = 0;
+            sepiaSlider.value = 0;
+            brightnessSlider.value = 100;
+            contrastSlider.value = 100;
+        }
+
+        // Initial message
+        statusMessage.textContent = 'Upload an image to get started!';
+    </script>
+</body>
+</html>
