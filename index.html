@@ -2,73 +2,36 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>One HTML Page Challenge</title>
+        <meta name="description" content="Create anything you want within 1 single HTML file. Practice your skills with the barebones of web development. How creative can you be with such restrictions?" />
+        <meta name="robots" content="index, follow" />
 
-        <!-- Icons -->
+        <!-- Preload assets -->
+        <link rel="preload" as="image" href="./one-html-page-logo.png" fetchpriority="high" />
+        <link rel="preload" as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" fetchpriority="high" />
+        <link rel="preload" as="script" href="./entries.js" />
 
         <!-- Favicon -->
-        <link rel="shortcut icon" href="./meta/favicon.ico" />
+        <link rel="icon" href="./favicon.ico" />
 
-        <!-- Apple/Safari icon -->
-        <link rel="apple-touch-icon" sizes="57x57" href="./meta/apple-icon-57x57.png" />
-        <link rel="apple-touch-icon" sizes="60x60" href="./meta/apple-icon-60x60.png" />
-        <link rel="apple-touch-icon" sizes="72x72" href="./meta/apple-icon-72x72.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="./meta/apple-icon-76x76.png" />
-        <link rel="apple-touch-icon" sizes="114x114" href="./meta/apple-icon-114x114.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="./meta/apple-icon-120x120.png" />
-        <link rel="apple-touch-icon" sizes="144x144" href="./meta/apple-icon-144x144.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="./meta/apple-icon-152x152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="./meta/apple-icon-180x180.png" />
-
-        <!-- Android Chrome -->
-        <link rel="icon" type="image/png" sizes="192x192" href="./meta/android-icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="./meta/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="96x96" href="./meta/favicon-96x96.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="./meta/favicon-16x16.png" />
-
-        <!-- Square Windows tiles -->
-        <meta name="msapplication-square70x70logo" content="./meta/ms-icon-70x70.png" />
-        <meta name="msapplication-square144x144logo" content="./meta/ms-icon-144x144.png" />
-        <meta name="msapplication-square150x150logo" content="./meta/ms-icon-150x150.png" />
-        <meta name="msapplication-square310x310logo" content="./meta/ms-icon-310x310.png" />
-
-        <!-- Rectangular Windows tile -->
-        <meta name="msapplication-wide310x150logo" content="./meta/ms-icon-310x150.png" />
-
-        <!-- Web App Manifest -->
-        <link rel="manifest" href="./meta/site.webmanifest" />
-
-        <!-- Windows tile theme color -->
-        <meta name="msapplication-TileColor" content="#da532c" />
-        <meta name="msapplication-TileImage" content="./meta/ms-icon-144x144.png" />
-        <meta name="msapplication-config" content="./meta/browserconfig.config" />
-
-        <!-- Android theme color -->
-        <meta name="theme-color" content="#ffffff" />
-        <link rel="mask-icon" href="./meta/safari-pinned-tab.svg" color="#ffa500" />
-
-        <!-- END Icons -->
-
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-144023646-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
-            gtag("config", "UA-144023646-1");
-        </script>
         <meta property="og:title" content="One HTML Page Challenge" />
         <meta property="og:image" content="https://repository-images.githubusercontent.com/194445383/571a9000-9cd0-11e9-9a72-2faf76647a01" />
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 
         <style>
+            .container {
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+
             .jumbotron {
                 text-align: center;
             }
 
             .logo {
                 max-width: 70%;
+                height: auto;
             }
 
             body {
@@ -99,12 +62,10 @@
     </head>
     <body>
         <div class="container">
-            <br />
-
             <div class="card">
                 <div class="card-body">
                     <div class="jumbotron">
-                        <img src="./meta/one-html-page-logo.png" alt="One Html Page Challenge" class="logo" />
+                        <img src="./one-html-page-logo.png" width="2404" height="1582" alt="One Html Page Challenge" fetchpriority="high" class="logo" />
                         <hr class="my-4" />
                         <p>
                             The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework.
@@ -112,7 +73,7 @@
                         </p>
                         <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge/blob/master/README.md#how-to-submit" role="button" target="_blank">Submit an Entry</a>
                         <a class="btn btn-primary btn-lg" href="https://github.com/Metroxe/one-html-page-challenge" role="button" target="_blank">Github</a>
-                        
+
                     </div>
                     <div class="input-group flex-nowrap">
                         <input type="text" class="form-control" placeholder="Search" aria-label="Search" aria-describedby="addon-wrapping" id="search" oninput="searchOnInput()" />
@@ -124,7 +85,6 @@
                 </div>
             </div>
         </div>
-        <br />
 
         <script src="./entries.js"></script>
         <script>

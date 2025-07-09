@@ -1,3 +1,7 @@
 .idea
 .vscode
 .DS_Store
+node_modules
+validation-results.json
+package-lock.json
+package.json
