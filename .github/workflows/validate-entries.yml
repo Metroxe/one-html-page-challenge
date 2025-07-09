@@ -34,10 +34,10 @@ jobs:
         echo "All changed files:"
         echo "$changed_files"
         
-        # Check if all changed files are in allowed paths
+        # Check if all changed files are in allowed paths (no longer requiring entries.js)
         allowed=true
         while IFS= read -r file; do
-          if [[ ! "$file" =~ ^entries/ ]] && [[ "$file" != "entries.js" ]]; then
+          if [[ ! "$file" =~ ^entries/ ]]; then
             echo "❌ Non-entries file found: $file"
             allowed=false
           fi
@@ -66,7 +66,7 @@ jobs:
       if: steps.check-files.outputs.should_run == 'true'
       id: changed-files
       run: |
-        echo "files=$(git diff --name-only HEAD~1 HEAD | grep -E '^entries/.*\.html?$|^entries\.js$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+        echo "files=$(git diff --name-only HEAD~1 HEAD | grep -E '^entries/.*\.html?$' | tr '\n' ' ')" >> $GITHUB_OUTPUT
     
     - name: Run validation script
       if: steps.check-files.outputs.should_run == 'true'

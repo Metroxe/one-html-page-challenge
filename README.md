@@ -13,10 +13,16 @@ The goal is to create anything you want within 1 single html file. Practice your
  
 ## How to Submit
  1. Fork the repository.
- 2. Add your html file to the `/entries` directory.
- 3. Edit the `entries.js` file in the root, with your information for the entry.
- 4. Commit to your forked repo.
- 5. Make a pull request to master from your forked repo.
+ 2. Add your html file to the `/entries` directory with required meta tags in the `<head>` section:
+    ```html
+    <meta name="description" content="Brief description of your entry">
+    <meta name="author" content="Your Name">
+    <meta name="github" content="your-github-username">
+    ```
+ 3. Commit to your forked repo.
+ 4. Make a pull request to master from your forked repo.
+ 
+ **Note:** The `entries.js` file is now automatically generated from your HTML meta tags! No manual editing required.
  
  _* You may submit as many entries as you'd like._
  
