@@ -1,0 +1,52 @@
+name: Generate Entries JS
+
+on:
+  push:
+    paths:
+      - 'entries/**/*.html'
+    branches: [ master ]
+  pull_request:
+    paths:
+      - 'entries/**/*.html'
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  generate-entries-js:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        
+    - name: Install dependencies
+      run: |
+        npm install jsdom cheerio
+        
+    - name: Generate entries.js
+      run: node .github/scripts/generate-entries-json.js
+      
+    - name: Check if entries.js changed
+      id: check-changes
+      run: |
+        if git diff --quiet entries.js; then
+          echo "changed=false" >> $GITHUB_OUTPUT
+        else
+          echo "changed=true" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Commit and push entries.js
+      if: steps.check-changes.outputs.changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add entries.js
+        git commit -m "Auto-update entries.js from HTML metadata"
+        git push 
