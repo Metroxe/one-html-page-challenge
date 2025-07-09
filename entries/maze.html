@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A 64x64 maze game where you have to finish in order to get confetti. W A S D.">
+    <meta name="author" content="Alex Manochio">
+    <meta name="github" content="ajm19826">
+    <title>Large 2D Maze Game</title>
+    <style>
+        /* Basic reset and body styling */
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1a1a1a; /* Dark background */
+            font-family: 'Inter', sans-serif; /* Modern font */
+            color: #eee;
+            position: relative;
+            overflow: hidden; /* Prevent scrollbars from confetti */
+        }
+
+        /* Message box for game status */
+        #message-box {
+            position: absolute;
+            top: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            z-index: 100; /* Ensure it's above the game */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid #444;
+        }
+
+        /* Game container - holds the 2D maze */
+        #game-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px; /* Some padding around the maze */
+            max-width: 95vw; /* Ensure it fits wide screens */
+            max-height: 95vh; /* Ensure it fits tall screens */
+            box-sizing: border-box;
+        }
+
+        /* The 2D maze grid */
+        #maze-grid {
+            display: grid;
+            border: 2px solid #555;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply cleanly */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            background-color: #222; /* Background for the grid itself */
+            /* Max width/height to prevent overflow on smaller screens */
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 1 / 1; /* Keep it square */
+        }
+
+        /* Styling for individual maze cells */
+        .maze-cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.8em; /* Smaller font for larger maze */
+            color: white;
+            border: 0.5px solid rgba(0, 0, 0, 0.1); /* Subtle grid lines */
+        }
+
+        .maze-cell.wall {
+            background-color: #555; /* Wall color */
+            border-radius: 1px; /* Slightly rounded corners for walls */
+        }
+
+        .maze-cell.path {
+            background-color: #333; /* Path color */
+        }
+
+        /* Player marker */
+        .maze-cell.player {
+            background-color: #007bff; /* Blue for player */
+            border: 1px solid #0056b3;
+            border-radius: 50%; /* Circle shape */
+            animation: pulse-player 1s infinite alternate;
+        }
+
+        @keyframes pulse-player {
+            from { transform: scale(0.8); opacity: 0.8; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Start and End markers */
+        .maze-cell.start {
+            background-color: #4CAF50; /* Green for start */
+            border-radius: 50%;
+            animation: pulse-marker 1.5s infinite alternate;
+        }
+
+        .maze-cell.end {
+            background-color: #F44336; /* Red for end */
+            border-radius: 50%;
+            animation: pulse-marker 1.5s infinite alternate;
+        }
+
+        @keyframes pulse-marker {
+            from { transform: scale(0.7); opacity: 0.8; }
+            to { transform: scale(0.9); opacity: 1; }
+        }
+
+        /* Confetti styling */
+        #confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allow clicks to pass through */
+            z-index: 200;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #f0f; /* Default color, will be randomized */
+            border-radius: 50%; /* Circle or square, randomized */
+            opacity: 0;
+            animation: confetti-fall 3s forwards ease-out;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translate(var(--start-x), var(--start-y)) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="message-box">Use WASD or Arrow Keys to move. Find the Red Circle!</div>
+    <div id="game-container">
+        <div id="maze-grid">
+            <!-- Maze cells will be dynamically added here by JavaScript -->
+        </div>
+    </div>
+    <div id="confetti-container"></div>
+
+    <script>
+        // Game constants
+        const MAZE_WIDTH = 64;
+        const MAZE_HEIGHT = 64;
+        const CELL_SIZE = 10; // Reduced cell size for a 64x64 maze
+        document.documentElement.style.setProperty('--cell-size', `${CELL_SIZE}px`);
+
+        // Maze definition (will be generated)
+        let maze = [];
+
+        // Player state
+        let playerX = 0; // Player's X position in maze grid
+        let playerY = 0; // Player's Y position in maze grid
+
+        // DOM elements
+        const mazeGridEl = document.getElementById('maze-grid');
+        const messageBoxEl = document.getElementById('message-box');
+        const confettiContainerEl = document.getElementById('confetti-container');
+
+        // Store references to all cell elements for easy updates
+        const cells = [];
+
+        // --- Maze Generation Algorithm (Recursive Backtracking) ---
+        function generateMaze(width, height) {
+            // Initialize grid with all walls
+            const grid = Array(height).fill(0).map(() => Array(width).fill(1)); // 1 = wall, 0 = path
+
+            // Stack for DFS
+            const stack = [];
+
+            // Helper to get unvisited neighbors
+            function getUnvisitedNeighbors(x, y) {
+                const neighbors = [];
+                const directions = [
+                    { dx: 0, dy: -2 }, // Up
+                    { dx: 0, dy: 2 },  // Down
+                    { dx: -2, dy: 0 }, // Left
+                    { dx: 2, dy: 0 }   // Right
+                ];
+
+                for (const dir of directions) {
+                    const nx = x + dir.dx;
+                    const ny = y + dir.dy;
+
+                    if (nx >= 0 && nx < width && ny >= 0 && ny < height && grid[ny][nx] === 1) {
+                        neighbors.push({ x: nx, y: ny, wallX: x + dir.dx / 2, wallY: y + dir.dy / 2 });
+                    }
+                }
+                return neighbors;
+            }
+
+            // Start at a random cell (must be odd coordinates to ensure valid paths)
+            let startX = 1; // Math.floor(Math.random() * (width / 2)) * 2 + 1;
+            let startY = 1; // Math.floor(Math.random() * (height / 2)) * 2 + 1;
+
+            grid[startY][startX] = 0; // Mark as path
+            stack.push({ x: startX, y: startY });
+
+            while (stack.length > 0) {
+                const current = stack[stack.length - 1]; // Peek
+                const neighbors = getUnvisitedNeighbors(current.x, current.y);
+
+                if (neighbors.length > 0) {
+                    const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+                    grid[next.wallY][next.wallX] = 0; // Carve path through wall
+                    grid[next.y][next.x] = 0;     // Mark neighbor as path
+                    stack.push({ x: next.x, y: next.y });
+                } else {
+                    stack.pop(); // Backtrack
+                }
+            }
+
+            // Set start and end points (ensure they are paths)
+            // Start at (1,1)
+            grid[1][1] = 2; // Start
+            playerX = 1;
+            playerY = 1;
+
+            // End at (width-2, height-2)
+            grid[height - 2][width - 2] = 3; // End
+
+            return grid;
+        }
+
+        // --- Game Logic ---
+
+        // Function to initialize the maze elements in the DOM
+        function createMazeElements() {
+            maze = generateMaze(MAZE_WIDTH, MAZE_HEIGHT);
+
+            mazeGridEl.style.gridTemplateColumns = `repeat(${MAZE_WIDTH}, var(--cell-size))`;
+            mazeGridEl.style.gridTemplateRows = `repeat(${MAZE_HEIGHT}, var(--cell-size))`;
+
+            // Clear previous maze elements if any
+            mazeGridEl.innerHTML = '';
+
+            for (let y = 0; y < MAZE_HEIGHT; y++) {
+                cells[y] = []; // Initialize row in 2D array
+                for (let x = 0; x < MAZE_WIDTH; x++) {
+                    const cellType = maze[y][x];
+                    const cellEl = document.createElement('div');
+                    cellEl.className = 'maze-cell';
+
+                    if (cellType === 1) { // Wall
+                        cellEl.classList.add('wall');
+                    } else { // Path, Start, or End
+                        cellEl.classList.add('path');
+                        if (cellType === 2) { // Start
+                            cellEl.classList.add('start');
+                            cellEl.textContent = 'S';
+                        } else if (cellType === 3) { // End
+                            cellEl.classList.add('end');
+                            cellEl.textContent = 'E';
+                        }
+                    }
+                    mazeGridEl.appendChild(cellEl);
+                    cells[y][x] = cellEl; // Store reference to the cell element
+                }
+            }
+            updatePlayerPosition(); // Set initial player position
+        }
+
+        // Function to update the player's visual position on the grid
+        function updatePlayerPosition() {
+            // Remove 'player' class from previous position
+            // This is inefficient for large mazes, but simpler for this challenge.
+            // A better way would be to store the old player position and only update those two cells.
+            for (let y = 0; y < MAZE_HEIGHT; y++) {
+                for (let x = 0; x < MAZE_WIDTH; x++) {
+                    cells[y][x].classList.remove('player');
+                }
+            }
+
+            // Add 'player' class to current position
+            if (cells[playerY] && cells[playerY][playerX]) {
+                cells[playerY][playerX].classList.add('player');
+            }
+
+
+            // Check for win condition
+            if (maze[playerY][playerX] === 3) {
+                showMessage('You found the exit! You win!');
+                // Disable controls
+                document.removeEventListener('keydown', handleKeyDown);
+                triggerConfetti(); // Trigger confetti!
+            }
+        }
+
+        // Function to move the player
+        function movePlayer(dx, dy) {
+            const newPlayerX = playerX + dx;
+            const newPlayerY = playerY + dy;
+
+            // Simple collision detection
+            if (newPlayerX >= 0 && newPlayerX < MAZE_WIDTH &&
+                newPlayerY >= 0 && newPlayerY < MAZE_HEIGHT &&
+                maze[newPlayerY][newPlayerX] !== 1) { // If not a wall
+                playerX = newPlayerX;
+                playerY = newPlayerY;
+                updatePlayerPosition();
+            } else {
+                showMessage('Ouch! That\'s a wall.', 1000);
+            }
+        }
+
+        // Keyboard input handler
+        function handleKeyDown(event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                case 'w':
+                    movePlayer(0, -1); // Move up
+                    break;
+                case 'ArrowDown':
+                case 's':
+                    movePlayer(0, 1); // Move down
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                    movePlayer(-1, 0); // Move left
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    movePlayer(1, 0); // Move right
+                    break;
+            }
+        }
+
+        // Function to display messages to the user
+        let messageTimeout;
+        function showMessage(msg, duration = 0) {
+            messageBoxEl.textContent = msg;
+            clearTimeout(messageTimeout);
+            if (duration > 0) {
+                messageTimeout = setTimeout(() => {
+                    messageBoxEl.textContent = '';
+                }, duration);
+            }
+        }
+
+        // --- Confetti Logic ---
+        const confettiColors = [
+            '#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5',
+            '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50',
+            '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800',
+            '#ff5722', '#795548', '#9e9e9e', '#607d8b'
+        ];
+
+        function triggerConfetti() {
+            const numConfetti = 100; // Number of confetti pieces
+            for (let i = 0; i < numConfetti; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+
+                // Randomize size and shape
+                const size = Math.random() * 10 + 5; // 5px to 15px
+                piece.style.width = `${size}px`;
+                piece.style.height = `${size}px`;
+                piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0%'; // Circle or square
+
+                // Random color
+                piece.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+
+                // Random start position (from top center)
+                const startX = Math.random() * window.innerWidth - (window.innerWidth / 2);
+                const startY = -Math.random() * 50; // Start slightly above viewport
+
+                // Random end position (falling down and spreading out)
+                const endX = startX + (Math.random() - 0.5) * window.innerWidth * 1.5;
+                const endY = window.innerHeight + Math.random() * 100;
+
+                piece.style.setProperty('--start-x', `${startX}px`);
+                piece.style.setProperty('--start-y', `${startY}px`);
+                piece.style.setProperty('--end-x', `${endX}px`);
+                piece.style.setProperty('--end-y', `${endY}px`);
+
+                // Random animation delay and duration
+                piece.style.animationDelay = `${Math.random() * 0.5}s`;
+                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2s to 4s
+
+                confettiContainerEl.appendChild(piece);
+
+                // Remove piece after animation to clean up DOM
+                piece.addEventListener('animationend', () => {
+                    piece.remove();
+                });
+            }
+        }
+
+        // Initialize the game when the window loads
+        window.onload = function() {
+            createMazeElements();
+            document.addEventListener('keydown', handleKeyDown);
+            // Adjust maze grid size to fit screen after initial render
+            const mazeGridComputedStyle = window.getComputedStyle(mazeGridEl);
+            const mazeGridWidth = parseFloat(mazeGridComputedStyle.width);
+            const mazeGridHeight = parseFloat(mazeGridComputedStyle.height);
+
+            const viewportWidth = window.innerWidth - 40; // Account for padding
+            const viewportHeight = window.innerHeight - messageBoxEl.offsetHeight - 60; // Account for message box and other padding
+
+            const scaleFactor = Math.min(viewportWidth / mazeGridWidth, viewportHeight / mazeGridHeight, 1);
+            mazeGridEl.style.transform = `scale(${scaleFactor})`;
+            mazeGridEl.style.transformOrigin = 'center center';
+        };
+    </script>
+</body>
+</html>
