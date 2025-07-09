@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Prim's Maze</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <style>
+            body {
+                background: #504945;
+                color: #ebdbb2;
+                display: flex;
+                flex-direction: row-reverse;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                width: 100vw;
+                height: 100vh;
+                gap: 4rem;
+                margin: 0;
+            }
+
+            div#maze {
+                display: grid;
+                grid-gap: 0px;
+                border: 1px solid #282828;
+                width: 512px;
+                height: 512px;
+                animation: appear 1s cubic-bezier(0.5, 0, 0, 1);
+            }
+
+            @media (max-width: 768px) {
+                div#maze {
+                    width: 320px;
+                    height: 320px;
+                }
+            }
+
+            @media (max-width: 340px) {
+                div#maze {
+                    width: 214px;
+                    height: 214px;
+                }
+            }
+
+            @keyframes appear {
+                from {
+                    opacity: 0;
+                    transform: translateY(2rem);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            div#maze > div#maze_cell.wall {
+                background-color: #282828;
+            }
+
+            div#maze > div#maze_cell.path {
+                background-color: #ebdbb2;
+            }
+
+            div#maze > div#maze_cell.unvisited {
+                background-color: #458588;
+            }
+
+            div#maze > div#maze_cell.start {
+                background-color: #98971a;
+            }
+
+            div#maze > div#maze_cell.end {
+                background-color: #cc241d;
+            }
+
+            div#maze > div#maze_cell > div#maze_player {
+                width: 100%;
+                height: 100%;
+                background-color: #fe8019;
+            }
+
+            div#maze_controls {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            div#maze_controls > button:first-child {
+                grid-column: 2;
+            }
+
+            div#maze_controls > button:nth-child(2) {
+                grid-column: 1;
+            }
+
+            div#maze_controls > button {
+                margin: 0.1em;
+                padding: 0.5em;
+                width: 64px;
+                height: 64px;
+                font-size: 1.5em;
+                background-color: #282828;
+                color: #ebdbb2;
+                border: none;
+                border-radius: 0.25em;
+                cursor: pointer;
+                transition: background-color 0.1s ease-out;
+            }
+
+            div#maze_controls > button:hover {
+                background-color: #3c3836;
+            }
+
+            div#maze_controls > button:active {
+                background-color: #504945;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="maze_controls">
+            <button onclick="movePlayer(0)">↑</button>
+            <button onclick="movePlayer(2)">←</button>
+            <button onclick="movePlayer(1)">↓</button>
+            <button onclick="movePlayer(3)">→</button>
+        </div>
+
+        <div id="maze"></div>
+
+        <script type="text/javascript">
+            const Cell = {
+                WALL: 0,
+                PATH: 1,
+                UNVISITED: 2,
+                START: 3,
+                END: 4
+            }
+
+            const Direction = {
+                UP: 0,
+                DOWN: 1,
+                LEFT: 2,
+                RIGHT: 3
+            }
+
+            let width = 9, height = 9;
+            const maze = [];
+
+            const getSurroundingCells = (randomWall) => {
+                let surroundingCells = 0;
+
+                if(maze[randomWall[0] - 1][randomWall[1]] == Cell.PATH) surroundingCells++;
+                if(maze[randomWall[0] + 1][randomWall[1]] == Cell.PATH) surroundingCells++;
+                if(maze[randomWall[0]][randomWall[1] - 1] == Cell.PATH) surroundingCells++;
+                if(maze[randomWall[0]][randomWall[1] + 1] == Cell.PATH) surroundingCells++;
+
+                return surroundingCells;
+            }
+
+            const generateMaze = () => {
+                for(let x = 0; x < width; x++) {
+                    maze[x] = [];
+
+                    for(let y = 0; y < height; y++) {
+                        maze[x].push(Cell.UNVISITED);
+                    }
+                }
+
+                const startX = Math.max(Math.min(1, Math.floor(Math.random() * width)), width - 2),
+                    startY = Math.max(Math.min(1, Math.floor(Math.random() * height)), height - 2);
+
+                maze[startY][startX] = Cell.PATH;
+                
+                const walls = [
+                    [startY - 1, startX],
+                    [startY + 1, startX],
+                    [startY, startX - 1],
+                    [startY, startX + 1]
+                ];
+
+                for(let i = 0; i < walls.length; i++) {
+                    const x = walls[i][0], y = walls[i][1];
+
+                    maze[x][y] = Cell.WALL;
+                }
+
+                while(walls.length > 0) {
+                    const randomWall = walls[Math.floor(Math.random() * (walls.length - 1))];
+                    
+                    const pushWall = (x, y) => {
+                        if(maze[x][y] != Cell.PATH) {
+                            maze[x][y] = Cell.WALL;
+                            walls.push([x, y]);
+                        }
+                    }
+
+                    const deleteWall = () => {
+                        for(let i = 0; i < walls.length; i++)
+                            if(walls[i][0] == randomWall[0] && walls[i][1] == randomWall[1])
+                                walls.splice(i, 1);
+                    }
+
+                    if (randomWall[1] != 0) {
+                        if(maze[randomWall[0]][randomWall[1]-1] == Cell.UNVISITED && maze[randomWall[0]][randomWall[1]+1] == Cell.PATH) {
+                            const surroundingCells = getSurroundingCells(randomWall);
+                        
+                            if(surroundingCells < 2) {
+                                maze[randomWall[0]][randomWall[1]] = Cell.PATH;
+                            
+                                if(randomWall[0] != 0) {
+                                    const x = randomWall[0] - 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            
+                                if(randomWall[0] != height - 1) {
+                                    const x = randomWall[0] + 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            
+                                if(randomWall[1] != 0) {
+                                    const x = randomWall[0], y = randomWall[1] - 1;
+                                    pushWall(x, y);
+                                }
+                            }
+                        }
+                    }
+
+                    if (randomWall[0] != 0) {
+                        if (maze[randomWall[0] - 1][randomWall[1]] == Cell.UNVISITED && maze[randomWall[0] + 1][randomWall[1]] == Cell.PATH) {
+                            const surroundingCells = getSurroundingCells(randomWall);
+                        
+                            if (surroundingCells < 2) {
+                                maze[randomWall[0]][randomWall[1]] = Cell.PATH;
+                            
+                                if (randomWall[0] != 0) {
+                                    const x = randomWall[0] - 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            
+                                if (randomWall[1] != 0) {
+                                    const x = randomWall[0], y = randomWall[1] - 1;
+                                    pushWall(x, y);
+                                }
+                            
+                                if (randomWall[1] != width - 1) {
+                                    const x = randomWall[0], y = randomWall[1] + 1;
+                                    pushWall(x, y);
+                                }
+                            }
+
+                            deleteWall();
+
+                            continue;
+                        }
+                    }
+
+                    if (randomWall[0] != height - 1) {
+                        if(maze[randomWall[0]+1][randomWall[1]] == Cell.UNVISITED && maze[randomWall[0]-1][randomWall[1]] == Cell.PATH) {
+                            const surroundingCells = getSurroundingCells(randomWall);
+                        
+                            if(surroundingCells < 2) {
+                                maze[randomWall[0]][randomWall[1]] = Cell.PATH;
+                            
+                                if(randomWall[0] != height - 1) {
+                                    const x = randomWall[0] + 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            
+                                if(randomWall[1] != 0) {
+                                    const x = randomWall[0], y = randomWall[1] - 1;
+                                    pushWall(x, y);
+                                }
+                            
+                                if(randomWall[1] != width - 1) {
+                                    const x = randomWall[0], y = randomWall[1] + 1;
+                                    pushWall(x, y);
+                                }
+                            }
+                        
+                            deleteWall();
+                        
+                            continue;
+                        }
+                    }
+
+                    if (randomWall[1] != width - 1) {
+                        if (maze[randomWall[0]][randomWall[1]+1] == Cell.UNVISITED && maze[randomWall[0]][randomWall[1]-1] == Cell.PATH) {
+                            const surroundingCells = getSurroundingCells(randomWall);
+                        
+                            if (surroundingCells < 2) {
+                                maze[randomWall[0]][randomWall[1]] = Cell.PATH;
+                            
+                                if (randomWall[1] != width - 1) {
+                                    const x = randomWall[0], y = randomWall[1] + 1;
+                                    pushWall(x, y);
+                                }
+                            
+                                if (randomWall[0] != height - 1) {
+                                    const x = randomWall[0] + 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            
+                                if (randomWall[0] != 0) {
+                                    const x = randomWall[0] - 1, y = randomWall[1];
+                                    pushWall(x, y);
+                                }
+                            }
+                        
+                            deleteWall();
+                        
+                            continue;
+                        }
+                    }
+
+                    deleteWall();
+                }
+
+                for(let x = 0; x < width; x++) {
+                    for(let y = 0; y < height; y++) {
+                        if(maze[x][y] == Cell.UNVISITED) 
+                            maze[x][y] = Cell.WALL;
+                    }
+                }
+            
+                for(let i = 0; i < width; i++) {
+                    if(maze[1][i] == Cell.PATH) {
+                        maze[1][i] = Cell.START;
+                        break;
+                    }
+                }
+            
+                for(let i = width - 1; i > 0; i--) {
+                    if(maze[height - 2][i] == Cell.PATH) {
+                        maze[height - 2][i] = Cell.END;
+                        break;
+                    }
+                }
+            }
+
+            const refreshMazeDisplay = () => {
+                const mazeElement = document.getElementById('maze');
+
+                mazeElement.innerHTML = '';
+                mazeElement.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+                mazeElement.style.gridTemplateRows = `repeat(${height}, 1fr)`;
+
+                for(let x = 0; x < width; x++) {
+                    for(let y = 0; y < height; y++) {
+                        const cell = maze[x][y];
+                        const cellElement = document.createElement('div');
+
+                        cellElement.id = `maze_cell`;
+
+                        switch(cell) {
+                            case Cell.WALL:
+                                cellElement.classList.add('wall');
+                                break;
+
+                            case Cell.PATH:
+                                cellElement.classList.add('path');
+                                break;
+
+                            default:
+                            case Cell.UNVISITED:
+                                cellElement.classList.add('unvisited');
+                                break;
+
+                            case Cell.START:
+                                cellElement.classList.add('start');
+                                break;
+
+                            case Cell.END:
+                                cellElement.classList.add('end');
+                                break;
+                        }
+
+                        mazeElement.appendChild(cellElement);
+                    }
+                }
+
+                const player = document.createElement('div');
+                player.id = 'maze_player';
+
+                mazeElement.getElementsByClassName('start')[0].appendChild(player);
+            };
+
+            const movePlayer = (direction) => {
+                const player = document.getElementById('maze_player');
+                let playerCell = player.parentElement,
+                    newCell = null;
+
+                if(playerCell.classList.contains('end')) 
+                    return;
+
+                switch(direction) {
+                    case Direction.UP:
+                        for(let i = 0; i < height; i++) {
+                            playerCell = playerCell.previousElementSibling;
+                        }
+
+                        newCell = playerCell;
+
+                        break;
+
+                    case Direction.DOWN:
+                        for(let i = 0; i < height; i++) {
+                            playerCell = playerCell.nextElementSibling;
+                        }
+
+                        newCell = playerCell;
+
+                        break;
+
+                    case Direction.LEFT:
+                        newCell = playerCell.previousElementSibling;
+                        break;
+
+                    case Direction.RIGHT:
+                        newCell = playerCell.nextElementSibling;
+                        break;
+                }
+
+                if(!newCell || newCell.classList.contains('wall')) 
+                    return;
+
+                newCell.appendChild(player);
+
+                if(newCell.classList.contains('end')) {
+                    setTimeout(() => {
+                        width += 2;
+                        height += 2;
+
+                        generateMaze();
+                        refreshMazeDisplay();
+                    }, 1000);
+                }
+            }
+
+            document.addEventListener('keydown', (event) => {
+                switch(event.key) {
+                    case 'ArrowUp':
+                        event.preventDefault();
+                        movePlayer(Direction.UP);
+                        break;
+
+                    case 'ArrowDown':
+                        event.preventDefault();
+                        movePlayer(Direction.DOWN);
+                        break;
+
+                    case 'ArrowLeft':
+                        event.preventDefault();
+                        movePlayer(Direction.LEFT);
+                        break;
+
+                    case 'ArrowRight':
+                        event.preventDefault();
+                        movePlayer(Direction.RIGHT);
+                        break;
+                }
+            });
+
+            generateMaze();
+            refreshMazeDisplay();
+        </script>
+    </body>
+</html>
