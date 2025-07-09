@@ -1,0 +1,136 @@
+<!-- Cool game yay -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shape Dodge Frenzy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff7e5f, #feb47b);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+    }
+    canvas {
+      border: 3px solid white;
+      display: block;
+      background: #1d1f21;
+    }
+    #scoreboard {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="scoreboard">
+    🏆 Score: <span id="score">0</span>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 600;
+    canvas.height = 400;
+
+    // Game variables
+    let player = { x: 280, y: 370, width: 40, height: 20, speed: 5 };
+    let shapes = [];
+    let score = 0;
+    let gameRunning = true;
+
+    // Generate random falling shapes
+    function createShape() {
+      const size = Math.random() * 30 + 10;
+      shapes.push({
+        x: Math.random() * (canvas.width - size),
+        y: -size,
+        size: size,
+        color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+        speed: Math.random() * 3 + 2,
+      });
+    }
+
+    // Game loop functions
+    function update() {
+      if (!gameRunning) return;
+
+      // Move shapes
+      shapes.forEach(shape => {
+        shape.y += shape.speed;
+      });
+
+      // Remove shapes that go off the screen
+      shapes = shapes.filter(shape => shape.y <= canvas.height);
+
+      // Check for collisions
+      shapes.forEach(shape => {
+        if (
+          player.x < shape.x + shape.size &&
+          player.x + player.width > shape.x &&
+          player.y < shape.y + shape.size &&
+          player.y + player.height > shape.y
+        ) {
+          // Collision detected
+          gameRunning = false;
+          alert(`Game Over! Final Score: ${score}`);
+          document.location.reload();
+        }
+      });
+
+      // Update score
+      score++;
+      document.getElementById('score').innerText = score;
+    }
+
+    function draw() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw player
+      ctx.fillStyle = 'deepskyblue';
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      // Draw shapes
+      shapes.forEach(shape => {
+        ctx.fillStyle = shape.color;
+        ctx.fillRect(shape.x, shape.y, shape.size, shape.size);
+      });
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      if (gameRunning) {
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    // Handle player movement
+    window.addEventListener('keydown', e => {
+      if (e.code === 'ArrowLeft' && player.x > 0) {
+        player.x -= player.speed;
+      } else if (e.code === 'ArrowRight' && player.x < canvas.width - player.width) {
+        player.x += player.speed;
+      }
+    });
+
+    // Start game
+    setInterval(createShape, 1000); // Spawn shapes every second
+    gameLoop();
+  </script>
+</body>
+</html>
