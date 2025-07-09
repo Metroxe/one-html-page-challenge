@@ -4,6 +4,17 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>One HTML Page Challenge</title>
+        <meta name="description" content="Create anything you want within 1 single HTML file. Practice your skills with the barebones of web development. How creative can you be with such restrictions?" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Preload assets -->
+        <link rel="preload" as="image" href="./one-html-page-logo.png" fetchpriority="high" />
+        <link rel="preload" as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" fetchpriority="high" />
+        <link rel="preload" as="script" href="./entries.js" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+        <link rel="preconnect"  href="https://www.googletagmanager.com" crossorigin>
+        <link rel="dns-prefetch" href="https://www.google-analytics.com">
+        <link rel="preconnect"  href="https://www.google-analytics.com" crossorigin>
 
         <!-- Favicon -->
         <link rel="icon" href="./favicon.ico" />
@@ -33,6 +44,7 @@
 
             .logo {
                 max-width: 70%;
+                height: auto;
             }
 
             body {
@@ -66,7 +78,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="jumbotron">
-                        <img src="./one-html-page-logo.png" alt="One Html Page Challenge" class="logo" />
+                        <img src="./one-html-page-logo.png" width="2404" height="1582" alt="One Html Page Challenge" fetchpriority="high" class="logo" />
                         <hr class="my-4" />
                         <p>
                             The goal is to create anything you want within 1 single html file. Practice your skills with no assistance from libraries, no separation of files, and no assistance of a modern framework.
