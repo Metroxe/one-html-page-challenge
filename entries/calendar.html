@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meta tags added due to entries.js deprecation on July 8th, 2025 -->
+    <meta name="author" content="Vincent Lejtzén">
+    <meta name="github" content="lejtzen">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calendar</title>
+    <meta
+      name="description"
+      content="A venture into the intricacies of date management in the web
+        browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <style>
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
+      }
+
+      html {
+        line-height: 1.5;
+        -webkit-text-size-adjust: 100%;
+        -moz-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+        font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+          "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-feature-settings: normal;
+        font-variation-settings: normal;
+        -webkit-tap-highlight-color: transparent;
+        scroll-behavior: smooth;
+        scroll-padding: 0;
+        font-size: 16px;
+        font-weight: 500;
+        accent-color: rgba(255, 69, 58, 1);
+        background-color: rgba(0, 0, 0, 0.87);
+        color: rgba(255, 255, 255, 1);
+      }
+
+      body {
+        line-height: inherit;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 2rem;
+        margin: 0;
+        min-height: 100vh;
+      }
+
+      button {
+        font-family: inherit;
+        font-feature-settings: inherit;
+        font-variation-settings: inherit;
+        font-size: 100%;
+        font-weight: inherit;
+        line-height: inherit;
+        color: inherit;
+        margin: 0;
+        padding: 0;
+        text-transform: none;
+        appearance: button;
+        -webkit-appearance: button;
+        background-color: transparent;
+        cursor: pointer;
+        transition: all ease-out 200ms;
+        border: none;
+      }
+
+      a {
+        color: rgba(255, 69, 58, 1);
+        text-decoration: underline;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        line-height: 1;
+        font-weight: 200;
+      }
+
+      h1 strong {
+        font-weight: 500;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 1px;
+      }
+
+      nav button {
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background-color: rgba(255, 255, 255, 0.12);
+        padding: 0.25rem 0.5rem;
+      }
+
+      nav button:hover {
+        background-color: rgba(255, 255, 255, 0.32);
+      }
+
+      main {
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 2rem;
+        width: 100%;
+        max-width: 1280px;
+      }
+
+      table {
+        text-align: center;
+      }
+
+      caption {
+        font-size: 1.25rem;
+        font-weight: 300;
+        text-align: left;
+        color: rgba(255, 69, 58, 1);
+      }
+
+      tr {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      th,
+      td {
+        width: 3ch;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      th {
+        font-weight: normal;
+        color: rgba(255, 255, 255, 0.54);
+        padding: 1rem 0;
+      }
+
+      td {
+        height: 3ch;
+        color: rgba(255, 255, 255, 0.32);
+        border-radius: 9999px;
+      }
+
+      td.active {
+        color: rgba(255, 255, 255, 0.87);
+      }
+
+      td.today {
+        color: rgba(255, 255, 255, 1);
+        background-color: rgba(255, 69, 58, 1);
+      }
+
+      abbr {
+        text-decoration: none;
+      }
+
+      footer {
+        padding: 0rem;
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.54);
+      }
+
+      footer p {
+        margin: 0;
+      }
+
+      @media (min-width: 640px) {
+        main {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+
+      @media (min-width: 768px) {
+        main {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        main {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1280px) {
+        body,
+        main {
+          gap: 4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>
+        Calendar
+        <strong id="title"></strong>
+      </h1>
+
+      <nav>
+        <button type="button" id="prev" title="Previous year">&larr;</button>
+        <button type="button" id="today" title="Today">Today</button>
+        <button type="button" id="next" title="Next year">&rarr;</button>
+      </nav>
+    </header>
+
+    <main>
+      <table>
+        <caption>
+          January
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          February
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          March
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          April
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          May
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          June
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          July
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          August
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          September
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          October
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          November
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <caption>
+          December
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col"><abbr title="Monday">M</abbr></th>
+            <th scope="col"><abbr title="Tuesday">T</abbr></th>
+            <th scope="col"><abbr title="Wednesday">W</abbr></th>
+            <th scope="col"><abbr title="Thursday">T</abbr></th>
+            <th scope="col"><abbr title="Friday">F</abbr></th>
+            <th scope="col"><abbr title="Saturday">S</abbr></th>
+            <th scope="col"><abbr title="Sunday">S</abbr></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+
+    <footer>
+      <p>
+        This is a web experiment crafted using HTML, CSS, and JavaScript. It
+        serves as a venture into the intricacies of date management in the web
+        browser. Drawing inspiration from the macOS calendar application, it's
+        designed as a potential feature for
+        <a href="https://rodadagar.nu" title="Röda dagar">Röda dagar</a>, a
+        website dedicated to aggregating and showcasing information about public
+        holidays in Sweden. But for now I will only leave it here. Check out the
+        source code for some inspiration.
+      </p>
+    </footer>
+
+    <script>
+      (() => {
+        let date = null;
+        const title = document.getElementById("title");
+        const prev = document.getElementById("prev");
+        const today = document.getElementById("today");
+        const next = document.getElementById("next");
+        const months = document.querySelectorAll("table");
+        const setDate = (newDate) => {
+          const now = new Date();
+          date = new Date(newDate);
+          title.innerText = date.getFullYear();
+          months.forEach((table, monthIndex) => {
+            let month = new Date(date);
+
+            month.setMonth(monthIndex);
+
+            const firstWeekDay = new Date(new Date(month).setDate(1));
+            const offset = 2 - (firstWeekDay.getDay() || 7);
+
+            month.setDate(offset);
+
+            [...table.querySelectorAll("tbody tr")].forEach((row) =>
+              [...row.querySelectorAll("td")].forEach((cell) => {
+                const isCurrentMonth = monthIndex === month.getMonth();
+                const isToday = now.toDateString() === month.toDateString();
+
+                cell.innerText = month.getDate();
+                cell.classList.toggle("active", isCurrentMonth);
+                cell.classList.toggle("today", isCurrentMonth && isToday);
+                month.setDate(month.getDate() + 1);
+              })
+            );
+          });
+        };
+
+        setDate(new Date());
+
+        prev.addEventListener("click", () =>
+          setDate(new Date().setFullYear(date.getFullYear() - 1))
+        );
+        today.addEventListener("click", () => setDate(new Date()));
+        next.addEventListener("click", () =>
+          setDate(new Date().setFullYear(date.getFullYear() + 1))
+        );
+      })();
+    </script>
+  </body>
+</html>
