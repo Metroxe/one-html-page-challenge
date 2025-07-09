@@ -144,26 +144,38 @@ function validateNoNetworkRequests(content) {
   return issues;
 }
 
-// Validate entry exists in entries.js
-function validateEntryInManifest(filename) {
-  try {
-    const entriesContent = fs.readFileSync('entries.js', 'utf8');
-    
-    // Extract the entries array
-    const entriesMatch = entriesContent.match(/const\s+entries\s*=\s*\[([\s\S]*?)\];/);
-    if (!entriesMatch) {
-      return ['Could not parse entries.js file'];
-    }
-
-    // Check if filename exists in the entries
-    if (!entriesContent.includes(`"${filename}"`)) {
-      return [`Entry not found in entries.js. Please add an entry for ${filename}`];
-    }
-    
-    return [];
-  } catch (error) {
-    return [`Error reading entries.js: ${error.message}`];
+// Validate required meta tags exist in HTML
+function validateRequiredMetaTags(content) {
+  const issues = [];
+  const $ = cheerio.load(content);
+  
+  // Check for title (can be from meta tag or title element)
+  const metaTitle = $('meta[name="title"]').attr('content');
+  const titleElement = $('title').text();
+  
+  if (!metaTitle && !titleElement) {
+    issues.push('Missing title: Add either <meta name="title" content="Your Title"> or <title>Your Title</title>');
   }
+  
+  // Check for description
+  const description = $('meta[name="description"]').attr('content');
+  if (!description) {
+    issues.push('Missing description: Add <meta name="description" content="Brief description of your entry">');
+  }
+  
+  // Check for author
+  const author = $('meta[name="author"]').attr('content');
+  if (!author) {
+    issues.push('Missing author: Add <meta name="author" content="Your Name">');
+  }
+  
+  // GitHub username is optional but recommended
+  const github = $('meta[name="github"]').attr('content');
+  if (!github) {
+    issues.push('Recommended: Add <meta name="github" content="your-github-username"> to link to your profile');
+  }
+  
+  return issues;
 }
 
 // Validate HTML syntax and structure
@@ -232,8 +244,8 @@ function validateEntry(filePath) {
   // 5. Validate no network requests
   issues.push(...validateNoNetworkRequests(content));
 
-  // 6. Validate entry exists in entries.js
-  issues.push(...validateEntryInManifest(filename));
+  // 6. Validate required meta tags
+  issues.push(...validateRequiredMetaTags(content));
 
   return issues;
 }
