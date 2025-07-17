@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do list</title>
+    <link rel="shortcut icon" href="https://i.ibb.co/2050F4Bb/to-do-icon.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Princess+Sofia&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Allan:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Original+Surfer&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <style>
+        @media screen and (min-width: 1024px) and (max-width: 1440px) {
+            /* Laptop Responsivenss */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                background-color: #121212;
+                color: #f01613;
+            }
+            
+            header {
+                height: 8rem;
+                text-align: center;
+                line-height: 8rem;
+                font-size: 2rem;
+                font-family: "Princess Sofia", serif;
+            }
+            
+            main {
+                max-height: 100%;
+            }
+            
+            .container {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .main-box {
+                border-radius: 20px;
+                width: 50rem;
+                height: 30rem;
+                border: 1px solid #8b8b8b;
+                padding: 1.5rem 3rem;
+                overflow-x: hidden;
+            }
+            
+            .all-items li{
+                width: 100%;
+                padding: 0.5rem 0;
+                font-size: 1.8rem;
+                word-spacing: 0.2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            num {
+                color: #ff9378;
+                font-size: 1.4rem;
+                align-self: last baseline;
+            }
+            .item-text {
+                display: flex;
+                /* text-overflow: ellipsis; */
+                width: 40rem;
+                white-space: normal;
+            }
+            .item-text p {
+                margin-left: 1.5rem;
+                color: #fff;
+                transition: transform 0.2s ease-in-out;
+                font-family: "Original Surfer", serif;
+                cursor: pointer;
+                /* text-overflow: ellipsis; */
+                /* overflow: visible; */
+                /* white-space: inherit; */
+            }
+            .item-text p:hover {
+                text-decoration: underline;
+                transform: scale(1.03);
+            }
+            #item-check {
+                width: 2rem;
+                height: 2rem;
+                cursor: pointer;
+                border-radius: 50%;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            
+            .next-item {
+                justify-self: center;
+                margin: 1rem 0;
+                border: 1px solid white;
+                border-radius: 40px;
+            }
+            .next-item button {
+                font-size: 1.6rem;
+                padding: 0.5rem 1.2rem;
+                background: none;
+                border: none;
+                color: #f01613;
+                cursor: pointer;
+            }
+            
+            section[class*="search"] {
+                position: absolute;
+                top: 2rem;
+                right: 1rem;
+            }
+            .search-input {
+                height: 2.5rem;
+                font-size: 1.1rem;
+                outline: none;
+                padding: 0 1rem;
+                width: 15rem;
+                border-radius: 10px;
+                font-family: "Roboto", serif;
+                background-color: #ffffff36;
+                color: #d2d2d2;
+            }
+            
+            section[class*="add"] {
+                position: absolute;
+                top: 40%;
+                left: 38%;
+                display: none;
+            }
+            .add-task-box {
+                height: 10rem;
+                width: 20rem;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                font-family: "Roboto", serif;
+                background: #ffffff13;
+                border-radius: 5px;
+                /* border: 1px solid #ffffff3e; */
+                box-shadow: 0 1px 20px #ffffff13;
+            }
+            .add-task-box button {
+                font-size: 2rem;
+                margin: 0rem 0 0.5rem;
+                padding: 0.25rem 1.2rem;
+                border-radius: 50px;
+                background: transparent;
+                color: #d2d2d2;
+                cursor: pointer;
+                font-family: "Iceland", serif;
+                transition: all 0.2s ease-in-out;
+            }
+            .add-task-box button:hover {
+                background-color: #ffffff3e;
+                color: #000;
+            }
+            .add-input {
+                height: 3rem;
+                width: 18rem;
+                margin: 0.5rem 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                outline: none;
+                padding: 1rem;
+                border-radius: 10px;
+                border: none;
+                font-family: "Nunito", serif;
+                background-color: #ffffffc8;
+            }
+
+            .footer {
+                text-align: center;
+                background-color: inherit;
+                position: absolute;
+                bottom: 0;
+                left: 47vw;
+            }
+            .copyright > a:visited,
+            .copyright > a {
+                color: #5e96e9;
+                text-decoration: none;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            /* Mobile Responsivenss */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                background-color: #121212;
+                color: #f01613;
+            }
+            
+            header {
+                height: 10rem;
+                text-align: center;
+                line-height: 10rem;
+                font-size: 1.75rem;
+                font-family: "Princess Sofia", serif;
+            }
+            
+            main {
+                max-height: 100%;
+            }
+            
+            .container {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                position: relative;
+            }
+            
+            .main-box {
+                border-radius: 20px;
+                margin-top: 3rem;
+                width: 90%;
+                height: auto;
+                border: 1px solid #8b8b8b;
+                padding: 1.5rem 1.5rem;
+                overflow-x: hidden;
+            }
+            
+            .all-items li{
+                width: 100%;
+                padding: 0.5rem 0;
+                font-size: 1.8rem;
+                word-spacing: 0.2rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            num {
+                color: #ff9378;
+                font-size: 1.4rem;
+                align-self: last baseline;
+            }
+            .item-text {
+                display: flex;
+                /* text-overflow: ellipsis; */
+                width: 15rem;
+                white-space: normal;
+            }
+            .item-text p {
+                margin-left: 1rem;
+                color: #fff;
+                transition: transform 0.2s ease-in-out;
+                font-family: "Original Surfer", serif;
+                /* text-overflow: ellipsis; */
+                overflow: visible;
+                white-space: normal;
+            }
+            .item-text p:hover {
+                text-decoration: underline;
+                transform: scale(1.03);
+            }
+            #item-check {
+                width: 2rem;
+                height: 2rem;
+                cursor: pointer;
+                border-radius: 50%;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            
+            .next-item {
+                margin: 1rem 0;
+                border: 1px solid white;
+                border-radius: 40px;
+                text-align: center;
+                width: 7rem;
+                justify-self: center;
+            }
+            #next-item {
+                font-size: 1.6rem;
+                padding: 0.5rem 1rem;
+                text-align: center;
+                background: none;
+                width: 7rem;
+                border: none;
+                color: #f01613;
+            }
+            
+            section[class*="search"] {
+                position: absolute;
+                top: 8.5rem;
+                left: 15%;
+            }
+            .search-input {
+                height: 3rem;
+                font-size: 1.1rem;
+                outline: none;
+                padding: 0 1rem;
+                width: 18rem;
+                border-radius: 10px;
+                font-family: "Roboto", serif;
+                background-color: #ffffff36;
+                color: #d2d2d2;
+            }
+            
+            section[class*="add"] {
+                position: absolute;
+                top: 40%;
+                left: 12%;
+                display: none;
+            }
+            .add-task-box {
+                height: 11rem;
+                width: 20rem;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+                font-family: "Roboto", serif;
+                background: #ffffff13;
+                border-radius: 5px;
+                /* border: 1px solid #ffffff3e; */
+                box-shadow: 0 1px 20px #ffffff13;
+            }
+            .add-task-box button {
+                font-size: 2rem;
+                margin: 0rem 0 0.5rem;
+                padding: 0.25rem 1.2rem;
+                border-radius: 50px;
+                background: transparent;
+                color: #d2d2d2;
+                cursor: pointer;
+                font-family: "Iceland", serif;
+                transition: all 0.2s ease-in-out;
+            }
+            .add-task-box button:hover {
+                background-color: #ffffff3e;
+                color: #000;
+            }
+            .add-input {
+                height: 3rem;
+                width: 18rem;
+                margin: 0.5rem 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                outline: none;
+                padding: 1rem;
+                border-radius: 10px;
+                border: none;
+                font-family: "Nunito", serif;
+                background-color: #ffffffc8;
+            }
+
+            .footer {
+                text-align: center;
+                background-color: inherit;
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                cursor: pointer;
+            }
+            .copyright > a:visited,
+            .copyright > a {
+                color: #5e96e9;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+            &hearts;
+            To-Do List
+            &hearts;
+        </h1>
+    </header>
+    <main>
+        <div class="container">
+            <div class="main-box">
+                <ol class="all-items">
+                    <!-- <li>
+                        <div class="item-text">
+                            <num>1. </num>
+                            <p>All Work Done</p>
+                        </div>
+                        <button id="item-check"></button>
+                    </li> -->   
+                </ol>
+                <div class="next-item">
+                    <button id="next-item">
+                        Add &plus;
+                    </button>
+                </div>
+            </div>
+            <footer class="footer">
+                <p class="copyright">
+                    &copy; <a href="https://github.com/satisoff" target="_blank">satisoff</a>
+                </p>
+            </footer>
+        </div>
+    </main>
+
+    <section class="search-section">
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Search">
+        </div>
+    </section>
+
+    <section class="add-section">
+        <div class="add-task-box">
+            <input type="text" class="add-input">
+            <button id="insert-task">Add</button>
+        </div>
+    </section>
+
+    
+    <script>
+        const addBtn = document.getElementById("next-item");
+        const addSec = document.querySelector(".add-section");
+        const homeSec = document.querySelector(".main-box");
+        const addSecAddBtn = document.getElementById("insert-task");
+        const addInput = document.querySelector(".add-input");
+        const searchInput = document.querySelector(".search-input");
+        const allCheckBox = document.querySelectorAll("#item-check");
+        const copyRight = document.querySelector(".copyright");
+
+        function addItem(curItemNum, newTaskContent) {
+            addInput.value = "";            //clear old value
+            const newItemLi = document.createElement("li");
+            const newItemDiv = document.createElement("div");
+            newItemDiv.classList.add("item-text", `item-${curItemNum}`);
+            const newItemNum = document.createElement("num");
+            newItemNum.innerText = `${curItemNum}. `;
+            const newItemPara = document.createElement("p");    
+            newItemPara.innerText = `${newTaskContent}`;
+            // Make item to redirect to its content
+            newItemPara.addEventListener("click", () => {
+                let query = encodeURIComponent(newTaskContent);
+                window.open(`https://www.google.com/search?q=${query}`);
+            })
+            const newItemBtn = document.createElement("button");
+            newItemBtn.setAttribute('id', 'item-check');
+            newItemDiv.appendChild(newItemNum);
+            newItemDiv.appendChild(newItemPara);
+            newItemLi.appendChild(newItemDiv);
+            newItemLi.appendChild(newItemBtn)
+            document.querySelector(".all-items").appendChild(newItemLi);
+        }
+
+        function addItemLocal(itemNo, itemName) {
+            localStorage.setItem(itemNo, itemName);
+        }
+
+        function defineItem() {
+            homeSec.style.display = "none";
+            addSec.style.display = "block";
+            addSec.firstElementChild.firstElementChild.focus();
+        }
+
+        function loadLocalData() {
+            let localCounter = 0;    
+            while(localCounter < localStorage.length) {
+                if (parseInt(localStorage.key(localCounter)) == localStorage.key(localCounter)) {           //key must be integer
+                    let key = localStorage.key(localCounter);
+                    let value = localStorage.getItem(key);
+                    addItem(key, value);
+                }
+                localCounter++;
+            }
+        }
+
+        function setNewTask() {
+            let nextItemNum = 1;
+            if (localStorage.getItem('localCounter')) {
+            nextItemNum = parseInt(localStorage.getItem('localCounter'))+1;             //next avail key
+            }
+            if (addInput.value) {
+                addItemLocal(nextItemNum, addInput.value);
+                addItem(nextItemNum, addInput.value);
+                localStorage.setItem("localCounter", nextItemNum);
+                homeSec.style.display = "block";
+                addSec.style.display = "none";
+            } else {
+                alert("Task field can't be Empty");
+            }
+        }
+
+        addBtn.addEventListener("click", defineItem);
+        addSecAddBtn.addEventListener("click", setNewTask);
+        addSec.firstElementChild.firstElementChild.addEventListener("keydown", (key) => {       //triggering input field
+            if (key.keyCode === 13) {               //key code for "Enter" key
+                setNewTask();
+            }
+        })
+
+        // Add event listner on the main-box which isn't dynamically created
+        homeSec.addEventListener('click', (event) => {
+            if (event.target && event.target.matches("button#item-check")) {
+                event.target.style.backgroundImage = "url('https://i.ibb.co/7tLG2dhF/check-Mark.png')";
+                event.target.previousSibling.lastElementChild.style.textDecoration = "line-through";
+                event.target.disabled = 'true';
+                let idToRem = parseInt(event.target.previousSibling.firstElementChild.innerText.split(".")[0]);
+                localStorage.removeItem(idToRem);
+            }
+        })
+
+        window.addEventListener("load", () => {
+            if (!localStorage.getItem('localCounter')) {      //if no items present
+                addSec.style.display = "block";
+                homeSec.style.display = "none";
+            } else {
+                if (localStorage.length===0) localStorage.setItem('localCounter', '0');
+                loadLocalData();
+            }
+        })
+
+        // Search Task
+        function searchTask() {
+            if (searchInput.value) {
+                let curWord = searchInput.value;
+                homeSec.firstElementChild.replaceChildren();           //remove all child
+                let localCounter = 0;    
+                while(localCounter < localStorage.length) {
+                    if (parseInt(localStorage.key(localCounter)) == localStorage.key(localCounter)) {       //checking if key is an integer
+                        let key = localStorage.key(localCounter);
+                        let value = localStorage.getItem(key);
+                        if (value.toLowerCase().includes(curWord.toLowerCase())) {
+                            addItem(key, value);
+                        }
+                    }
+                    localCounter++;
+                }
+            } else {
+                homeSec.firstElementChild.replaceChildren();           //remove all child
+                loadLocalData();
+            }
+        }
+
+        searchInput.addEventListener("input", searchTask);
+
+        // Remove default link formatting for copyright button
+        copyRight.addEventListener("click", () => {
+            this.preventDefault();
+        });
+    </script>
+</body>
+</html>
