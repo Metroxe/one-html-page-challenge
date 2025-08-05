@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%222048px%22%20height%3D%222048px%22%20viewBox%3D%220%2C0%2C128%2C128%22%3E%3Cg%20stroke%3D%22%23111%22%20stroke-width%3D%226%22%20fill%3D%22white%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M48%2C28a16%2C16%2C0%2C0%2C0%2C32%2C0%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M26%2C68a72%2C32%2C0%2C0%2C1%2C74%2C0%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M28%2C78a48%2C32%2C0%2C0%2C1%2C70%2C0%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M40%2C96a48%2C64%2C0%2C0%2C1%2C48%2C0%22%3E%3C%2Fpath%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2264%22%20r%3D%2232%22%20fill%3D%22white%22%3E%3C%2Fcircle%3E%3Cpath%20d%3D%22M46%2C68a12%2C2%2C0%2C0%2C0%2C24%2C0%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23111%22%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2252%22%20r%3D%223%22%20%2F%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2252%22%20r%3D%223%22%20%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+      type="image/svg+xml"
+    />
+    <title>Onpa.svg👋</title>
+    <meta
+      name="description"
+      content="You can save wave shapes of your voice with Onpa.svg."
+    />
+    <meta name="author" content="Manybugs" />
+    <meta name="github" content="manybugsdev" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: #111;
+        color: white;
+        font-family: sans-serif;
+      }
+      main {
+        width: 100%;
+        padding: 0 1rem;
+        margin: 0 auto;
+        max-width: 600px;
+      }
+      svg {
+        border: white 3px solid;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+      button {
+        background: white;
+        color: #111;
+        border: none;
+        outline: none;
+        font-weight: bold;
+        border-radius: 9999px;
+        cursor: pointer;
+        margin: 0 0.2rem;
+      }
+      button:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      input[type="range"] {
+        appearance: none;
+        background: white;
+        height: 1px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Onpa.svg</h1>
+      <p>Save wave shapes of your voice.</p>
+      <svg
+        id="view"
+        viewBox="0 0 640 360"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="gray"
+      ></svg>
+      <p>
+        <label
+          >Timeline
+          <input
+            id="timeline"
+            type="range"
+            oninput="changeTimeline(event.target.value)"
+        /></label>
+      </p>
+      <p>
+        <button id="activateButton" onclick="activate()">Activate</button>
+        <button id="toggleButton" onclick="toggle()">Start</button>
+        <button id="saveButton" onclick="save()">Save</button>
+      </p>
+    </main>
+    <script>
+      /**
+       * Constants
+       */
+      const bufferLength = 256; // must be power of 2
+      const recordsLength = 128;
+      /**
+       * States
+       */
+      const states = {
+        analyser: null,
+        recording: false,
+        records: Array.from({ length: recordsLength }, () =>
+          new Uint8Array(bufferLength).fill(128)
+        ),
+        index: recordsLength - 1,
+      };
+      /**
+       * Change timelines.
+       */
+      function changeTimeline(index) {
+        states.index = index;
+        update();
+      }
+      /**
+       * Activate microphones.
+       */
+      async function activate() {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+        });
+        const audioCtx = new (window.AudioContext ||
+          window.webkitAudioContext)();
+        states.analyser = audioCtx.createAnalyser();
+        const source = audioCtx.createMediaStreamSource(stream);
+        source.connect(states.analyser);
+        toggle();
+      }
+      /**
+       * Toggle recording.
+       */
+      function toggle() {
+        states.recording = !states.recording;
+        requestAnimationFrame(frame);
+      }
+      /**
+       * Animation frame
+       */
+      function frame() {
+        update();
+        if (!states.recording) return;
+        states.analyser.fftSize = 2 * bufferLength;
+        const dataArray = new Uint8Array(bufferLength);
+        states.analyser.getByteTimeDomainData(dataArray);
+        states.records.push(dataArray);
+        states.records.shift();
+        requestAnimationFrame(frame);
+      }
+      /**
+       * Save a svg file.
+       */
+      function save() {
+        const a = document.createElement("a");
+        a.href = `data:image/svg+xml,${encodeURIComponent(view.outerHTML)}`;
+        a.download = "onpa.svg";
+        a.click();
+      }
+      /**
+       * Update DOM with states.
+       */
+      function update() {
+        const ys = states.records[states.index];
+        view.innerHTML = Array.from({ length: 63 }, (_, i) => i * 10 + 10)
+          .map((x, i) => {
+            let y = ys[Math.floor((i / 63) * bufferLength)] - 128;
+            y = Math.abs(y);
+            return `<rect x="${x}" y="${
+              180 - y
+            }" width="${3}" height="${Math.max(Math.abs(2 * y), 2)}"></rect>`;
+          })
+          .join("");
+        activateButton.disabled = !!states.analyser;
+        saveButton.disabled = toggleButton.disabled = !states.analyser;
+        toggleButton.textContent = states.recording ? "Stop" : "Start";
+        timeline.min = 0;
+        timeline.max = recordsLength - 1;
+        timeline.step = 1;
+        timeline.value = states.index;
+      }
+      update();
+    </script>
+  </body>
+</html>
+<!--
+References
+----------
+
+* https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
+* https://developer.mozilla.org/ja/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
+-->
