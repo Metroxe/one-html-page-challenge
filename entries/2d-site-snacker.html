@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <meta name="description" content="A swarm of creatures invades and consumes one page challenge sites!">
+        <meta name="author" content="Liam Clegg (Cleggacus)">
+        <meta name="github" content="cleggacus">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2D Site Snackers</title>
+    </head>
+
+    <style>
+:root {
+    --bg-color: #000;
+    --fg-color: #fff;
+
+    --code-bg-color: #222;
+    --button-bg-color: #127378;
+    --button-hover-bg-color: #109ea4;
+    --button-fg-color: #fff;
+    --link-color: #00f5ff;
+    --border-color: #888;
+    --border-radius: 0.5rem;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1em;
+    line-height: 1.6em;
+    letter-spacing: 0.02em;
+    word-spacing: 0.05em;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: normal;
+}
+
+code {
+    background-color: var(--code-bg-color);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.5rem;
+}
+
+button {
+    cursor: pointer;
+    border-radius: 0.5rem;
+    background-color: var(--button-bg-color);
+    color: var(--button-fg-color);
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: var(--button-hover-bg-color);
+}
+
+a,
+a:link,
+a:visited,
+a:active,
+a:hover {
+    color: var(--link-color);
+}
+
+textarea {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: solid 1px var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--fg-color);
+    resize: vertical;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1em;
+    line-height: 1.6em;
+    font-weight: 400;
+    letter-spacing: 0.0125em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+textarea::placeholder {
+    color: var(--fg-color);
+    opacity: 0.7;
+}
+
+#container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    padding: 1rem;
+}
+
+#container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 40rem;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    border: solid 1px var(--border-color);
+}
+
+#container form p {
+    margin: 0;
+}
+
+#container form h1 {
+    margin: 1rem 0;
+}
+
+#container iframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+    </style>
+
+    <body>
+        <div id="root">
+        </div>
+
+        <script id="iframe-script" type="text/template">
+            class Creature {
+                constructor(x, y, angle) {
+                    this.x = x;
+                    this.y = y;
+
+                    this.angle = angle;
+                    this.speed = 0;
+                    this.acceleration = 200;
+                    this.maxSpeed = 500;
+                    this.turnSpeed = 4;
+                    this.fov = Math.PI / 180 * 60;
+                    this.visionRange = 10000;
+                    this.radius = 5;
+                    this.color = "#00f5ff";
+                }
+
+                isTouchingAnyFood(foods) {
+                    for (const food of foods) {
+                        const closestX = Math.max(food.x, Math.min(this.x, food.x + food.width));
+                        const closestY = Math.max(food.y, Math.min(this.y, food.y + food.height));
+                
+                        const dx = this.x - closestX;
+                        const dy = this.y - closestY;
+                        const distanceSquared = dx * dx + dy * dy;
+                
+                        if (distanceSquared < this.radius * this.radius) {
+                            return food;
+                        }
+                    }
+                
+                    return null;
+                }
+
+                getClosestFood(foods) {
+                    let closestFood = null;
+                    let closestDist = Infinity;
+
+                    for(const food of foods) {
+                        const fx = food.x + food.width / 2;
+                        const fy = food.y + food.height / 2;
+
+                        const dx = fx - this.x;
+                        const dy = fy - this.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance > this.visionRange) continue;
+
+                        const angleToFood = Math.atan2(dy, dx);
+                        let angleDiff = angleToFood - this.angle;
+
+                        angleDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
+
+                        if (Math.abs(angleDiff) <= this.fov / 2) {
+                            if (distance < closestDist) {
+                                closestDist = distance;
+                                closestFood = food;
+                            }
+                        }
+                    }
+
+                    return closestFood;
+                }
+
+                turnToward(targetX, targetY, dt) {
+                    const dx = targetX - this.x;
+                    const dy = targetY - this.y;
+
+                    const desiredAngle = Math.atan2(dy, dx);
+                    let angleDiff = desiredAngle - this.angle;
+
+                    angleDiff = Math.atan2(Math.sin(angleDiff), Math.cos(angleDiff));
+
+                    const maxTurn = this.turnSpeed * dt;
+                    angleDiff = Math.max(-maxTurn, Math.min(maxTurn, angleDiff));
+
+                    this.angle += angleDiff;
+
+                    this.angle = (this.angle + Math.PI * 2) % (Math.PI * 2);
+                }
+
+                update(dt, foods) {
+                    const touchingFood = this.isTouchingAnyFood(foods);
+
+                    if(touchingFood !== null) {
+                        touchingFood.flagDelete = true;
+                        this.speed = 0;
+                    }
+
+                    const food = this.getClosestFood(foods);
+
+                    if(food !== null) {
+                        const fx = food.x + food.width / 2;
+                        const fy = food.y + food.height / 2;
+                        this.turnToward(fx, fy, dt);
+                    } else {
+                        this.angle -= this.turnSpeed * dt;
+                    }
+
+                    this.angle %= (Math.PI * 2);
+
+                    this.speed = Math.min(this.speed + this.acceleration * dt, this.maxSpeed);
+
+                    let vx = Math.cos(this.angle) * this.speed;
+                    let vy = Math.sin(this.angle) * this.speed;
+
+                    this.x += vx * dt;
+                    this.y += vy * dt;
+                }
+
+                draw(ctx) {
+                    const x = this.x - window.scrollX;
+                    const y = this.y - window.scrollY;
+
+                    ctx.beginPath();
+                    ctx.arc(x, y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+
+
+                    const triangleLength = this.radius * 2;
+                    const triangleWidth = this.radius * 2;
+
+                    const tipX = x + Math.cos(this.angle) * (this.radius + triangleLength);
+                    const tipY = y + Math.sin(this.angle) * (this.radius + triangleLength);
+
+                    const baseLeftX = x + Math.cos(this.angle + Math.PI / 2) * (triangleWidth / 2);
+                    const baseLeftY = y + Math.sin(this.angle + Math.PI / 2) * (triangleWidth / 2);
+
+                    const baseRightX = x + Math.cos(this.angle - Math.PI / 2) * (triangleWidth / 2);
+                    const baseRightY = y + Math.sin(this.angle - Math.PI / 2) * (triangleWidth / 2);
+
+                    ctx.beginPath();
+                    ctx.moveTo(tipX, tipY);
+                    ctx.lineTo(baseLeftX, baseLeftY);
+                    ctx.lineTo(baseRightX, baseRightY);
+                    ctx.closePath();
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            class Food {
+                constructor(x, y, width, height, element) {
+                    this.element = element;
+                    this.x = x;
+                    this.y = y;
+                    this.width = width;
+                    this.height = height;
+                    this.color = "#FF00F5";
+                    this.flagDelete = false;
+                }
+
+                draw(ctx) {
+                    let x = this.x - window.scrollX;
+                    let y = this.y - window.scrollY;
+
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x, y, this.width, this.height);
+                }
+            }
+
+            class Simulation {
+                constructor(ctx) {
+                    this.counter = 0;
+                    this.creatures = [];
+                    this.food = [];
+                    this.ctx = ctx;
+                    this.lastTime = null;
+                    this.startTime = null;
+                    this.dt = 0;
+                    this.sinceStart = 0;
+                }
+
+                initCreatures() {
+                    const canvas = this.ctx.canvas;
+
+                    this.creatures = [];
+
+                    for(let i = 0; i < 20; i++) {
+                        const side = Math.floor(Math.random() * 4);
+
+                        let x, y;
+
+                        if(side == 0 || side == 2) {
+                            x = Math.random() * canvas.width;
+                            y = side == 0 ? 0 : canvas.height;
+                        } else {
+                            x = side == 3 ? 0 : canvas.width;
+                            y = Math.random() * canvas.height;
+                        }
+
+                        const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
+
+                        this.creatures.push(new Creature(x, y, angle))
+                    }
+                }
+
+                run() {
+                    this.lastTime = performance.now();
+                    this.startTime = performance.now();
+                    this.resize();
+                    requestAnimationFrame(this.update.bind(this))
+                }
+
+                getLeafElements() {
+                    const root = document.body;
+                    const leaves = [];
+
+                    function traverse(node) {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            const elementChildren = Array.from(node.children);
+
+                            if (elementChildren.length === 0 && node.id !== "simulation-canvas") {
+                                leaves.push(node);
+                            } else {
+                                elementChildren.forEach(traverse);
+                            }
+                        }
+                    }
+
+                    traverse(root);
+                    return leaves;
+                }
+
+                updateFood() {
+                    this.food = this.getLeafElements()
+                        .map(element => {
+                            const rect = element.getBoundingClientRect();
+                            const left = rect.left + window.scrollX;
+                            const top = rect.top + window.scrollY;
+                            let x = left + rect.width / 2;
+                            let y = top + rect.height / 2;
+                            return new Food(left, top, rect.width, rect.height, element);
+                        })
+                }
+
+                updateCreatures() {
+                    for(const creature of this.creatures) {
+                        creature.update(this.dt, this.food);
+                    }
+                }
+
+                drawCreatures() {
+                    for(const creature of this.creatures) {
+                        creature.draw(this.ctx);
+                    }
+                }
+
+                drawFood() {
+                    for(const food of this.food) {
+                        food.draw(this.ctx);
+                    }
+                }
+
+                resize() {
+                    const canvas = this.ctx.canvas;
+                    const rect = canvas.getBoundingClientRect();
+
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+                }
+
+                drawText(str) {
+                    const canvas = this.ctx.canvas;
+
+                    const textHeight = canvas.height / 2;
+                    this.ctx.font = `${textHeight}px sans-serif`;
+                    this.ctx.fillStyle = 'white';
+
+                    const text = str;
+                    const textMetrics = this.ctx.measureText(text);
+                    const textWidth = textMetrics.width;
+
+                    const x = (canvas.width - textWidth) / 2;
+                    const y = (canvas.height + textHeight * 0.75) / 2;
+
+                    this.ctx.fillText(text, x, y);
+                }
+
+                draw() {
+                    const canvas = this.ctx.canvas;
+                    this.ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    this.drawCreatures();
+                    this.drawFood();
+
+                    if(this.sinceStart < 3) {
+                        this.ctx.fillStyle = "#0009";
+                        this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+
+                    if(this.sinceStart < 1) {
+                        this.drawText("3");
+                    } else if(this.sinceStart < 2) {
+                        this.drawText("2");
+                    } else if(this.sinceStart < 3) {
+                        this.drawText("1");
+                    }
+                }
+
+                cleanUpFood() {
+                    for(const food of this.food) {
+                        if(food.flagDelete) {
+                            food.element.remove();
+                        }
+                    }
+                }
+
+                update(currentTime) {
+                    this.sinceStart = (currentTime - this.startTime) / 1000;
+
+                    if(this.sinceStart >= 3 && this.creatures.length <= 0) {
+                        this.initCreatures();
+                    }
+
+                    this.updateFood();
+
+                    this.dt = (currentTime - this.lastTime) / 1000;
+                    this.lastTime = currentTime;
+
+                    this.updateCreatures();
+                    this.draw();
+
+                    this.cleanUpFood();
+
+                    requestAnimationFrame(this.update.bind(this))
+                }
+            }
+
+            function injectCanvas() {
+                let canvasElement = document.createElement("canvas");
+                canvasElement.id = "simulation-canvas";
+                canvasElement.style.position = "fixed";
+                canvasElement.style.width = "100%";
+                canvasElement.style.height = "100vh";
+                canvasElement.style.top = "0";
+                canvasElement.style.left = "0";
+                canvasElement.style.zIndex = "999999";
+                canvasElement.style.border = "none";
+                canvasElement.style.outline = "none";
+                document.body.appendChild(canvasElement);
+                return canvasElement;
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const canvas = injectCanvas();
+                const ctx = canvas.getContext("2d");
+                const simulation = new Simulation(ctx);
+                simulation.run();
+            });
+        </script>
+
+        <script>
+            class SiteManager {
+                constructor() {
+                    this.stage = "unset";
+                    this.html = "";
+                }
+
+                clearRoot() {
+                    const root = document.querySelector("#root");
+
+                    while (root.firstChild) {
+                        root.removeChild(root.firstChild);
+                    }
+                }
+
+                async loadInit() {
+                    this.clearRoot();
+
+                    const root = document.querySelector("#root");
+
+                    root.innerHTML = `
+                        <div id="container">
+                            <form>
+                                <h1>HTML Site Snacker</h1>
+                                <p>Goto a website and type <code>ctrl+u</code> to get the source. Then copy and paste it into the input and consume!</p>
+                                <p>Or you can copy and paste some of the other <a href="https://github.com/Metroxe/one-html-page-challenge/tree/master/entries" target="_blank">One html page site entries</a></p>
+                                <textarea rows=10 placeholder="Type HTML Here!"></textarea>
+                                <button>Consume</button>
+                            </form>
+                        </div>
+                    `;
+
+                    const button = root.querySelector("button");
+                    const textarea = root.querySelector("textarea");
+
+                    button.addEventListener("click", () => {
+                        this.html = textarea.value;
+                        setURLHRML(this.html);
+                        this.loadStage("consume")
+                    })
+                }
+
+                injectScriptHTML(html) {
+                    const script = document.querySelector('#iframe-script');
+                    console.log(script)
+                    const scriptContent = script.textContent;
+                    const scriptToInject = `<script>${scriptContent}</scrip` + "t>";
+                    return html.replace('</body>', `${scriptToInject}</body>`);
+                }
+
+                async loadConsume() {
+                    this.clearRoot();
+
+                    const root = document.querySelector("#root");
+
+                    root.innerHTML = `
+                        <div id="container">
+                            <iframe></iframe>
+                        </div>
+                    `;
+
+                    const iframe = root.querySelector("#container iframe");
+                    iframe.srcdoc = this.injectScriptHTML(this.html);
+                    iframe.style.border = "none";
+                    iframe.style.outline = "none";
+                }
+
+                async loadStage(stage) {
+                    this.stage = stage;
+
+                    switch(this.stage) {
+                        case "init":
+                            await this.loadInit();
+                            break;
+                        case "consume":
+                            await this.loadConsume();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+function setURLHRML(html) {
+    const url = new URL(window.location);
+    url.searchParams.set('html', encodeURIComponent(html));
+    history.pushState({}, '', url);
+}
+
+function getURLHTML() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const encodedHTML = urlParams.get('html');
+    return encodedHTML ? decodeURIComponent(encodedHTML) : null;
+}
+
+            let siteManager = new SiteManager();
+
+            function load() {
+                const html = getURLHTML();
+
+                if(html === null) {
+                    siteManager.loadStage("init");
+                } else {
+                    console.log("consume", html)
+                    siteManager.html = html;
+                    siteManager.loadStage("consume");
+                }
+            }
+
+            load();
+            window.addEventListener('popstate', load);
+        </script>
+    </body>
+</html>
