@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="A moving solar system with actual relative speed of planets">
+  <meta name="author" content="Aryan Kapoor">
+  <meta name="github" content="Aryankpoor">
+  <title>Solar System</title>
+  <style>
+    html {
+      height: 100%;
+      width: 100%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    .solar-system {
+      --sun-diameter: 12dvh;
+      --sun-spacing: .15;
+
+
+      --mercury-size: .2;
+      --venus-size: .25;
+      --earth-size: .25;
+      --mars-size: .25;
+      --jupiter-size: .75;
+      --saturn-size: .6;
+      --uranus-size: .4;
+      --neptune-size: .4;
+      --pluto-size: .1;
+
+
+      --mercury-period: .24;
+      --venus-period: .615;
+      --earth-duration: 5s;
+      --mars-period: 1.88;
+      --jupiter-period: 11.86;
+      --saturn-period: 29.46;
+      --uranus-period: 84;
+      --neptune-period: 164;
+      --pluto-period: 248;
+
+      padding: 1rem 0 0 0;
+      overflow: hidden;
+
+      display: grid;
+      gap: calc(var(--sun-diameter) * .15);
+      grid-template-rows: repeat(10, auto);
+      grid-template-areas:
+        "pluto"
+        "neptune"
+        "uranus"
+        "saturn"
+        "jupiter"
+        "mars"
+        "earth"
+        "venus"
+        "mercury"
+        "sun";
+
+      .orbit {
+        --sun-margin: calc(var(--sun-diameter) * var(--sun-spacing));
+        --planet-diameter: max(var(--planet-size) * var(--sun-diameter), 1rem);
+
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-template-columns: subgrid;
+        justify-items: center;
+
+        &:has(.sun) {
+          --planet-size: 1;
+          grid-area: sun;
+          padding-block: var(--sun-margin);
+
+          .label {
+            color: transparent;
+          }
+        }
+
+        &:has(.mercury) {
+          --planet-size: var(--mercury-size);
+          --planet-duration: calc(var(--earth-duration) * var(--mercury-period));
+          grid-row: mercury-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: mercury;
+          }
+        }
+
+        &:has(.venus) {
+          --planet-size: var(--venus-size);
+          --planet-duration: calc(var(--earth-duration) * var(--venus-period));
+          grid-row: venus-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: venus;
+          }
+        }
+
+        &:has(.earth) {
+          --planet-size: var(--earth-size);
+          --planet-duration: var(--earth-duration);
+          grid-row: earth-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: earth;
+          }
+        }
+
+        &:has(.mars) {
+          --planet-size: var(--mars-size);
+          --planet-duration: calc(var(--earth-duration) * var(--mars-period));
+          grid-row: mars-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: mars;
+          }
+        }
+
+        &:has(.jupiter) {
+          --planet-size: var(--jupiter-size);
+          --planet-duration: calc(var(--earth-duration) * var(--jupiter-period));
+          grid-row: jupiter-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: jupiter;
+          }
+        }
+
+        &:has(.saturn) {
+          --planet-size: var(--saturn-size);
+          --planet-duration: calc(var(--earth-duration) * var(--saturn-period));
+          grid-row: saturn-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: saturn;
+          }
+
+        }
+
+        &:has(.uranus) {
+          --planet-size: var(--uranus-size);
+          --planet-duration: calc(var(--earth-duration) * var(--uranus-period));
+          grid-row: uranus-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: uranus;
+          }
+        }
+
+        &:has(.neptune) {
+          --planet-size: var(--neptune-size);
+          --planet-duration: calc(var(--earth-duration) * var(--neptune-period));
+          grid-row: neptune-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: neptune;
+          }
+        }
+
+        &:has(.pluto) {
+          --planet-size: var(--pluto-size);
+          --planet-duration: calc(var(--earth-duration) * var(--pluto-period));
+          grid-row: pluto-start / sun-end;
+
+          .planet,
+          .label {
+            grid-area: pluto;
+          }
+        }
+      }
+
+      .planet {
+        height: var(--planet-diameter);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        /* background-color: rgb(255 0 0 / .9); */
+        z-index: 1;
+        background-image: radial-gradient(circle at center 80%, rgb(255 255 255 / .4), rgb(255 255 255 / 0) 50%);
+
+        &.sun {
+          --sun-color: #ffd800;
+          background-color: var(--sun-color);
+          background-image: none;
+          box-shadow: 0 0 42px 0 color-mix(in oklch, transparent, var(--sun-color) 50%);
+        }
+
+        &.mercury {
+          background-color: #989494;
+        }
+
+        &.venus {
+          background-color: #e1d59d;
+        }
+
+        &.earth {
+          background-color: #008bb3;
+        }
+
+        &.mars {
+          background-color: #dfa272;
+        }
+
+        &.jupiter {
+          background-color: #af7045;
+        }
+
+        &.saturn {
+          background-color: #d3b57c;
+        }
+
+        &.uranus {
+          background-color: #77aac4;
+        }
+
+        &.neptune {
+          background-color: #3a80a4;
+        }
+
+        &.pluto {
+          background-color: #989494;
+        }
+      }
+
+      .orbit-ring {
+        grid-area: 1 / 1 / -1 / -1;
+        height: calc(2 * (100% - var(--planet-diameter) / 2 - var(--sun-diameter) / 2 - var(--sun-margin)));
+        aspect-ratio: 1;
+        translate: 0 calc(var(--planet-diameter) / 2);
+        border-radius: 50%;
+        border: 1px solid rgb(255 255 255 / .5);
+        z-index: 0;
+      }
+
+      .axis {
+        grid-area: 1 / 1 / -1 / -1;
+        display: grid;
+        grid-template-rows: subgrid;
+        transform-origin: center calc(100% - var(--sun-diameter) / 2 - var(--sun-margin));
+        animation: orbit var(--planet-duration) linear infinite;
+      }
+
+      .label {
+        align-self: center;
+        translate: 0 -.5lh;
+        z-index: 2;
+      }
+    }
+
+    @keyframes orbit {
+      from {
+        rotate: 0turn;
+      }
+
+      to {
+        rotate: 1turn;
+      }
+    }
+
+
+    body {
+      font-family: system-ui, sans-serif;
+      color: white;
+      background: linear-gradient(to bottom, #112, #223);
+    }
+
+    a {
+      color: currentcolor;
+    }
+
+    h1 {
+      font-weight: 400;
+    }
+
+    .layout {
+      min-height: 100dvh;
+      display: grid;
+
+      &>.solar-system {
+        align-self: end;
+      }
+    }
+
+    .content {
+      max-inline-size: 40rem;
+      margin: 8px;
+
+      &>*+* {
+        margin-block-start: 1em;
+      }
+    }
+  </style>
+
+
+  </script>
+</head>
+
+<body>
+  <div class="layout">
+
+
+    <ol class="solar-system">
+      <li class="orbit">
+        <div class="label">Sun</div>
+        <div class="planet sun"></div>
+      </li>
+      <li class="orbit">
+        <div class="label">Mercury</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet mercury"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Venus</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet venus"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Earth</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet earth"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Mars</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet mars"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Jupiter</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet jupiter"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Saturn</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet saturn"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Uranus</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet uranus"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Neptune</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet neptune"></div>
+        </div>
+      </li>
+      <li class="orbit">
+        <div class="label">Pluto</div>
+        <div class="orbit-ring"></div>
+        <div class="axis">
+          <div class="planet pluto"></div>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+
+</body>
+
+</html>

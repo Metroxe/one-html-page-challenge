@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find out the relationship between you and your partner">
+    <meta name="author" content="Excelsior">
+    <meta name="github" content="SandeepBalivada">
+    <title>FLAMES</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffeb3b;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            background-color: #ff5722;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"] {
+            width: 90%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.8);
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0; 
+        }
+
+        .btn {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            width: 48%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-indian {
+            background-color: #534caf;
+        }
+
+        .btn-western {
+            background-color: #534caf;
+        }
+
+        .btn:hover {
+            background-color: #388e3c;
+        }
+
+        #result, #calculation-process {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 16px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            word-wrap: break-word;
+        }
+
+        .names-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .name-box {
+            text-align: left;
+        }
+
+        .strike-off {
+            text-decoration: line-through;
+            color: red;
+        }
+
+        .flames-highlight {
+            font-weight: bold;
+            font-size: 24px;
+            color: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>FLAMES</h1>
+        <input type="text" id="name1" placeholder="Enter Your Name">
+        <input type="text" id="name2" placeholder="Enter Partner's Name">
+        <h2>Find Out!</h2>
+        <div class="buttons-container">
+            <button class="btn btn-indian" onclick="calculateFlames(1)">Indian Style</button>
+            <button class="btn btn-western" onclick="calculateFlames(2)">Global Style</button>
+        </div>
+        <div id="result"></div>
+        <div id="calculation-process"></div>
+        <div id="debug-logs"></div>
+    </div>
+
+    <script>
+        function strikeOffCommonLetters(name1Array, name2Array) {
+            let name1Steps = '';
+            let name2Steps = '';
+
+            let name1Display = [...name1Array];
+            let name2Display = [...name2Array];
+
+            for (let i = 0; i < name1Array.length; i++) {
+                const letter = name1Array[i];
+                if (name2Array.includes(letter)) {
+                    name1Display[i] = `<span class="strike-off">${letter}</span>`;
+                    name2Display[name2Array.indexOf(letter)] = `<span class="strike-off">${letter}</span>`;
+                    name2Array[name2Array.indexOf(letter)] = '-';
+                    name1Array[name1Array.indexOf(letter)] = '-';
+                }
+            }
+
+            name1Steps = name1Display.join(' ');
+            name2Steps = name2Display.join(' ');
+
+            return [name1Steps, name2Steps];
+        }
+
+        function calculateFlames(type) {
+            let name1 = document.getElementById('name1').value.toLowerCase().replace(/\s+/g, '');
+            let name2 = document.getElementById('name2').value.toLowerCase().replace(/\s+/g, '');
+
+            const flamesResult = ['Friends', 'Love', 'Affection', 'Marriage', 'Enemy', 'Siblings'];
+
+            if (!name1 || !name2) {
+                alert('Please enter both names!');
+                return;
+            }
+
+            let name1Array = name1.split('');
+            let name2Array = name2.split('');
+
+            const processElement = document.getElementById('calculation-process');
+            processElement.innerHTML = `<p>Striking off common letters:</p>`;
+
+            let [name1Steps, name2Steps] = strikeOffCommonLetters(name1Array, name2Array);
+
+            processElement.innerHTML += `
+                <div class="names-container">
+                    <div class="name-box">
+                        <p>Your Name:</p> ${name1Steps}
+                    </div>
+                    <div class="name-box">
+                        <p>Partner's Name:</p> ${name2Steps}
+                    </div>
+                </div>
+            `;
+
+            let remainingLetters = name1Array.filter(letter => letter !== '-').concat(name2Array.filter(letter => letter !== '-'));
+
+            let remainingCount = remainingLetters.length;
+
+            processElement.innerHTML += `<p>Remaining letters: ${remainingLetters}</p>`;
+            processElement.innerHTML += `<p>Remaining letters count: ${remainingCount}</p>`;
+            processElement.innerHTML += `<p>Counting FLAMES:</p>`;
+
+            if (type == 1) {
+                visualizeFlamesCountingIndian(remainingCount, 'FLAMES');
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Indian </p>`;  
+            } else {
+                let flamesCounting = visualizeFlamesCounting(remainingCount);
+                processElement.innerHTML += `<div class="flames-count">${flamesCounting}</div>`;
+                const debugLog = document.getElementById('debug-logs');
+                debugLog.innerHTML = `<p>Style: </br> </br> Global </p>`;  
+            }
+
+            getRelationship(remainingCount, flamesResult, type);
+        }
+
+        function visualizeFlamesCountingIndian(remainingCount, flames) {
+            let flamesHTML = '';
+            let newFlames = '';
+
+            let index = (remainingCount % flames.length) - 1;
+            if (index === -1) index = flames.length - 1;
+
+            for (let i = 0; i < flames.length; i++) {
+                if (i === index) {
+                    flamesHTML += `<span class="strike-off">${flames[i]}</span>`;
+                } else {
+                    flamesHTML += `${flames[i]} `;
+                    newFlames += flames[i];
+                }
+            }
+
+            const processElement = document.getElementById('calculation-process');
+            processElement.innerHTML += `<div class="flames-count">${flamesHTML}</div>`;
+
+            if (newFlames.length != 1) {
+                visualizeFlamesCountingIndian(remainingCount, newFlames);
+            } else {
+                processElement.innerHTML += `<span class="flames-highlight">${newFlames}</span>`;
+                const flamesResult = ['Friends', 'Love', 'Affection', 'Marriage', 'Enemy', 'Siblings'];
+                const relationship = flamesResult.find(name => name.startsWith(newFlames));
+                document.getElementById('result').innerText = `Relationship: ${relationship}`;
+            }
+        }
+
+        function visualizeFlamesCounting(remainingCount) {
+            const flames = 'FLAMES';
+            let flamesHTML = '';
+
+            let index = (remainingCount % flames.length) - 1;
+            if (index === -1) index = flames.length - 1;
+
+            for (let i = 0; i < flames.length; i++) {
+                if (i === index) {
+                    flamesHTML += `<span class="flames-highlight">${flames[i]}</span> `;
+                } else {
+                    flamesHTML += `${flames[i]} `;
+                }
+            }
+
+            return flamesHTML;
+        }
+
+        function getRelationship(remainingCount, flamesResult, type) {
+            if (type === 2) {
+                const index = (remainingCount % flamesResult.length) - 1;
+                const relationship = index >= 0 ? flamesResult[index] : flamesResult[flamesResult.length - 1];
+                document.getElementById('result').innerText = `Relationship: ${relationship}`;
+            }
+        }
+    </script>
+</body>
+</html>

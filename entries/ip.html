@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html>
-    <body style="text-align:center">
+<html lang="en">
+<head>
+    <!-- Meta tags added due to entries.js deprecation on July 8th, 2025 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find out what's your IP address">
+    <meta name="author" content="Elisha Hollander (donno2048)">
+    <meta name="github" content="donno2048">
+    <title>Your IP</title>
+</head>
+<body style="text-align:center">
         <script>
             var pc = new (window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection)({iceServers: [{urls: 'stun:stun.l.google.com:19302'}]}), ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g;
             pc.createDataChannel('');
