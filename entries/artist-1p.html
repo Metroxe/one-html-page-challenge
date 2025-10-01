@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="description" content="Find out how long you'd need to stream a song for the artist to make the same as a sale">
+    <meta name="author" content="m">
+    <meta name="github" content="g-i-t-h-u-b-u-s-e-r-n-a-m-e">
+    <title>How long will you need to stream a song for the artist need to get paid the same as a sale calc</title>
+    <style>
+      body {
+        background-color: mediumpurple;
+        color: black;
+        text-align: center;
+      }
+      .title {
+        font-size: 300%;
+        font-weight: bold;
+      }
+      .title > select {
+        font-size: 100%;
+        font-weight: bold;
+        font-family: serif;
+      }
+      .title > select > option {
+        font-weight: bold;
+      }
+      input {
+        width: 8%;
+      }
+      .selectors > select {
+        font-size: 150%;
+      }
+      .selectors > input {
+        font-size: 150%;
+      }
+      .selectors > button{
+        font-size: 150%;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="title">How long do you have to listen to a song on streaming for the artist to be paid the same as a sale for 
+      <select id="cost">
+        <option value="nice">69 Cents</option>
+        <option selected value="butshit">99 Cents</option>
+        <option value="buck29">$1.29</option>
+      </select>
+       on iTunes?</p>
+    <p class="selectors">
+      Song length:
+      <input type="number" id="lengthMin" placeholder="minutes">
+      <input type="number" id="lengthSec" placeholder="seconds">
+      <!--what streaming service gets used--></p><p class="selectors">
+      <select id="streamer">
+        <option disabled selected hidden>Streaming service</option>
+        <option value="spot">Spotify</option>
+        <option value="apple">Apple Music</option>
+        <option value="tidal">Tidal</option>
+        <option value="yt">YouTube Music</option>
+        <option value="pan">Pandora</option>
+        <option value="deez">Deezer</option>
+        <option value="amazon">Amazon Music</option>
+        <option value="nap">Napster</option>
+      </select></p><p class="selectors">
+      <button onclick="calc()">Calculate!</button>
+    </p>
+    <h1 id="output" class="title"></h1>
+    <script>
+      function tim(number){
+        return String(number).padStart(2, '0');
+      }
+      function calc(){
+       if (document.getElementById('streamer').value == 'spot'){
+          var stream = 0.003;}
+        if (document.getElementById('streamer').value == 'apple'){
+          var stream = 0.008;}
+       if (document.getElementById('streamer').value == 'tidal'){
+          var stream = 0.013;}
+        if (document.getElementById('streamer').value == 'yt'){
+          var stream = 0.008;}
+        if (document.getElementById('streamer').value == 'pan'){
+          var stream = 0.00133;}
+        if (document.getElementById('streamer').value == 'deez'){
+          var stream = 0.0011;}
+       if (document.getElementById('streamer').value == 'amazon'){
+          var stream = 0.00402;}
+        if (document.getElementById('streamer').value == 'nap'){
+          var stream = 0.019;}
+        if (document.getElementById('cost').value == 'nice'){
+          var worth = 0.483;}
+        if (document.getElementById('cost').value == 'butshit'){
+          var worth = 0.683;}
+        if (document.getElementById('cost').value == 'buck29'){
+          var worth = 0.903;}
+          var lengthMin = parseInt(document.getElementById('lengthMin').value, 10);
+          var lengthSec = parseInt(document.getElementById('lengthSec').value, 10);
+          var length = Math.floor(lengthMin * 60 + lengthSec);
+          var sex = Math.round(worth / stream * length)
+          var hours = Math.floor(sex / 3600);
+          var mins = Math.floor((sex / 60) - (hours * 60));
+          var sec = Math.floor(sex - (mins * 60) - (hours * 3600));
+        if (length >= 30)
+          document.getElementById('output').innerHTML = hours + ':' + tim(mins) + ':' + tim(sec);
+        else
+          document.getElementById('output').innerHTML = 'Streaming services typically just pay artists for streams over 30 seconds.'
+      }
+    </script>
+  </body>
+</html>
