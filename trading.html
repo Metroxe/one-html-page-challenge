@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AlgoTrader Dashboard</title>
+
+  <!-- ✅ Required meta tags for the repository entry -->
+  <meta name="description" content="A sleek AlgoTrader Dashboard displaying portfolio performance and asset data with interactive charts.">
+  <meta name="author" content="Yusuf Lusho">
+  <meta name="github" content="yusuf-lusho">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background-color: #0f0b1a;
+      color: white;
+      overflow-y: auto;
+    }
+
+    .header {
+      width: 90%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 30px auto 0;
+    }
+
+    .search {
+      background-color: #1e1935;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      color: white;
+      width: 300px;
+    }
+
+    .user {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #3a2f6c;
+    }
+
+    .dashboard {
+      width: 90%;
+      max-width: 1100px;
+      margin: 40px auto 80px;
+    }
+
+    .dashboard-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background-color: #1a1530;
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    canvas {
+      width: 100%;
+      height: 350px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2a2345;
+      color: #c5c6c7;
+    }
+
+    tr:nth-child(even) {
+      background-color: #1e1935;
+    }
+
+    tr:hover {
+      background-color: #322c54;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <input class="search" type="text" placeholder="Search assets..." />
+    <div class="user"></div>
+  </div>
+
+  <div class="dashboard">
+    <div class="dashboard-title">Dashboard</div>
+
+    <div class="card">
+      <h3>Portfolio Performance</h3>
+      <p>Your portfolio has grown by <strong>15.2%</strong> over the last 30 days.</p>
+      <canvas id="chart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Your Assets</h3>
+      <p>An overview of your current crypto and stock holdings.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Asset</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Change (24h)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Bitcoin (BTC)</td>
+            <td>Crypto</td>
+            <td>$48,200</td>
+            <td style="color: #00ff88;">+2.3%</td>
+          </tr>
+          <tr>
+            <td>Ethereum (ETH)</td>
+            <td>Crypto</td>
+            <td>$19,100</td>
+            <td style="color: #00ff88;">+1.8%</td>
+          </tr>
+          <tr>
+            <td>Apple (AAPL)</td>
+            <td>Stock</td>
+            <td>$23,500</td>
+            <td style="color: #ff4c4c;">−0.6%</td>
+          </tr>
+          <tr>
+            <td>Google (GOOGL)</td>
+            <td>Stock</td>
+            <td>$31,400</td>
+            <td style="color: #00ff88;">+0.9%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Sep 7', 'Sep 9', 'Sep 12', 'Sep 15', 'Sep 18', 'Sep 21', 'Sep 24', 'Sep 27', 'Sep 30', 'Oct 2', 'Oct 5'],
+        datasets: [{
+          label: 'Portfolio Value ($)',
+          data: [80000, 82000, 84000, 83000, 90000, 94000, 100000, 108000, 112000, 118000, 122000],
+          borderColor: '#805ad5',
+          backgroundColor: 'rgba(128, 90, 213, 0.2)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#9f7aea',
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            backgroundColor: '#2a2345',
+            titleColor: '#fff',
+            bodyColor: '#fff',
+            callbacks: {
+              label: function(context) {
+                return `Value: $${context.formattedValue}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#c5c6c7' },
+            grid: { color: '#2a2345' }
+          },
+          y: {
+            ticks: {
+              color: '#c5c6c7',
+              callback: function(value) {
+                return '$' + value / 1000 + 'k';
+              }
+            },
+            grid: { color: '#2a2345' }
+          }
+        },
+        animation: {
+          duration: 1500,
+          easing: 'easeOutQuart'
+        }
+      }
+    });
+  </script>
+</body>
+</html>
