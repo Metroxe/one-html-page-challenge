@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>HTML Viewer</title>
+        <meta name="description" content="HTML Viewer. Preview your code with option to download it">
+        <meta name="author" content="IL-Internet">
+        <meta name="github" content="IL-Internet">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                display: flex;
+                gap: 20px;
+            }
+            textarea,
+            iframe {
+                flex: 1;
+                height: 400px;
+                overflow: auto;
+                border: 1px solid #ccc;
+                padding: 10px;
+                box-sizing: border-box;
+                resize: none;
+            }
+            iframe {
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <h3>HTML Viewer</h3>
+        <button onclick="render()">Render</button>
+        <button onclick="download()">Download</button>
+        <div class="container">
+            <textarea id="htmlInput" wrap="off" placeholder="Paste HTML here"></textarea>
+            <iframe id="preview" sandbox="allow-scripts"></iframe>
+        </div>
+        <script>
+            let htmlContent = "";
+            function render() {
+                htmlContent = document.getElementById("htmlInput").value.trim();
+                if (!htmlContent) return;
+                const iframe = document.getElementById("preview");
+                iframe.srcdoc = htmlContent;
+            }
+            function download() {
+                htmlContent = document.getElementById("htmlInput").value.trim();
+                if (!htmlContent) return;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, "text/html");
+                const title = doc.querySelector("title")?.textContent.trim() || "untitled";
+                const blob = new Blob([htmlContent], { type: "text/html" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `${title}.html`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        </script>
+    </body>
+</html>
