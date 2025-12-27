@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+</head>
+<body>
+<div class="container">
+    <h4>Welcome To Your Digital Clock</h4>
+    <h5>Select Your Timezone</h5>
+    <select id="timezone-select">
+        <option value="UTC">UTC</option>
+        <option value="America/New_York">New York (UTC-5)</option>
+        <option value="Europe/London">London (UTC+0)</option>
+        <option value="Asia/Kolkata">India (UTC+5:30)</option>
+        <option value="Australia/Sydney">Sydney (UTC+11)</option>
+    </select>
+    <h2 id="clock">00:00:00</h2>
+</div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            color:aquamarine;
+        }
+        #clock {
+            font-size: 48px;
+            margin-top: 20px;
+        }
+        select {
+            font-size: 16px;
+            padding: 5px;
+        }
+        .container {
+            display: inline-block;
+            padding: 20px;
+            border: 2px solid #e3e1e1;
+            border-radius: 10px;
+            background-color: #211b1b;
+        }
+    </style>
+    <script>
+        const clockElement = document.getElementById('clock');
+        const timezoneSelect = document.getElementById('timezone-select');
+
+        function updateClock() {
+            const selectedTimezone = timezoneSelect.value;
+            const options = { timeZone: selectedTimezone, hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const formatter = new Intl.DateTimeFormat([], options);
+            const timeString = formatter.format(new Date());
+            clockElement.textContent = timeString;
+        }
+
+        timezoneSelect.addEventListener('change', updateClock);
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to display the time immediately
+    </script>
+</body>
+</html>
