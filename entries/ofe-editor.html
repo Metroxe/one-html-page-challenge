@@ -1132,17 +1132,342 @@ function exportHTML() {
 }
 
 // ===========================
-// EXPORT: PDF (browser print)
+// EXPORT: PDF (proper PDF generation)
 // ===========================
 function exportPDF() {
-  const style = document.createElement('style');
-  style.id = 'rcc-print-style';
-  style.textContent = '@media print{.app-header,.toolbar,.pane-header,.status-bar,.editor-pane{display:none!important}.main-container{height:auto!important;display:block!important}.preview-pane{display:block!important;flex:none!important}#preview{padding:0!important;overflow:visible!important}}';
-  document.head.appendChild(style);
-  updatePreview();
-  window.print();
-  setTimeout(function(){ const s=document.getElementById('rcc-print-style'); if(s)s.remove(); }, 1000);
+  showToast('Generating PDF...', 5000);
   closeExportMenu();
+  
+  setTimeout(function() {
+    try {
+      const content = editor.innerHTML;
+      const pdfDoc = createPDF(content);
+      download('document.pdf', pdfDoc, 'application/pdf');
+      showToast('PDF exported successfully!');
+    } catch(e) {
+      showToast('PDF generation failed. Please try again.');
+    }
+  }, 100);
+}
+
+function createPDF(html) {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  tempDiv.style.cssText = 'position:absolute;left:-9999px;width:700px;font-family:Georgia,serif;font-size:14px;line-height:1.6;color:#000';
+  document.body.appendChild(tempDiv);
+  
+  const elements = [];
+  Array.from(tempDiv.childNodes).forEach(function(node) {
+    elements.push(parseNodeForPDF(node));
+  });
+  
+  document.body.removeChild(tempDiv);
+  
+  const pdf = buildPDFDocument(elements);
+  return pdf;
+}
+
+function parseNodeForPDF(node) {
+  if (node.nodeType === 3) {
+    const text = node.textContent.trim();
+    return text ? { type: 'text', content: text, size: 12 } : null;
+  }
+  if (node.nodeType !== 1) return null;
+  
+  const tag = node.tagName.toLowerCase();
+  const text = node.textContent.trim();
+  
+  switch(tag) {
+    case 'h1': return { type: 'heading', content: text, size: 24, bold: true };
+    case 'h2': return { type: 'heading', content: text, size: 20, bold: true };
+    case 'h3': return { type: 'heading', content: text, size: 16, bold: true };
+    case 'h4': case 'h5': case 'h6': return { type: 'heading', content: text, size: 14, bold: true };
+    case 'p': return { type: 'paragraph', content: text, size: 12 };
+    case 'blockquote': return { type: 'quote', content: text, size: 12 };
+    case 'ul': case 'ol': {
+      const items = Array.from(node.querySelectorAll('li')).map(function(li) {
+        return li.textContent.trim();
+      });
+      return { type: tag === 'ul' ? 'bullet' : 'numbered', items: items, size: 12 };
+    }
+    case 'table': {
+      const rows = Array.from(node.querySelectorAll('tr')).map(function(tr) {
+        return Array.from(tr.querySelectorAll('td,th')).map(function(cell) {
+          return cell.textContent.trim();
+        });
+      });
+      return { type: 'table', rows: rows };
+    }
+    case 'hr': return { type: 'line' };
+    case 'br': return { type: 'break' };
+    case 'div': case 'section': case 'article': {
+      const children = [];
+      Array.from(node.childNodes).forEach(function(child) {
+        const parsed = parseNodeForPDF(child);
+        if (parsed) children.push(parsed);
+      });
+      return children.length === 1 ? children[0] : { type: 'group', children: children };
+    }
+    default: return text ? { type: 'text', content: text, size: 12 } : null;
+  }
+}
+
+function buildPDFDocument(elements) {
+  const pageWidth = 612;
+  const pageHeight = 792;
+  const margin = 72;
+  const contentWidth = pageWidth - 2 * margin;
+  
+  let pages = [];
+  let currentPage = { objects: [], fonts: {} };
+  let yPos = pageHeight - margin;
+  
+  elements.forEach(function(elem) {
+    if (!elem) return;
+    
+    if (elem.type === 'group') {
+      elem.children.forEach(function(child) {
+        processElement(child);
+      });
+      return;
+    }
+    
+    processElement(elem);
+  });
+  
+  function processElement(elem) {
+    if (!elem) return;
+    
+    const lineHeight = (elem.size || 12) * 1.4;
+    
+    if (yPos < margin + lineHeight) {
+      pages.push(currentPage);
+      currentPage = { objects: [], fonts: {} };
+      yPos = pageHeight - margin;
+    }
+    
+    switch(elem.type) {
+      case 'heading':
+      case 'paragraph':
+      case 'text':
+        if (elem.content) {
+          const lines = wrapText(elem.content, contentWidth, elem.size || 12);
+          lines.forEach(function(line) {
+            if (yPos < margin + lineHeight) {
+              pages.push(currentPage);
+              currentPage = { objects: [], fonts: {} };
+              yPos = pageHeight - margin;
+            }
+            currentPage.objects.push({
+              type: 'text',
+              x: margin,
+              y: yPos,
+              text: line,
+              size: elem.size || 12,
+              bold: elem.bold || false
+            });
+            yPos -= lineHeight;
+          });
+          yPos -= lineHeight * 0.3;
+        }
+        break;
+      
+      case 'quote':
+        if (elem.content) {
+          const lines = wrapText(elem.content, contentWidth - 40, elem.size || 12);
+          lines.forEach(function(line) {
+            if (yPos < margin + lineHeight) {
+              pages.push(currentPage);
+              currentPage = { objects: [], fonts: {} };
+              yPos = pageHeight - margin;
+            }
+            currentPage.objects.push({
+              type: 'text',
+              x: margin + 20,
+              y: yPos,
+              text: line,
+              size: elem.size || 12,
+              color: [0.4, 0.4, 0.4]
+            });
+            yPos -= lineHeight;
+          });
+          yPos -= lineHeight * 0.3;
+        }
+        break;
+      
+      case 'bullet':
+      case 'numbered':
+        elem.items.forEach(function(item, idx) {
+          const prefix = elem.type === 'bullet' ? '• ' : (idx + 1) + '. ';
+          const lines = wrapText(prefix + item, contentWidth - 30, 12);
+          lines.forEach(function(line, lineIdx) {
+            if (yPos < margin + lineHeight) {
+              pages.push(currentPage);
+              currentPage = { objects: [], fonts: {} };
+              yPos = pageHeight - margin;
+            }
+            currentPage.objects.push({
+              type: 'text',
+              x: margin + (lineIdx > 0 ? 20 : 0),
+              y: yPos,
+              text: line,
+              size: 12
+            });
+            yPos -= lineHeight;
+          });
+        });
+        yPos -= lineHeight * 0.3;
+        break;
+      
+      case 'line':
+        currentPage.objects.push({
+          type: 'line',
+          x1: margin,
+          y1: yPos,
+          x2: pageWidth - margin,
+          y2: yPos
+        });
+        yPos -= 20;
+        break;
+      
+      case 'break':
+        yPos -= lineHeight;
+        break;
+      
+      case 'table':
+        elem.rows.forEach(function(row) {
+          const cellText = row.join(' | ');
+          const lines = wrapText(cellText, contentWidth, 10);
+          lines.forEach(function(line) {
+            if (yPos < margin + 14) {
+              pages.push(currentPage);
+              currentPage = { objects: [], fonts: {} };
+              yPos = pageHeight - margin;
+            }
+            currentPage.objects.push({
+              type: 'text',
+              x: margin,
+              y: yPos,
+              text: line,
+              size: 10
+            });
+            yPos -= 14;
+          });
+        });
+        yPos -= 10;
+        break;
+    }
+  }
+  
+  if (currentPage.objects.length > 0) {
+    pages.push(currentPage);
+  }
+  
+  return generatePDFBytes(pages, pageWidth, pageHeight);
+}
+
+function wrapText(text, maxWidth, fontSize) {
+  const avgCharWidth = fontSize * 0.5;
+  const maxChars = Math.floor(maxWidth / avgCharWidth);
+  const words = text.split(' ');
+  const lines = [];
+  let currentLine = '';
+  
+  words.forEach(function(word) {
+    const testLine = currentLine ? currentLine + ' ' + word : word;
+    if (testLine.length <= maxChars) {
+      currentLine = testLine;
+    } else {
+      if (currentLine) lines.push(currentLine);
+      currentLine = word;
+    }
+  });
+  
+  if (currentLine) lines.push(currentLine);
+  return lines.length > 0 ? lines : [''];
+}
+
+function generatePDFBytes(pages, width, height) {
+  const objects = [];
+  let objNum = 1;
+  
+  const catalog = objNum++;
+  const pageTree = objNum++;
+  const fontObj = objNum++;
+  const fontBoldObj = objNum++;
+  
+  const pageObjs = [];
+  const contentObjs = [];
+  
+  pages.forEach(function() {
+    pageObjs.push(objNum++);
+    contentObjs.push(objNum++);
+  });
+  
+  let pdf = '%PDF-1.4\n';
+  const xref = [0];
+  
+  function addObject(content) {
+    xref.push(pdf.length);
+    pdf += objects.length + 1 + ' 0 obj\n' + content + '\nendobj\n';
+    objects.push(content);
+  }
+  
+  addObject('<</Type/Catalog/Pages ' + pageTree + ' 0 R>>');
+  
+  let pagesRef = '';
+  pageObjs.forEach(function(p) { pagesRef += p + ' 0 R '; });
+  addObject('<</Type/Pages/Kids[' + pagesRef + ']/Count ' + pages.length + '>>');
+  
+  addObject('<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>');
+  addObject('<</Type/Font/Subtype/Type1/BaseFont/Helvetica-Bold>>');
+  
+  pages.forEach(function(page, idx) {
+    addObject('<</Type/Page/Parent ' + pageTree + ' 0 R/MediaBox[0 0 ' + width + ' ' + height + ']/Contents ' + contentObjs[idx] + ' 0 R/Resources<</Font<</F1 ' + fontObj + ' 0 R/F2 ' + fontBoldObj + ' 0 R>>>>');
+    
+    let stream = 'BT\n';
+    page.objects.forEach(function(obj) {
+      if (obj.type === 'text') {
+        const font = obj.bold ? 'F2' : 'F1';
+        stream += '/' + font + ' ' + obj.size + ' Tf\n';
+        if (obj.color) {
+          stream += obj.color[0] + ' ' + obj.color[1] + ' ' + obj.color[2] + ' rg\n';
+        } else {
+          stream += '0 0 0 rg\n';
+        }
+        stream += obj.x + ' ' + obj.y + ' Td\n';
+        stream += '(' + escapePDFString(obj.text) + ') Tj\n';
+        stream += -obj.x + ' ' + -obj.y + ' Td\n';
+      } else if (obj.type === 'line') {
+        stream += 'ET\n';
+        stream += '0.8 0.8 0.8 RG\n';
+        stream += '1 w\n';
+        stream += obj.x1 + ' ' + obj.y1 + ' m\n';
+        stream += obj.x2 + ' ' + obj.y2 + ' l\nS\n';
+        stream += 'BT\n';
+      }
+    });
+    stream += 'ET';
+    
+    addObject('<</Length ' + stream.length + '>>\nstream\n' + stream + '\nendstream');
+  });
+  
+  const xrefPos = pdf.length;
+  pdf += 'xref\n0 ' + (objects.length + 1) + '\n';
+  pdf += '0000000000 65535 f\n';
+  xref.slice(1).forEach(function(pos) {
+    pdf += String(pos).padStart(10, '0') + ' 00000 n\n';
+  });
+  
+  pdf += 'trailer\n<</Size ' + (objects.length + 1) + '/Root 1 0 R>>\n';
+  pdf += 'startxref\n' + xrefPos + '\n%%EOF';
+  
+  const encoder = new TextEncoder();
+  return encoder.encode(pdf);
+}
+
+function escapePDFString(str) {
+  return str.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
 }
 
 // ===========================
