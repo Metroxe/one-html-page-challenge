@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f7f3ea">
+<title>蚕宝宝生长记</title>
+<meta property="og:title" content="蚕宝宝生长记 — 给 2-3 岁宝宝的蚕的生命周期互动游戏">
+<meta property="og:description" content="单文件 HTML，零依赖、无广告、无追踪。点击即可在浏览器里陪宝宝看蚕卵孵化、吃桑叶、吐丝结茧、变成飞蛾。">
+<meta property="og:image" content="https://mockxing.github.io/silkworm-life-cycle/assets/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mockxing.github.io/silkworm-life-cycle/assets/og.png">
+<meta name="description" content="A 75 KB single-file HTML toy that walks a 2-year-old through a silkworm life cycle - eggs, hatch, feed x15, cocoon, butterfly. No text, no build, no tracking, runs fully offline.">
+<meta name="author" content="mockxing">
+<meta name="github" content="mockxing">
+<style>
+  :root{
+    --cream:#f7f3ea; --cream-2:#efe8d6; --paper:#fffdf6;
+    --green-1:#7bb661; --green-2:#5a8f43; --green-3:#3f6b2c;
+    --ink:#4a3f33; --ink-soft:#6b5f4f;
+    --accent:#e88aa0; --accent-2:#f6c45c; --blue:#7fb3d4;
+    --metal-1:#e8eaee; --metal-2:#b9bdc6; --metal-3:#8a8f99; --metal-4:#5f636d;
+    --rust:#8b5a2b; --moss:#6f8f57;
+    --silk:#ffffff; --silk-2:#f6f6f1;
+    --shadow:0 8px 24px rgba(60,50,30,.18);
+    --radius:18px;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 800px at 20% -10%,#fff7e6 0%,transparent 60%),
+      radial-gradient(1000px 700px at 110% 110%,#eaf3e0 0%,transparent 55%),
+      linear-gradient(160deg,#fbf6ea 0%,#f1ead8 100%);
+    user-select:none;-webkit-user-select:none;
+    touch-action:none;
+  }
+  #app{display:flex;flex-direction:column;height:100dvh;min-height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
+
+  /* ===== 顶栏 ===== */
+  header.topbar{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
+    padding:10px 16px 6px;gap:10px;
+  }
+  .title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:18px;letter-spacing:.5px}
+  .title .leaf-ico{width:22px;height:22px;flex:0 0 auto}
+  .title small{display:block;font-size:10px;font-weight:600;color:var(--ink-soft);letter-spacing:2px}
+  .top-actions{display:flex;gap:8px}
+  .icon-btn{
+    width:38px;height:38px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,.7);box-shadow:0 2px 8px rgba(120,100,60,.12);
+    display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--ink);
+    transition:transform .15s, background .2s;
+  }
+  .icon-btn:active{transform:scale(.9)}
+  .icon-btn.off{opacity:.45}
+
+  /* ===== 步骤条 ===== */
+  nav.steps{
+    flex:0 0 auto;display:flex;gap:4px;padding:4px 10px 8px;overflow-x:auto;
+    scrollbar-width:none;
+  }
+  nav.steps::-webkit-scrollbar{display:none}
+  .step{
+    flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:6px 2px;border-radius:12px;cursor:pointer;color:var(--ink-soft);
+    transition:background .2s,color .2s,transform .15s;background:transparent;border:none;
+  }
+  .step .dot{
+    width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:14px;background:#fff;box-shadow:inset 0 0 0 2px #e3dcc8;color:var(--ink-soft);
+    transition:all .25s;
+  }
+  .step .label{font-size:10.5px;font-weight:700;white-space:nowrap}
+  .step.active .dot{background:linear-gradient(145deg,var(--green-1),var(--green-2));color:#fff;box-shadow:0 4px 10px rgba(90,143,67,.35);inset:0 0 0 2px transparent}
+  .step.active{color:var(--ink)}
+  .step.done .dot{background:linear-gradient(145deg,var(--accent-2),#e8a93a);color:#fff}
+  .step:active{transform:scale(.94)}
+
+  /* ===== 主舞台 ===== */
+  main.stage-wrap{flex:1 1 auto;position:relative;display:flex;align-items:center;justify-content:center;padding:6px 10px;min-height:0}
+  .stage{
+    position:relative;width:100%;max-width:760px;height:100%;
+    border-radius:var(--radius);overflow:hidden;
+    background:
+      radial-gradient(120% 80% at 50% 10%,#fffaf0 0%,#f7eed8 60%,#efe2c4 100%);
+    box-shadow:var(--shadow),inset 0 0 0 1px rgba(255,255,255,.6);
+  }
+  #scene{width:100%;height:100%;display:block;touch-action:none}
+  .hint-tap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+  .hint-tap .ring{
+    width:64px;height:64px;border-radius:50%;border:3px solid var(--accent);
+    animation:tapPulse 1.6s ease-in-out infinite;opacity:.85;
+  }
+  @keyframes tapPulse{0%,100%{transform:scale(.85);opacity:.85}50%{transform:scale(1.1);opacity:.35}}
+
+  /* ===== 底部解说 + 控制 ===== */
+  footer.bottom{flex:0 0 auto;padding:6px 12px calc(8px + var(--safe-bottom));display:flex;flex-direction:column;gap:8px}
+  .bubble{
+    position:relative;background:#fff;border-radius:16px;padding:10px 16px 11px;
+    font-size:14px;line-height:1.55;color:var(--ink);box-shadow:0 4px 14px rgba(90,75,40,.12);
+    border:1.5px solid #f0e7d2;min-height:42px;display:flex;align-items:center;gap:9px;
+  }
+  .bubble .face{font-size:20px;flex:0 0 auto}
+  .bubble .text{flex:1 1 auto}
+  .bubble.parent{font-size:13px;color:var(--ink-soft)}
+  .controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .chip{
+    border:1.5px solid #e3dcc8;background:rgba(255,255,255,.75);color:var(--ink);
+    padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(120,100,60,.1);
+    transition:transform .15s,background .2s;
+  }
+  .chip:active{transform:scale(.92)}
+  .chip:disabled{opacity:.35;cursor:not-allowed}
+  .chip.primary{background:linear-gradient(145deg,var(--green-1),var(--green-2));color:#fff;border-color:transparent}
+
+  /* ===== 选择卡浮层 ===== */
+  .overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;z-index:30;
+    background:radial-gradient(circle at 50% 45%,rgba(40,30,15,.28),rgba(40,30,15,.5));backdrop-filter:blur(2px)}
+  .overlay.show{display:flex;animation:fadeIn .3s}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .choose-cards{display:flex;gap:12px;padding:16px;max-width:560px}
+  .card{
+    flex:0 0 auto;width:clamp(96px,28vw,128px);cursor:pointer;
+    background:var(--paper);border-radius:16px;padding:12px 8px 10px;
+    border:2px solid #f0e7d2;box-shadow:0 8px 20px rgba(60,40,15,.18);
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    transition:transform .18s,box-shadow .2s,border-color .2s;
+  }
+  .card:hover{transform:translateY(-4px) scale(1.02);border-color:var(--accent)}
+  .card:active{transform:scale(.96)}
+  .card .thumb{width:100%;aspect-ratio:1/1}
+  .card .name{font-size:12.5px;font-weight:800;color:var(--ink)}
+  .card .sub{font-size:10px;color:var(--ink-soft)}
+
+  /* ===== 反悔按钮 ===== */
+  .undo-fab{
+    position:absolute;top:12px;left:12px;z-index:25;display:none;
+    align-items:center;gap:6px;padding:8px 14px;border-radius:999px;
+    background:rgba(255,255,255,.92);border:1.5px solid #f0e7d2;color:var(--ink);
+    font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(90,75,40,.18);
+  }
+  .undo-fab.show{display:inline-flex;animation:popIn .25s}
+  @keyframes popIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* ===== 桌面宽屏布局 ===== */
+  @media(min-width:900px){
+    #app{padding:14px 16px}
+    .desktop-grid{display:grid;grid-template-columns:1fr 240px;grid-template-rows:auto 1fr auto;gap:12px;height:100%;max-width:960px;margin:0 auto;width:100%}
+    header.topbar{grid-column:1/3;grid-row:1}
+    main.stage-wrap{grid-column:1;grid-row:2;padding:0}
+    nav.steps{grid-column:2;grid-row:2;flex-direction:column;gap:6px;overflow-y:auto;padding:8px;background:rgba(255,255,255,.5);border-radius:14px;box-shadow:var(--shadow)}
+    nav.steps .step{flex-direction:row;justify-content:flex-start;gap:10px;padding:10px 12px}
+    nav.steps .step .label{font-size:13px}
+    nav.steps .step .dot{width:30px;height:30px}
+    footer.bottom{grid-column:1/3;grid-row:3}
+    .stage{max-width:900px;margin:0 auto}
+  }
+
+  /* ===== 点按涟漪 ===== */
+  .ripple{position:absolute;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(255,255,255,.75) 0%,rgba(232,138,160,.4) 55%,transparent 72%);}
+
+  /* ===== 引导手指 ===== */
+  .hint-tap{position:absolute;display:none;pointer-events:none;transform:translate(-50%,-50%);z-index:20;}
+  .hint-tap .ring{width:56px;height:56px;border-radius:50%;border:3px solid var(--accent);
+    animation:tapPulse 1.5s ease-in-out infinite;}
+  .hint-tap .finger{position:absolute;left:50%;top:50%;font-size:30px;transform:translate(-50%,-30%);
+    animation:tapBounce 1.1s ease-in-out infinite;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));}
+  @keyframes tapBounce{0%,100%{transform:translate(-50%,-30%)}50%{transform:translate(-50%,-48%)}}
+
+  /* ===== 过场淡入 ===== */
+  .stage-fade{position:absolute;inset:0;border-radius:var(--radius);pointer-events:none;z-index:28;
+    background:radial-gradient(circle at 50% 45%,#fff7e6 0%,#f3e7c8 100%);opacity:0;transition:opacity .32s ease;}
+  .stage-fade.show{opacity:1;}
+
+  /* ===== 成长进度条 ===== */
+  .progress{display:none;align-items:center;gap:10px;padding:2px 4px 0;}
+  .progress.show{display:flex;}
+  .progress .track{flex:1 1 auto;height:8px;border-radius:999px;background:rgba(120,100,60,.14);overflow:hidden;}
+  .progress .fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--green-1),var(--green-2));transition:width .5s ease;}
+  .progress .ptxt{font-size:12px;font-weight:800;color:var(--ink);white-space:nowrap;}
+
+  /* ===== 无障碍：尊重减少动效偏好 ===== */
+  @media (prefers-reduced-motion: reduce){
+    .tapPulse,.tapBounce,.ring,.finger,.toast,.card,.chip,.icon-btn{animation:none!important;}
+    *{transition-duration:.001ms!important;}
+  }
+
+  /* 通用动画类 */
+  .fadeout{animation:fadeOut .6s forwards}
+  @keyframes fadeOut{to{opacity:0;visibility:hidden}}
+  .fadein{animation:fadeIn .5s}
+  .toast{position:absolute;bottom:78px;left:50%;transform:translateX(-50%);background:rgba(60,45,25,.92);color:#fff;padding:8px 16px;border-radius:999px;font-size:13px;z-index:40;animation:toastIn .3s;pointer-events:none}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="desktop-grid" id="grid">
+
+    <header class="topbar">
+      <div class="title">
+        <svg class="leaf-ico" viewBox="0 0 24 24"><path d="M3 21C3 12 9 4 21 3c0 12-8 18-18 18z" fill="#7bb661"/><path d="M3 21C7 16 13 11 19 8" stroke="#3f6b2c" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+        <span>蚕宝宝生长记<small>SILKWORM · 生命之旅</small></span>
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn" id="btnSound" title="声音开关">🔊</button>
+        <button class="icon-btn" id="btnReset" title="重玩">↺</button>
+      </div>
+    </header>
+
+    <nav class="steps" id="steps"></nav>
+
+    <main class="stage-wrap">
+      <div class="stage" id="stage">
+        <svg id="scene" viewBox="0 0 800 560" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="stage-fade" id="stageFade"></div>
+        <div class="hint-tap" id="hintTap"><div class="ring"></div><div class="finger">👆</div></div>
+        <button class="undo-fab" id="undoFab">↩ 反悔</button>
+        <div class="overlay" id="overlay">
+          <div class="choose-cards" id="chooseCards"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bottom">
+      <div class="bubble" id="bubble">
+        <span class="face" id="bubbleFace">🌱</span>
+        <span class="text" id="bubbleText">点中间的铅笔盒，开始养蚕吧！</span>
+      </div>
+      <div class="progress" id="progress">
+        <div class="track"><div class="fill" id="feedFill"></div></div>
+        <span class="ptxt" id="progressText">🍃 0/15 · 1龄</span>
+      </div>
+      <div class="controls" id="controls"></div>
+    </footer>
+
+  </div>
+</div>
+
+<script>
+"use strict";
+/* =========================================================
+   蚕宝宝生长记 — 单文件实现
+   状态机: closed → opening → eggs → hatch → grow →
+           spinReady → choose → spinCocoon/spinFan/spinStar →
+           donePupa/doneFan/doneStar
+   ========================================================= */
+const SVGNS = "http://www.w3.org/2000/svg";
+const VB = {w:800, h:560};
+const $ = (id) => document.getElementById(id);
+const svgEl = (n, a={}) => { const e=document.createElementNS(SVGNS,n); for(const k in a) e.setAttribute(k,a[k]); return e; };
+const rand = (a,b) => a + Math.random()*(b-a);
+const pick = arr => arr[Math.floor(Math.random()*arr.length)];
+const clamp = (v,a,b) => Math.max(a,Math.min(b,v));
+
+/* ---------- 舞台坐标系（viewBox 800x560） ---------- */
+// 盒内活动区域（家）
+const HOME = { x:60, y:90, w:680, h:440 };
+// 蚕可活动区域（盒内边距）
+const PLAY = { x:90, y:140, w:620, h:360 };
+
+/* =========================================================
+   1) Web Audio 音效合成
+   ========================================================= */
+class Audio {
+  constructor(){ this.ctx=null; this.on=true; this.ready=false; }
+  init(){
+    if(this.ctx) return;
+    try{ this.ctx = new (window.AudioContext||window.webkitAudioContext)(); this.ready=true; }catch(e){}
+  }
+  resume(){ if(this.ctx && this.ctx.state==='suspended') this.ctx.resume(); }
+  tone({freq=440,dur=.15,type='sine',gain=.2,attack=.005,release=.08,slideTo=null,t0=0}={}){
+    if(!this.on||!this.ctx) return;
+    const t = this.ctx.currentTime + t0;
+    const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
+    o.type=type; o.frequency.setValueAtTime(freq,t);
+    if(slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t+dur);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(gain, t+attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur+release);
+    o.connect(g).connect(this.ctx.destination);
+    o.start(t); o.stop(t+dur+release+.02);
+  }
+  noise({dur=.2,gain=.15,filterFreq=1200,filterQ=1,type='lowpass',t0=0}={}){
+    if(!this.on||!this.ctx) return;
+    const t=this.ctx.currentTime+t0;
+    const len=Math.floor(this.ctx.sampleRate*dur);
+    const buf=this.ctx.createBuffer(1,len,this.ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(1-i/len);
+    const src=this.ctx.createBufferSource(); src.buffer=buf;
+    const f=this.ctx.createBiquadFilter(); f.type=type; f.frequency.value=filterFreq; f.Q.value=filterQ;
+    const g=this.ctx.createGain(); g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    src.connect(f).connect(g).connect(this.ctx.destination);
+    src.start(t);
+  }
+  // 音效封装
+  openBox(){ // 吱呀 + 卡扣
+    this.tone({freq:180,dur:.55,type:'sawtooth',gain:.12,slideTo:420,release:.1});
+    this.tone({freq:260,dur:.06,type:'square',gain:.18,t0:.5});
+  }
+  hatch(){ this.tone({freq:880,dur:.1,type:'triangle',gain:.18}); this.tone({freq:1320,dur:.12,type:'triangle',gain:.12,t0:.08}); }
+  dropLeaf(){ this.noise({dur:.18,gain:.06,filterFreq:2400,type:'bandpass',filterQ:.6}); }
+  eat(){ // 沙沙咔嚓
+    this.noise({dur:.22,gain:.13,filterFreq:900,filterQ:1.2});
+    this.tone({freq:220,dur:.04,type:'square',gain:.06,t0:.05});
+  }
+  wiggle(){ this.tone({freq:660,dur:.12,type:'sine',gain:.12,slideTo:880}); }
+  molt(){ this.tone({freq:330,dur:.4,type:'sine',gain:.12,slideTo:660,release:.15}); }
+  spinStart(){ this.tone({freq:140,dur:1.2,type:'sawtooth',gain:.05,slideTo:200,release:.2}); }
+  spinLoop(){ this.noise({dur:.5,gain:.03,filterFreq:600,filterQ:2}); }
+  stage(){ this.tone({freq:523,dur:.1,type:'triangle',gain:.14}); this.tone({freq:784,dur:.12,type:'triangle',gain:.12,t0:.08}); }
+  done(){ // 完成叮
+    [523,659,784,1047].forEach((f,i)=>this.tone({freq:f,dur:.18,type:'triangle',gain:.16,t0:i*.1}));
+  }
+  butterfly(){ this.tone({freq:880,dur:.25,type:'sine',gain:.12,slideTo:1320}); this.tone({freq:1320,dur:.2,type:'sine',gain:.1,t0:.18,slideTo:1760}); }
+  fanWave(){ this.noise({dur:.35,gain:.08,filterFreq:500,filterQ:.8}); this.tone({freq:300,dur:.3,type:'sine',gain:.06,slideTo:420}); }
+  tap(){ this.tone({freq:660,dur:.05,type:'square',gain:.05}); }
+  vibrate(){ if(navigator.vibrate) navigator.vibrate(30); }
+}
+const AU = new Audio();
+
+/* =========================================================
+   2) 状态机 & 全局状态
+   ========================================================= */
+const STATE = {
+  cur:'closed', prev:[],
+  feedCount:0, instar:1, // 龄数 1..5
+  ending:null, // 'cocoon'|'fan'|'star'
+  mute:false,
+};
+const STAGES = [
+  {id:'closed',    label:'蚕宝宝的家', icon:'🏠'},
+  {id:'eggs',      label:'蚕卵',     icon:'🥚'},
+  {id:'hatch',     label:'孵化',     icon:'🐜'},
+  {id:'grow',      label:'成长',     icon:'🐛'},
+  {id:'spinReady', label:'吐丝',     icon:'🧵'},
+  {id:'done',      label:'结茧',     icon:'✨'},
+];
+function setState(s, opts={}){
+  if(STATE.cur===s && !opts.force) return;
+  if(!opts.noPush && STATE.cur!=='closed') STATE.prev.push(STATE.cur);
+  STATE.cur=s;
+  renderSteps();
+  if(!opts.silent) AU.stage();
+  onStageEnter(s);
+}
+function canGoBackTo(target){
+  const order=['closed','opening','eggs','hatch','grow','spinReady','choose','done'];
+  return order.indexOf(target) < order.indexOf(STATE.cur);
+}
+
+/* =========================================================
+   3) SVG defs（渐变 / 滤镜）
+   ========================================================= */
+const scene = $('scene');
+function buildDefs(){
+  const defs = svgEl('defs');
+
+  // 铝合金拉丝
+  const gMetal = svgEl('linearGradient',{id:'metalGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#eef0f3'],['30%','#d4d8de'],['55%','#b9bdc6'],['80%','#cfd3da'],['100%','#a7abb4']]
+    .forEach(([o,c])=>{gMetal.appendChild(svgEl('stop',{offset:o,'stop-color':c}))});
+  defs.appendChild(gMetal);
+
+  const gMetalSide = svgEl('linearGradient',{id:'metalSide',x1:0,y1:0,x2:1,y2:0});
+  [['0%','#9a9ea6'],['45%','#d4d8de'],['55%','#e8eaee'],['100%','#8a8f99']]
+    .forEach(([o,c])=>gMetalSide.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gMetalSide);
+
+  // 拉丝纹理
+  const brush = svgEl('filter',{id:'brush',x:'-5%',y:'-5%',width:'110%',height:'110%'});
+  brush.appendChild(svgEl('feTurbulence',{type:'fractalNoise',baseFrequency:'0.9 0.12',numOctaves:'2',seed:'7',result:'n'}));
+  brush.appendChild(svgEl('feColorMatrix',{in:'n',type:'matrix',values:'0 0 0 0 0.55 0 0 0 0 0.56 0 0 0 0 0.6 0 0 0 0.18 0'}));
+  const bl=svgEl('feGaussianBlur',{stdDeviation:'0.4'}); brush.appendChild(bl);
+  defs.appendChild(brush);
+
+  // 磨损/锈迹 mask
+  const rust = svgEl('filter',{id:'rust',x:'-10%',y:'-10%',width:'120%',height:'120%'});
+  rust.appendChild(svgEl('feTurbulence',{type:'fractalNoise',baseFrequency:'0.012 0.018',numOctaves:'3',seed:'13',result:'rn'}));
+  rust.appendChild(svgEl('feColorMatrix',{in:'rn',type:'matrix',values:'0 0 0 0 0.31 0 0 0 0 0.20 0 0 0 0 0.08 0 0 0 2.2 -0.6'}));
+  defs.appendChild(rust);
+
+  // 投影
+  const sh = svgEl('filter',{id:'softShadow',x:'-30%',y:'-30%',width:'160%',height:'160%'});
+  sh.appendChild(svgEl('feGaussianBlur',{in:'SourceAlpha',stdDeviation:'4'}));
+  sh.appendChild(svgEl('feOffset',{dx:'2',dy:'6',result:'o'}));
+  const m=svgEl('feMerge'); m.appendChild(svgEl('feMergeNode',{in:'o'})); m.appendChild(svgEl('feMergeNode',{in:'SourceGraphic'}));
+  sh.appendChild(m);
+  defs.appendChild(sh);
+
+  // 纸巾+桑叶底
+  const gPaper = svgEl('radialGradient',{id:'homeBg',cx:'50%',cy:'40%',r:'75%'});
+  [['0%','#fffaf0'],['60%','#f7eed8'],['100%','#e8d9b8']].forEach(([o,c])=>gPaper.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gPaper);
+
+  const gLeaf = svgEl('linearGradient',{id:'leafGrad',x1:0,y1:0,x2:1,y2:1});
+  [['0%','#8ec96a'],['50%','#6fa84e'],['100%','#4f8238']].forEach(([o,c])=>gLeaf.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gLeaf);
+
+  // 蚕宝宝身体
+  const gWorm = svgEl('linearGradient',{id:'wormGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#fdfbf3'],['55%','#f3ead2'],['100%','#e3d4b0']].forEach(([o,c])=>gWorm.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gWorm);
+  const gWormMature = svgEl('linearGradient',{id:'wormMatureGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#fffbe6'],['55%','#f5e9b8'],['100%','#e6cd7a']].forEach(([o,c])=>gWormMature.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gWormMature);
+
+  // 蚕茧半透明
+  const gCocoon = svgEl('radialGradient',{id:'cocoonGrad',cx:'40%',cy:'35%',r:'70%'});
+  [['0%','#ffffff'],['60%','#f4f1e6'],['100%','#d8d2c0']].forEach(([o,c])=>gCocoon.appendChild(svgEl('stop',{offset:o,'stop-color':c,'stop-opacity':o==='100%'?.85:.95})));
+  defs.appendChild(gCocoon);
+  // 蛹
+  const gPupa = svgEl('radialGradient',{id:'pupaGrad',cx:'40%',cy:'35%',r:'70%'});
+  [['0%','#c8a06a'],['60%','#9c6f3e'],['100%','#6b4a24']].forEach(([o,c])=>gPupa.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gPupa);
+
+  // 开始养蚕按钮（绿色渐变）
+  const gBtn = svgEl('linearGradient',{id:'btnGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#8ec96a'],['50%','#6fa84e'],['100%','#4f8238']].forEach(([o,c])=>gBtn.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gBtn);
+  // 金属顶部高光
+  const gShine = svgEl('linearGradient',{id:'shineGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','rgba(255,255,255,.85)'],['100%','rgba(255,255,255,0)']].forEach(([o,c])=>gShine.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gShine);
+  // 名牌纸
+  const gLabel = svgEl('linearGradient',{id:'labelGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#fffdf6'],['100%','#f0e7d2']].forEach(([o,c])=>gLabel.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gLabel);
+
+  // 香槟银金属（暖调）
+  const gChamp = svgEl('linearGradient',{id:'champGrad',x1:0,y1:0,x2:0,y2:1});
+  [['0%','#f3ece0'],['28%','#e0d6c2'],['52%','#c9bda4'],['78%','#ddd2bd'],['100%','#b6a888']]
+    .forEach(([o,c])=>gChamp.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gChamp);
+  const gChampSide = svgEl('linearGradient',{id:'champSide',x1:0,y1:0,x2:1,y2:0});
+  [['0%','#a99a7e'],['45%','#ddd2bd'],['55%','#f1e9da'],['100%','#9c8d72']]
+    .forEach(([o,c])=>gChampSide.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gChampSide);
+  // 边缘中性磨损（非橙锈）
+  const gWear = svgEl('radialGradient',{id:'wearGrad',cx:'50%',cy:'50%',r:'65%'});
+  [['0%','rgba(120,100,70,0)'],['70%','rgba(120,100,70,0)'],['100%','rgba(110,90,60,.18)']]
+    .forEach(([o,c])=>gWear.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gWear);
+
+  // 丝（洁白，靠轮廓描边和投影与背景拉开对比）
+  const gSilk = svgEl('radialGradient',{id:'silkGrad',cx:'50%',cy:'40%',r:'70%'});
+  [['0%','#ffffff'],['70%','#faf9f6'],['100%','#eae5d8']].forEach(([o,c])=>gSilk.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gSilk);
+
+  // 扇柄木
+  const gWood = svgEl('linearGradient',{id:'woodGrad',x1:0,y1:0,x2:1,y2:0});
+  [['0%','#b07a44'],['50%','#d9a86a'],['100%','#8a5a2c']].forEach(([o,c])=>gWood.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gWood);
+
+  // 心形/星形高光
+  const gHi = svgEl('radialGradient',{id:'hiGrad',cx:'35%',cy:'30%',r:'60%'});
+  [['0%','rgba(255,255,255,.9)'],['60%','rgba(255,255,255,.15)'],['100%','rgba(255,255,255,0)']].forEach(([o,c])=>gHi.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gHi);
+
+  // 外晕
+  const gGlow = svgEl('radialGradient',{id:'glowGrad',cx:'50%',cy:'50%',r:'55%'});
+  [['0%','rgba(255,255,255,.5)'],['60%','rgba(255,240,210,.18)'],['100%','rgba(255,240,210,0)']].forEach(([o,c])=>gGlow.appendChild(svgEl('stop',{offset:o,'stop-color':c})));
+  defs.appendChild(gGlow);
+
+  scene.appendChild(defs);
+}
+
+/* =========================================================
+   4) 场景层管理
+   ========================================================= */
+const LAYERS = {};
+function buildLayers(){
+  ['bg','home','leaves','worms','cocoon','fans','butterflies','fx','ui'].forEach(id=>{
+    const g=svgEl('g',{id:'L_'+id}); scene.appendChild(g); LAYERS[id]=g;
+  });
+}
+function clearLayer(name){
+  while(LAYERS[name].firstChild) LAYERS[name].removeChild(LAYERS[name].firstChild);
+}
+function clearFxAndEndings(){
+  clearLayer('fx'); clearLayer('butterflies');
+  clearLayer('cocoon'); clearLayer('fans');
+  Fan.group=null; Fan.silkLayers=[]; Fan.bones=null; // 清扇子引用，防止重玩后残留
+  Cocoon.list=[];
+}
+
+/* =========================================================
+   5) 铅笔盒（旧铝合金）
+   ========================================================= */
+const PencilBox = {
+  group:null, lid:null, built:false,
+  build(){
+    if(this.built){
+      this.group.style.display='';
+      if(this.lid){
+        this.lid.setAttribute('transform',`rotate(0 ${this.cx} ${this.hingeY})`);
+        this.lid.style.opacity='1';
+      }
+      return;
+    }
+    const g=svgEl('g',{id:'pencilBox'}); this.group=g;
+    const cx=VB.w/2, by=140, w=380, h=220;
+    const top=by, bot=by+h;
+    // 地面投影（柔和椭圆）
+    g.appendChild(svgEl('ellipse',{cx, cy:bot+24, rx:w/2+6, ry:14, fill:'rgba(80,60,30,.12)'}));
+    // 盒身底座（奶油色侧面厚度）
+    g.appendChild(svgEl('rect',{x:cx-w/2, y:by+h-4, width:w, height:26, rx:12, fill:'#dbc8a0'}));
+    g.appendChild(svgEl('rect',{x:cx-w/2+8, y:by+h, width:w-16, height:3, rx:1.5, fill:'rgba(255,255,255,.35)'}));
+    // 盒身内壁（翻盖后可见的暖白内里）
+    g.appendChild(svgEl('rect',{x:cx-w/2, y:top, width:w, height:h, rx:22, fill:'#fff8ee', stroke:'#d8c8a0', 'stroke-width':1.2}));
+
+    // ===== 盒盖（香槟银拉丝金属） =====
+    const lidG=svgEl('g',{id:'lid', transform:`rotate(0 ${cx-w/2} ${by+h/2})`});
+    // 盖主体
+    lidG.appendChild(svgEl('rect',{x:cx-w/2, y:top, width:w, height:h, rx:22, fill:'url(#champGrad)', stroke:'#9c8d72','stroke-width':1.4}));
+    // 横向拉丝高光（金属感）
+    for(let i=0;i<5;i++){
+      const ly=top+34+i*((h-68)/4);
+      lidG.appendChild(svgEl('line',{x1:cx-w/2+22, y1:ly, x2:cx+w/2-22, y2:ly, stroke:'rgba(255,255,255,.16)','stroke-width':1}));
+    }
+    // 顶部高光条
+    lidG.appendChild(svgEl('rect',{x:cx-w/2+12, y:top+8, width:w-24, height:14, rx:7, fill:'url(#shineGrad)', opacity:.7}));
+    // 底部暗影
+    lidG.appendChild(svgEl('rect',{x:cx-w/2+12, y:bot-16, width:w-24, height:10, rx:5, fill:'rgba(120,100,70,.16)'}));
+    // 边缘中性磨损（非橙锈）
+    lidG.appendChild(svgEl('rect',{x:cx-w/2, y:top, width:w, height:h, rx:22, fill:'url(#wearGrad)'}));
+    // 接缝虚线（翻盖分割）
+    lidG.appendChild(svgEl('line',{x1:cx-w/2+24, y1:bot-6, x2:cx+w/2-24, y2:bot-6, stroke:'rgba(120,100,70,.3)','stroke-width':1, 'stroke-dasharray':'3 3'}));
+
+    // 四角铆钉（金属小圆）
+    [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sy])=>{
+      const rx=cx+sx*(w/2-18), ry = sy<0 ? top+18 : bot-18;
+      lidG.appendChild(svgEl('circle',{cx:rx, cy:ry, r:5.5, fill:'url(#champSide)', stroke:'#8a7c62','stroke-width':.8}));
+      lidG.appendChild(svgEl('circle',{cx:rx-1.5, cy:ry-1.5, r:1.6, fill:'rgba(255,255,255,.85)'}));
+    });
+
+    // 中心名牌（拉丝银牌 + 蚀刻文字）
+    const lpW=250, lpH=58, lpY=top+44;
+    lidG.appendChild(svgEl('rect',{x:cx-lpW/2, y:lpY, width:lpW, height:lpH, rx:12, fill:'url(#champGrad)', stroke:'#8a7c62','stroke-width':1.2}));
+    lidG.appendChild(svgEl('rect',{x:cx-lpW/2, y:lpY, width:lpW, height:lpH, rx:12, fill:'url(#wearGrad)'}));
+    const title=svgEl('text',{x:cx, y:lpY+lpH/2+1, 'text-anchor':'middle','font-size':21, 'font-weight':800, fill:'#5e5240', 'letter-spacing':4});
+    title.textContent='蚕宝宝的家';
+    lidG.appendChild(title);
+    const sub=svgEl('text',{x:cx, y:lpY+lpH/2+17, 'text-anchor':'middle','font-size':7.5, fill:'#8a7c62','letter-spacing':3});
+    sub.textContent='SILKWORM HOME';
+    lidG.appendChild(sub);
+
+    // 「开始养蚕」按钮（绿渐变 CTA + 金属描边）
+    const btnW=170, btnH=44, btnY=top+122;
+    const btn=svgEl('g',{id:'startBtn'});
+    btn.appendChild(svgEl('rect',{x:cx-btnW/2, y:btnY+4, width:btnW, height:btnH, rx:22, fill:'rgba(60,40,15,.18)'}));
+    btn.appendChild(svgEl('rect',{x:cx-btnW/2, y:btnY, width:btnW, height:btnH, rx:22, fill:'url(#btnGrad)', stroke:'#4a7a30','stroke-width':1.5}));
+    btn.appendChild(svgEl('rect',{x:cx-btnW/2+6, y:btnY+3, width:btnW-12, height:13, rx:6, fill:'url(#shineGrad)', opacity:.6}));
+    const btnTxt=svgEl('text',{x:cx, y:btnY+btnH/2+6, 'text-anchor':'middle','font-size':17, 'font-weight':800, fill:'#fff', 'letter-spacing':2});
+    btnTxt.textContent='开始养蚕 ▸';
+    btn.appendChild(btnTxt);
+    btn.style.cursor='pointer';
+    lidG.appendChild(btn);
+
+    // 中部金属卡扣（3D）
+    const clY=top+186;
+    lidG.appendChild(svgEl('rect',{x:cx-14, y:clY-9, width:28, height:18, rx:5, fill:'url(#champSide)', stroke:'#8a7c62','stroke-width':1}));
+    lidG.appendChild(svgEl('rect',{x:cx-9, y:clY-4, width:18, height:8, rx:3, fill:'#8a7c62'}));
+
+    // 底部铰链（小金属轴）
+    g.appendChild(svgEl('rect',{x:cx-w/2+16, y:bot-2, width:w-32, height:5, rx:2.5, fill:'url(#champSide)'}));
+    g.appendChild(svgEl('circle',{cx:cx-w/2+20, cy:bot+0.5, r:3, fill:'#8a7c62'}));
+    g.appendChild(svgEl('circle',{cx:cx+w/2-20, cy:bot+0.5, r:3, fill:'#8a7c62'}));
+
+    this.lid=lidG; this.hingeX=cx-w/2; this.hingeY=by+h/2; this.cx=cx;
+    g.appendChild(lidG);
+    LAYERS.bg.appendChild(g);
+    this.built=true;
+  },
+  open(cb){
+    if(!this.lid) return;
+    AU.openBox();
+    // 翻盖动画：绕左侧竖边铰链旋转，从右往左开（右缘向左上扫开）
+    const lid=this.lid, hx=this.hingeX, hy=this.hingeY;
+    let start=null; const dur=1100; const TARGET=-170;
+    const step=(t)=>{
+      if(!start) start=t;
+      const p=Math.min(1,(t-start)/dur);
+      // 缓动：先快后慢，末段轻微过甩
+      let ang=TARGET*Math.min(1,p/0.9);
+      if(p>0.9){ ang=TARGET+Math.sin((p-0.9)/0.1*Math.PI)*4; }
+      lid.setAttribute('transform',`rotate(${ang.toFixed(2)} ${hx} ${hy})`);
+      if(p<1) requestAnimationFrame(step);
+      else {
+        lid.style.transition='opacity .5s'; lid.style.opacity='0';
+        setTimeout(()=>{
+          if(this.group) this.group.style.display='none';
+          zoomHome(true); // 镜头推近聚焦盒内
+          cb&&cb();
+        }, 480);
+      }
+    };
+    requestAnimationFrame(step);
+  }
+};
+
+/* 镜头推近：对 .stage 容器做 CSS 缩放（视觉聚焦，不改动 SVG 内部坐标，保证点击坐标判断准确） */
+function zoomHome(in_){
+  const s=$('stage');
+  s.style.transition='transform 1s cubic-bezier(.4,0,.2,1)';
+  s.style.transformOrigin='center center';
+  requestAnimationFrame(()=>{ s.style.transform = in_? 'scale(1.05)':'scale(1)'; });
+}
+
+/* =========================================================
+   6) 蚕宝宝
+   ========================================================= */
+class Silkworm{
+  constructor(i){
+    this.id=i; this.x=rand(PLAY.x+40,PLAY.x+PLAY.w-40); this.y=rand(PLAY.y+40,PLAY.y+PLAY.h-40);
+    this.angle=rand(0,360); this.speed=rand(.25,.55);
+    this.wiggleT=0; this.eatTarget=null; this.eating=false; this.eatTimer=0;
+    this.stuckCount=0; this.lastEatDist=9999; // 卡死检测
+    this.node=null; this.bodyLen=0;
+    this.build();
+  }
+  get size(){ // 不同龄期大小
+    return [0, 0.5, 0.7, 0.9, 1.1, 1.35][STATE.instar] || 1;
+  }
+  get isMature(){ return STATE.instar>=5; }
+  build(){
+    const g=svgEl('g',{class:'worm'});
+    this.node=g;
+    this.draw();
+    LAYERS.worms.appendChild(g);
+    g.addEventListener('click',(e)=>{ e.stopPropagation(); this.wiggle(); AU.wiggle(); });
+  }
+  draw(){
+    const g=this.node; while(g.firstChild) g.removeChild(g.firstChild);
+    const s=this.size;
+    const segs = this.isMature? 9 : (STATE.instar>=3?8:7);
+    const segR = (this.isMature?9:7)*s;
+    const segLen = (this.isMature?13:11)*s;
+    const total = segs*segLen;
+    this.bodyLen = total;
+    const mature = this.isMature;
+    // 蚁蚕特殊：黑细小蚂蚁
+    const ant = STATE.instar===1;
+    const bodyFill = ant? '#3a3328' : (mature? 'url(#wormMatureGrad)':'url(#wormGrad)');
+    const headFill = ant? '#1f1a12' : '#6b4a2c';
+    // 身体分节（从尾到头）
+    for(let i=segs-1;i>=0;i--){
+      const cx=-i*segLen + segR; // 头部在前
+      const ry=segR*(1 - i*0.015);
+      const seg=svgEl('ellipse',{cx, cy:0, rx:segR, ry, fill:bodyFill, opacity:.95});
+      if(i%2===0 && !ant){
+        // 气孔
+        const hole=svgEl('circle',{cx:cx-1, cy:-ry*.55, r:Math.max(.6,1.2*s), fill:'#9a8a6a'});
+        g.appendChild(hole);
+      }
+      g.appendChild(seg);
+      if(i<segs-1){
+        // 节间线
+        g.insertBefore(svgEl('line',{x1:cx, y1:-ry*.7, x2:cx, y2:ry*.7, stroke:'rgba(120,90,50,.18)','stroke-width':.8}), seg);
+      }
+      // 腹足
+      if(i%2===1 && i>0){
+        g.appendChild(svgEl('circle',{cx:cx-2, cy:ry*.9, r:Math.max(.8,1.6*s), fill: ant?'#1f1a12':'#7a5e3a'}));
+      }
+    }
+    // 头部（在前 = 正x方向，但旋转后随 angle）
+    const hx=segR+2, hy=0;
+    g.appendChild(svgEl('circle',{cx:hx, cy:0, r:segR*1.05, fill:headFill}));
+    // 腮红
+    if(!ant){
+      g.appendChild(svgEl('circle',{cx:hx+segR*.4, cy:-segR*.4, r:segR*.32, fill:'rgba(232,138,160,.45)'}));
+      g.appendChild(svgEl('circle',{cx:hx+segR*.4, cy:segR*.4, r:segR*.32, fill:'rgba(232,138,160,.45)'}));
+    }
+    // 眼睛 + 高光
+    const eyeR=Math.max(.8,1.6*s)*(ant?0.7:1);
+    g.appendChild(svgEl('circle',{cx:hx+segR*.5, cy:-segR*.35, r:eyeR, fill:'#1a1208'}));
+    g.appendChild(svgEl('circle',{cx:hx+segR*.5, cy:segR*.35, r:eyeR, fill:'#1a1208'}));
+    g.appendChild(svgEl('circle',{cx:hx+segR*.5+eyeR*.3, cy:-segR*.35-eyeR*.3, r:eyeR*.4, fill:'#fff'}));
+    g.appendChild(svgEl('circle',{cx:hx+segR*.5+eyeR*.3, cy:segR*.35-eyeR*.3, r:eyeR*.4, fill:'#fff'}));
+    // 微笑
+    g.appendChild(svgEl('path',{d:`M ${hx+segR*.6} ${0} q ${segR*.3} ${segR*.25} ${segR*.6} 0`, stroke:'#3a2a1a','stroke-width':Math.max(.6,1*s), fill:'none','stroke-linecap':'round'}));
+    // 触角（小）
+    g.appendChild(svgEl('line',{x1:hx+segR*.8,y1:-segR*.5,x2:hx+segR*1.4,y2:-segR*.9,stroke:'#3a2a1a','stroke-width':.8}));
+    g.appendChild(svgEl('line',{x1:hx+segR*.8,y1:segR*.5,x2:hx+segR*1.4,y2:segR*.9,stroke:'#3a2a1a','stroke-width':.8}));
+    g.appendChild(svgEl('circle',{cx:hx+segR*1.4,cy:-segR*.9,r:Math.max(.6,1*s),fill:'#3a2a1a'}));
+    g.appendChild(svgEl('circle',{cx:hx+segR*1.4,cy:segR*.9,r:Math.max(.6,1*s),fill:'#3a2a1a'}));
+  }
+  wiggle(){ this.wiggleT=18; }
+  update(){
+    // 找叶子吃：任意距离的蚕都会被最近的叶子吸引（去掉距离门槛，确保掉下的叶子一定会被吃）
+    if(this.eatTarget && this.eatTarget.eaten>=1){ this.eatTarget=null; this.eating=false; this.stuckCount=0; }
+    if(!this.eating && Leaf.all.length){
+      let best=null, bd=9999;
+      for(const l of Leaf.all){
+        if(l.eaten>=1 || l.falling) continue; // 飘落中的叶子先不抢
+        const d=Math.hypot(l.x-this.x,l.y-this.y);
+        if(d<bd){bd=d;best=l;}
+      }
+      if(best){ this.eatTarget=best; this.stuckCount=0; this.lastEatDist=9999; }
+    }
+    if(this.eatTarget && this.eatTarget.eaten<1){
+      const l=this.eatTarget;
+      const d=Math.hypot(l.x-this.x,l.y-this.y);
+      // 卡死检测：如果连续多帧距离没变近（被边界阻挡），放弃当前叶子
+      if(d >= this.lastEatDist - 0.5) this.stuckCount++;
+      else this.stuckCount = 0;
+      this.lastEatDist = d;
+      if(this.stuckCount > 30){ this.eatTarget=null; this.eating=false; this.stuckCount=0; this.lastEatDist=9999; }
+      else if(d<36){ this.eating=true; }
+      else{
+        this.eating=false;
+        const ang=Math.atan2(l.y-this.y,l.x-this.x)*180/Math.PI;
+        this.angle = lerpAngle(this.angle, ang, .12);
+        // 离得越远跑得越快（赶过去吃）
+        const sp = this.speed * (d>120? 2.2 : 1.5);
+        this.x += Math.cos(ang*Math.PI/180)*sp;
+        this.y += Math.sin(ang*Math.PI/180)*sp;
+      }
+    } else {
+      this.eating=false;
+      // 随机游走
+      if(Math.random()<0.02) this.angle += rand(-50,50);
+      this.x += Math.cos(this.angle*Math.PI/180)*this.speed;
+      this.y += Math.sin(this.angle*Math.PI/180)*this.speed;
+    }
+    // 吃叶子
+    if(this.eating){
+      this.eatTimer++;
+      if(this.eatTimer%12===0){ this.eatTarget.bite(); AU.eat(); }
+      if(this.eatTarget.eaten>=1){ this.eatTarget=null; this.eating=false; }
+    }
+    // 摆动扭动
+    this.wiggleT = Math.max(0, this.wiggleT-1);
+    // 边界：按蚕身长度动态夹紧
+    const margin = this.bodyLen*0.5 + 8;
+    const lx=PLAY.x+margin, rx=PLAY.x+PLAY.w-margin;
+    const ty=PLAY.y+margin, by=PLAY.y+PLAY.h-margin;
+    if(this.x<lx){ this.x=lx; this.angle=180-this.angle+rand(-20,20); }
+    if(this.x>rx){ this.x=rx; this.angle=180-this.angle+rand(-20,20); }
+    if(this.y<ty){ this.y=ty; this.angle=-this.angle+rand(-20,20); }
+    if(this.y>by){ this.y=by; this.angle=-this.angle+rand(-20,20); }
+    // 渲染
+    const wob = this.wiggleT? Math.sin(this.wiggleT*.6)*18 : 0;
+    this.node.setAttribute('transform',`translate(${this.x.toFixed(1)} ${this.y.toFixed(1)}) rotate(${(this.angle+wob).toFixed(1)})`);
+  }
+}
+function lerpAngle(a,b,t){ let d=((b-a+540)%360)-180; return a+d*t; }
+
+const Worms = {
+  list:[],
+  spawn(n=12){
+    this.list = [];
+    clearLayer('worms'); // 清掉残留的旧蚕节点，避免重复孵化留下孤儿节点
+    for(let i=0;i<n;i++) this.list.push(new Silkworm(i));
+  },
+  tick(){ this.list.forEach(w=>w.update()); },
+  redrawAll(){ this.list.forEach(w=>w.draw()); },
+  clear(){ this.list=[]; clearLayer('worms'); }
+};
+
+/* =========================================================
+   7) 桑叶
+   ========================================================= */
+class Leaf{
+  constructor(x,y, opts={}){
+    this.x=x; this.y=y; this.eaten=0; this.fallT=0;
+    this.falling = opts.settled ? false : true; // settled=true 表示直接落定（底层装饰叶）
+    this.startX = opts.settled ? x : (x + rand(-30,30));
+    this.startY = opts.settled ? y : -30;
+    this.node=this.build();
+    LAYERS.leaves.appendChild(this.node);
+    Leaf.all.push(this);
+    if(!opts.silent && !opts.settled) AU.dropLeaf();
+  }
+  build(){
+    const g=svgEl('g',{class:'leaf', transform:`translate(${this.startX} ${this.startY}) rotate(${rand(-30,30)})`});
+    const s=rand(.85,1.1);
+    // 叶片主体（带缺口用 path）
+    this.path = svgEl('path',{
+      d: leafPath(s),
+      fill:'url(#leafGrad)', stroke:'#3f6b2c','stroke-width':.8
+    });
+    g.appendChild(this.path);
+    // 叶脉
+    g.appendChild(svgEl('path',{d:`M 0 0 q ${-6*s} ${-10*s} ${-14*s} ${-6*s} M 0 0 q ${-6*s} ${10*s} ${-14*s} ${6*s} M 0 0 q ${6*s} ${-10*s} ${14*s} ${-6*s} M 0 0 q ${6*s} ${10*s} ${14*s} ${6*s}`, stroke:'rgba(63,107,44,.5)','stroke-width':.7, fill:'none'}));
+    g.appendChild(svgEl('line',{x1:0,y1:0,x2:20*s,y2:0,stroke:'#3f6b2c','stroke-width':1.2}));
+    this.node=g; this.scale=s;
+    return g;
+  }
+  bite(){
+    if(this.eaten>=1) return;
+    this.eaten += rand(.25,.4);
+    // 用 mask 做缺口：在叶子位置随机挖洞
+    const biteX=rand(-12,12)*this.scale, biteY=rand(-8,8)*this.scale;
+    const hole=svgEl('circle',{cx:biteX, cy:biteY, r:rand(4,7)*this.scale, fill:'#fffaf0'});
+    hole.setAttribute('opacity','.0');
+    // 直接在叶子上加缺口圆（用底色覆盖模拟啃食）
+    this.node.insertBefore(svgEl('circle',{cx:biteX,cy:biteY,r:rand(4,7)*this.scale,fill:'rgba(255,250,240,.85)'}), this.path.nextSibling);
+    if(this.eaten>=1){
+      this.node.style.transition='opacity .8s, transform .8s';
+      this.node.style.opacity='0';
+      setTimeout(()=>{ this.node.remove(); Leaf.all=Leaf.all.filter(l=>l!==this); }, 800);
+    }
+  }
+  update(){
+    if(this.falling){
+      this.fallT++;
+      const t=Math.min(1,this.fallT/40);
+      const e = 1-Math.pow(1-t,2);
+      const x = this.startX + (this.x-this.startX)*e + Math.sin(this.fallT*.15)*8;
+      const y = this.startY + (this.y-this.startY)*e;
+      const r = Math.sin(this.fallT*.1)*30;
+      this.node.setAttribute('transform',`translate(${x} ${y}) rotate(${r})`);
+      if(t>=1){ this.falling=false; this.node.setAttribute('transform',`translate(${this.x} ${this.y}) rotate(${Math.sin(this.fallT*.1)*8})`); }
+    }
+  }
+}
+Leaf.all=[];
+function leafPath(s){
+  // 桑叶锯齿边
+  let d='M ';
+  const pts=[];
+  const N=18;
+  for(let i=0;i<N;i++){
+    const a=i/N*Math.PI*2;
+    const r=(1 + (i%2===0?0:.18)) * 16*s * (0.85+0.4*Math.abs(Math.cos(a)));
+    pts.push([Math.cos(a)*r, Math.sin(a)*r*0.85]);
+  }
+  d+=pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ');
+  d+=' Z';
+  return d;
+}
+const Leaves = {
+  all(){ return Leaf.all; },
+  dropAt(x,y,n=3){
+    for(let i=0;i<n;i++){
+      setTimeout(()=>{ new Leaf(x+rand(-25,25), y+rand(-15,15)); }, i*180);
+    }
+  },
+  tick(){ Leaf.all.forEach(l=>l.update()); },
+  clear(){ Leaf.all=[]; clearLayer('leaves'); }
+};
+
+/* =========================================================
+   8) 蚕卵 + 孵化
+   ========================================================= */
+const Eggs = {
+  group:null,
+  warming:false,
+  build(){
+    this.warming=false;
+    clearLayer('home');
+    // 盒底：纸巾 + 桑叶铺垫
+    const bg=svgEl('rect',{x:HOME.x,y:HOME.y,width:HOME.w,height:HOME.h,rx:14,fill:'url(#homeBg)'});
+    LAYERS.home.appendChild(bg);
+    // 纸巾褶皱
+    for(let i=0;i<6;i++){
+      LAYERS.home.appendChild(svgEl('path',{d:`M ${HOME.x+10} ${HOME.y+40+i*70} q ${HOME.w/2} ${rand(-10,10)} ${HOME.w-20} 0`,stroke:'rgba(200,180,140,.25)','stroke-width':1.5,fill:'none'}));
+    }
+    // 底层桑叶：作为真实 Leaf 实例（已落定状态），不喂养时蚕也会自己去吃
+    for(let i=0;i<3;i++){
+      const lx=HOME.x+rand(80,HOME.w-80), ly=HOME.y+rand(100,HOME.h-80);
+      const l=new Leaf(lx, ly, {settled:true, silent:true});
+      l.node.setAttribute('transform',`translate(${lx} ${ly}) rotate(${rand(-40,40)})`);
+      l.scale = 1.4; // 底层叶稍大
+    }
+    // 蚕卵群
+    this.group=svgEl('g',{id:'eggs'});
+    const cx=HOME.x+HOME.w/2, cy=HOME.y+HOME.h/2+20;
+    for(let i=0;i<16;i++){
+      const a=i/16*Math.PI*2, r=rand(20,55);
+      const ex=cx+Math.cos(a)*r, ey=cy+Math.sin(a)*r*0.6;
+      const egg=svgEl('ellipse',{cx:ex,cy:ey,rx:5,ry:4,fill: i<3?'#5a4a30':'#e8d089',stroke:'#b89a4e','stroke-width':.5});
+      this.group.appendChild(egg);
+    }
+    LAYERS.home.appendChild(this.group);
+    this.cx=cx; this.cy=cy;
+  },
+  warm(){
+    // 暖一暖：变灰黑（重入锁：孵化动画 1.6s 内禁止重复触发，避免多余小虫）
+    if(!this.group || this.warming) return;
+    this.warming=true;
+    AU.hatch();
+    const eggs=this.group.querySelectorAll('ellipse');
+    eggs.forEach((e,i)=>{
+      setTimeout(()=>{ e.setAttribute('fill','#3a3328'); e.setAttribute('stroke','#1a1208'); }, i*60);
+    });
+    showHint(false);
+    setBubble('🥚','点蚕卵暖一暖，宝宝要出来啦～','parent：卵临孵化会由淡黄变灰黑');
+    // 自动孵化
+    setTimeout(()=>this.hatch(), eggs.length*60+700);
+  },
+  hatch(){
+    setState('hatch', {noPush:false});
+    setBubble('🐜','哇！12只黑黑的小蚁蚕钻出来啦！','parent：蚁蚕像小蚂蚁，黑色多毛');
+    // 卵裂开 + 蚁蚕钻出
+    const eggs=this.group.querySelectorAll('ellipse');
+    eggs.forEach((e,i)=>{
+      setTimeout(()=>{
+        e.setAttribute('fill','#2a2218');
+        e.setAttribute('rx','6'); e.setAttribute('ry','3');
+        // 裂纹
+        const crack=svgEl('path',{d:`M ${e.getAttribute('cx')-4} ${e.getAttribute('cy')} L ${e.getAttribute('cx')} ${e.getAttribute('cy')-3} L ${+e.getAttribute('cx')+4} ${e.getAttribute('cy')}`,stroke:'#000','stroke-width':.6,fill:'none'});
+        this.group.appendChild(crack);
+      }, i*80);
+    });
+    // 生成蚁蚕
+    setTimeout(()=>{
+      this.group.style.transition='opacity .8s'; this.group.style.opacity='0';
+      setTimeout(()=>{ this.group.remove(); }, 800);
+      Worms.spawn(12);
+      AU.hatch();
+      // 自动进入成长
+      setTimeout(()=>{ setState('grow'); }, 1600);
+    }, eggs.length*80+800);
+  }
+};
+
+/* =========================================================
+   9) 成长（喂食/蜕皮）
+   ========================================================= */
+const Grow = {
+  moltCount:0, // 蜕皮次数
+  lastFeed:0,  // 喂食节流时间戳
+  feed(){
+    if(STATE.feedCount>=15) return; // 硬上限：到 15 次即停止计数，避免连点溢出
+    STATE.feedCount++;
+    AU.eat();
+    setBubble('🍃','咔嚓咔嚓！蚕宝宝吃得好香～', `parent：第 ${STATE.feedCount}/15 次喂食，龄数 ${STATE.instar}`);
+    // 每3次喂食蜕皮
+    if(STATE.feedCount%3===0 && STATE.instar<5){
+      this.molt();
+    }
+    if(STATE.feedCount>=15 && STATE.instar>=5){
+      setTimeout(()=>setState('spinReady'), 1200);
+    }
+    updateProgress();
+  },
+  molt(){
+    STATE.instar++;
+    AU.molt();
+    setBubble('💤','吃饱睡一觉，蜕皮长大啦！', `parent：进入第 ${STATE.instar} 龄，身体变大`);
+    // 蚕静止 + 闪白 + 重画
+    Worms.list.forEach(w=>{ w.wiggle(); });
+    setTimeout(()=>{
+      Worms.redrawAll();
+      AU.stage();
+      celebrate(VB.w/2, VB.h/2, 16);
+      updateProgress();
+    }, 600);
+  }
+};
+
+/* =========================================================
+   10) 吐丝 + 结茧选择
+   ========================================================= */
+const Spin = {
+  net:null,
+  start(){
+    clearLayer('fx');
+    setBubble('🧵','蚕宝宝身体透亮了，开始吐丝啦～','parent：熟蚕体色变黄透亮，准备结茧');
+    AU.spinStart();
+    // 蚕变透亮
+    Worms.redrawAll();
+    // 画凌乱丝网
+    this.net=svgEl('g',{opacity:0});
+    for(let i=0;i<24;i++){
+      const x1=rand(PLAY.x,PLAY.x+PLAY.w), y1=rand(PLAY.y,PLAY.y+PLAY.h);
+      const x2=x1+rand(-120,120), y2=y1+rand(-80,80);
+      this.net.appendChild(svgEl('path',{d:`M ${x1} ${y1} Q ${(x1+x2)/2+rand(-30,30)} ${(y1+y2)/2+rand(-30,30)} ${x2} ${y2}`, stroke:'rgba(255,255,255,.7)','stroke-width':.6, fill:'none'}));
+    }
+    LAYERS.fx.appendChild(this.net);
+    this.net.style.transition='opacity 1.5s';
+    requestAnimationFrame(()=>{ this.net.style.opacity='1'; });
+    // 蚕集中到中间
+    setTimeout(()=>{
+      Worms.list.forEach((w,i)=>{
+        const a=i/12*Math.PI*2, r=80;
+        w.x=VB.w/2+Math.cos(a)*r; w.y=VB.h/2+Math.sin(a)*r;
+      });
+    }, 800);
+    // 出现选择浮层
+    setTimeout(()=>{
+      setState('choose',{silent:true});
+      showChoose();
+    }, 2600);
+  },
+  undo(){
+    // 反悔：回吐丝待命，进度不丢
+    if(this.net){ this.net.remove(); this.net=null; }
+    STATE.ending=null;
+    $('undoFab').classList.remove('show');
+    Cocoon.clear(); Fan.clear();
+    setState('spinReady',{noPush:true, silent:true});
+    Spin.start();
+  }
+};
+
+/* =========================================================
+   11) 结局 A · 白茧 → 破茧成蝶
+   ========================================================= */
+const Cocoon = {
+  list:[],
+  build(){
+    clearLayer('cocoon');
+    this.list=[];
+    // 3x3 九个茧
+    const cx=VB.w/2, cy=VB.h/2-10;
+    for(let i=0;i<9;i++){
+      const r=parseInt(i/3), c=i%3;
+      const x=cx+(c-1)*120, y=cy+(r-1)*90;
+      const co={x,y,state:'closed', node:null, opened:false};
+      this.drawCocoon(co);
+      this.list.push(co);
+    }
+  },
+  drawCocoon(co){
+    const g=svgEl('g',{class:'cocoon', transform:`translate(${co.x} ${co.y})`});
+    g.style.cursor='pointer';
+    // 投影（落在桌面）
+    g.appendChild(svgEl('ellipse',{cx:0,cy:44,rx:28,ry:7,fill:'rgba(80,60,30,.15)'}));
+    // 茧体外形：真实蚕茧为椭圆形，顶端略收窄（蚕茧有乳头状突起）
+    const cocoonD='M 0 -42 C 20 -42 31 -22 31 0 C 31 24 18 42 0 42 C -18 42 -31 24 -31 0 C -31 -22 -20 -42 0 -42 Z';
+    // 底层茧壳：柔白半透明，能透出内蛹（参考 index.html 的干净材质）
+    g.appendChild(svgEl('path',{d:cocoonD, fill:'url(#cocoonGrad)', stroke:'rgba(196,184,156,.6)','stroke-width':1.4}));
+    // 丝纹纹理：横弧密排（克制，避免喧宾夺主）
+    for(let i=-3;i<=3;i++){
+      const y0=i*9;
+      const xMax=Math.max(2, Math.sqrt(Math.max(0, 1-(y0/42)**2))*29);
+      g.appendChild(svgEl('path',{d:`M ${-xMax} ${y0} Q 0 ${y0+rand(-3,3)} ${xMax} ${y0}`, stroke:'rgba(245,238,222,.55)','stroke-width':.7, fill:'none'}));
+    }
+    // 纵弧密排
+    for(let i=-2;i<=2;i++){
+      const x0=i*9;
+      const yMax=42*Math.sqrt(Math.max(0,1-(x0/31)**2));
+      if(yMax>5){
+        g.appendChild(svgEl('path',{d:`M ${x0} ${-yMax} Q ${x0+rand(-2,2)} 0 ${x0} ${yMax}`, stroke:'rgba(245,238,222,.4)','stroke-width':.6, fill:'none'}));
+      }
+    }
+    // 内蛹（棕色，清晰可见——真实蚕茧里能透出蚕蛹）
+    const pupa=svgEl('g',{class:'pupa'});
+    pupa.appendChild(svgEl('ellipse',{cx:0,cy:2,rx:13,ry:23,fill:'url(#pupaGrad)',stroke:'#8a5f38','stroke-width':1.1,opacity:.92}));
+    pupa.appendChild(svgEl('path',{d:'M -8 0 q5 11 10 2 M -13 12 q7 11 14 3', stroke:'#8a5f38','stroke-width':1, fill:'none', opacity:.6})); // 蛹节纹
+    pupa.appendChild(svgEl('ellipse',{cx:0,cy:-13,rx:5,ry:5,fill:'#cba06e'})); // 蛹头
+    g.appendChild(pupa);
+    // 高光（偏左上，软光）
+    g.appendChild(svgEl('ellipse',{cx:-9,cy:-16,rx:8,ry:13,fill:'rgba(255,255,255,.5)'}));
+    g.appendChild(svgEl('ellipse',{cx:-13,cy:-10,rx:4,ry:7,fill:'rgba(255,255,255,.55)'}));
+    co.node=g; co.pupaNode=pupa;
+    LAYERS.cocoon.appendChild(g);
+    g.addEventListener('click',(e)=>{ e.stopPropagation(); this.open(co); });
+  },
+  open(co){
+    if(co.opened) return;
+    co.opened=true;
+    AU.butterfly();
+    const g=co.node;
+    // ===== 破口效果：蚕蛹顶开茧帽，茧帽仍铰接在裂口一侧（两侧接触，连成同一处开口）=====
+    // 1) 裂口空腔（顶部破洞，露出已空的茧内）——画在蛹之后，使蛹从洞口透出
+    const mouth=svgEl('path',{d:'M -14 -30 Q -16 -41 0 -42 Q 16 -41 14 -30 Q 8 -22 0 -23 Q -8 -22 -14 -30 Z', fill:'#cdbf9e', stroke:'#a8966a','stroke-width':1, opacity:.95});
+    g.insertBefore(mouth, co.pupaNode);
+    // 2) 内腔阴影（增加纵深，区分"洞口"与"茧面"）
+    g.insertBefore(svgEl('ellipse',{cx:0,cy:-31,rx:9,ry:7,fill:'#b9a87f',opacity:.6}), co.pupaNode);
+    // 3) 茧帽（被顶起的丝片）：铰接在裂口左缘(-14,-30)，向上翻卷——与裂口左缘相接（接触，不另开第二处口子）
+    const flap=svgEl('path',{d:'M -14 -30 Q -20 -44 -6 -50 Q 14 -54 20 -40 Q 14 -37 6 -40 Q -4 -38 -14 -30 Z', fill:'#ece3cd', stroke:'#fff','stroke-width':1.8});
+    g.appendChild(flap);
+    // 4) 铰接处丝缕（强调茧帽与裂口相连，而非两片脱节）
+    g.appendChild(svgEl('path',{d:'M -14 -30 q -3 -2 -3 -6 M -10 -31 q -1 -3 1 -5', stroke:'#d9cdb0','stroke-width':1, fill:'none', opacity:.8}));
+    // 5) 茧帽轻轻掀起（尊重 reduced-motion）
+    if(!REDUCE && flap.animate){
+      flap.animate(
+        [{transform:'translate(0px,0px) rotate(0deg)'},{transform:'translate(2px,-4px) rotate(-8deg)'}],
+        {duration:520, easing:'ease-out', fill:'forwards'}
+      );
+    }
+    // 蛹扭动 → 化蝶飞出（rAF + 时间戳，避免后台节流）
+    const pupa=co.pupaNode;
+    const start=performance.now(); const dur=550;
+    const wiggle=(t)=>{
+      const p=Math.min(1,(t-start)/dur);
+      if(p<1){
+        const w=Math.sin(p*Math.PI*6);
+        pupa.setAttribute('transform',`translate(${(w*4).toFixed(1)} ${(Math.sin(p*10)*2).toFixed(1)}) rotate(${(w*18).toFixed(1)})`);
+        requestAnimationFrame(wiggle);
+      } else {
+        pupa.style.opacity='0';
+        Butterfly.spawn(co.x, co.y); // 化蝶飞出
+        celebrate(co.x, co.y, 12);
+        setTimeout(()=>{ if(pupa.parentNode) pupa.remove(); }, 200);
+      }
+    };
+    requestAnimationFrame(wiggle);
+  },
+  clear(){ this.list=[]; clearLayer('cocoon'); }
+};
+
+/* =========================================================
+   12) 蝴蝶
+   ========================================================= */
+const Butterfly = {
+  list:[],
+  spawn(x,y){
+    const g=svgEl('g',{transform:`translate(${x} ${y})`});
+    const colors=[['#f6a8c8','#e88aa0'],['#f6c45c','#e8a93a'],['#7fb3d4','#5a8fb0'],['#b88ed4','#8a5fb0']];
+    const c=pick(colors);
+    // 身体
+    g.appendChild(svgEl('ellipse',{cx:0,cy:0,rx:1.6,ry:8,fill:'#3a2a1a'}));
+    // 翅膀（左右各上下两片）
+    const wing=(sx,sy,col)=>{
+      const w=svgEl('path',{d:`M 0 0 Q ${sx*12} ${sy*-10} ${sx*18} ${sy*2} Q ${sx*14} ${sy*12} 0 ${sy*6} Z`, fill:col[0], stroke:col[1],'stroke-width':.8});
+      g.appendChild(w);
+      return w;
+    };
+    const wl1=wing(-1,-1,c), wr1=wing(1,-1,c);
+    const wl2=wing(-1,1,c), wr2=wing(1,1,c);
+    // 触角
+    g.appendChild(svgEl('path',{d:'M 0 -7 Q -3 -12 -5 -14 M 0 -7 Q 3 -12 5 -14',stroke:'#3a2a1a','stroke-width':.8,fill:'none'}));
+    LAYERS.butterflies.appendChild(g);
+    const b={x,y, vx:rand(-1.5,1.5), vy:rand(-2,-.5), g, wl1,wr1,wl2,wr2, t:0, life:0};
+    this.list.push(b);
+  },
+  tick(){
+    for(let i=this.list.length-1;i>=0;i--){
+      const b=this.list[i];
+      b.t++; b.life++;
+      // 飞向画面外
+      b.x += b.vx; b.y += b.vy;
+      b.vy -= 0.02; // 上飘
+      b.vx += Math.sin(b.t*.1)*0.08;
+      // 翅膀扇动
+      const flap = Math.abs(Math.sin(b.t*.4));
+      b.wl1.setAttribute('transform',`rotate(${-flap*50})`);
+      b.wr1.setAttribute('transform',`rotate(${flap*50})`);
+      b.wl2.setAttribute('transform',`rotate(${-flap*50})`);
+      b.wr2.setAttribute('transform',`rotate(${flap*50})`);
+      b.g.setAttribute('transform',`translate(${b.x} ${b.y}) rotate(${Math.sin(b.t*.1)*8})`);
+      if(b.x<-50||b.x>VB.w+50||b.y<-80||b.life>600){
+        b.g.remove(); this.list.splice(i,1);
+      }
+    }
+  },
+  clear(){ this.list=[]; clearLayer('butterflies'); }
+};
+
+/* =========================================================
+   13) 造型扇（爱心 / 星星）
+   ========================================================= */
+const Fan = {
+  group:null, type:null, // 'fan'|'star'
+  cx:VB.w/2, cy:VB.h/2-10, scale:1, rot:0, dx:0, dy:0,
+  guidePath:null, silkLayers:[], bone:null, _wheelHandler:null,
+  build(type){
+    this.type=type; this.silkLayers=[]; this.guidePath=null;
+    this.scale=1; this.rot=0; this.dx=0; this.dy=0; // 重置交互状态，防止重玩后残留
+    clearLayer('fans');
+    STATE.ending = type==='fan'?'fan': (type==='star'?'star':'fan');
+    const g=svgEl('g',{id:'fanGroup', transform:`translate(${this.cx} ${this.cy})`});
+    this.group=g;
+    LAYERS.fans.appendChild(g);
+    // 外晕（加强可见度）
+    g.appendChild(svgEl('circle',{cx:0,cy:0,r:180,fill:'url(#glowGrad)'}));
+    // 扇体投影（让扇子在浅背景上浮出来）
+    g.appendChild(svgEl('ellipse',{cx:4,cy:8,rx:130,ry:110,fill:'rgba(100,80,40,.12)'}));
+    // 引导线（轮廓 + 放射扇骨虚线）
+    const outline = type==='star'? starPath(150, 70, true) : heartPath(150);
+    this.outlineD = outline;
+    // 扇骨放射
+    const boneCount = type==='star'? 10 : 8;
+    const bones=svgEl('g',{opacity:.4});
+    for(let i=0;i<boneCount;i++){
+      const a = type==='star'?
+        (-90 + i*(360/boneCount)) :
+        (i*(360/boneCount) - 90);
+      // 内凹点（星星）跳过：简化用均匀放射
+      const rad = a*Math.PI/180;
+      const x2=Math.cos(rad)*150, y2=Math.sin(rad)*150;
+      bones.appendChild(svgEl('line',{x1:0,y1:0,x2:x2,y2:y2,stroke:'rgba(180,160,110,.5)','stroke-width':1,'stroke-dasharray':'3 4'}));
+    }
+    g.appendChild(bones);
+    this.bones=bones;
+    // 轮廓虚线
+    const guide=svgEl('path',{d:outline, fill:'none', stroke:'rgba(180,160,110,.55)','stroke-width':1.2,'stroke-dasharray':'4 4'});
+    g.appendChild(guide); this.guideEl=guide;
+
+    // 柄（向下）
+    const handleY = type==='star'? 150 : 130;
+    g.appendChild(svgEl('rect',{x:-4,y:handleY,width:8,height:70,rx:4,fill:'url(#woodGrad)'}));
+    g.appendChild(svgEl('circle',{cx:0,cy:handleY+72,r:7,fill:'url(#woodGrad)'}));
+
+    // 绕丝：一只蚕沿引导线爬，丝线逐根描出
+    this.spinSilk(g);
+    // 反悔按钮
+    $('undoFab').classList.add('show');
+  },
+  spinSilk(g){
+    // 6 层丝，每层用 path 描出，stroke-dashoffset 动画
+    const layers=6;
+    for(let L=0;L<layers;L++){
+      const scale = 1 - L*0.12;
+      const d = this.type==='star'? starPath(150*scale, 70*scale, true) : heartPath(150*scale);
+      const p=svgEl('path',{d, fill:'none', stroke:`url(#silkGrad)`, 'stroke-width': 3 + L*0.4, opacity:0, 'stroke-linecap':'round'});
+      g.appendChild(p);
+      this.silkLayers.push(p);
+    }
+    // 爬行的小蚕
+    const spinner=svgEl('g',{class:'spinner'});
+    const sBody=svgEl('ellipse',{cx:0,cy:0,rx:8,ry:4,fill:'url(#wormMatureGrad)'});
+    spinner.appendChild(sBody);
+    const sHead=svgEl('circle',{cx:8,cy:0,r:3.5,fill:'#6b4a2c'});
+    spinner.appendChild(sHead);
+    g.appendChild(spinner);
+    this.spinner=spinner;
+
+    // 用 outline 做 path 长度计算
+    const tempPath=svgEl('path',{d:this.outlineD, fill:'none'});
+    LAYERS.fans.appendChild(tempPath);
+    const total=tempPath.getTotalLength();
+    tempPath.remove();
+
+    let progress=0; const dur=4000; const start=performance.now();
+    const spinInterval=setInterval(()=>AU.spinLoop(), 400);
+    const animate=(now)=>{
+      const t=Math.min(1,(now-start)/dur);
+      progress=t;
+      // 蚕沿引导线爬
+      const len=tempPath? total*t : 0;
+      // 重建临时path取点
+      const tp=svgEl('path',{d:this.outlineD}); LAYERS.fans.appendChild(tp);
+      const pt=tp.getPointAtLength(total*t);
+      tp.remove();
+      spinner.setAttribute('transform',`translate(${pt.x} ${pt.y}) rotate(${Math.atan2(pt.y,pt.x)*180/Math.PI})`);
+      // 逐层描出
+      for(let i=0;i<this.silkLayers.length;i++){
+        const layerT = clamp((t - i*0.08)*1.4, 0, 1);
+        this.silkLayers[i].style.opacity = layerT>0? .9 : 0;
+        // 用 stroke-dasharray 描出
+        const lp=svgEl('path',{d:this.silkLayers[i].getAttribute('d')}); LAYERS.fans.appendChild(lp);
+        const ll=lp.getTotalLength(); lp.remove();
+        this.silkLayers[i].style.strokeDasharray = ll;
+        this.silkLayers[i].style.strokeDashoffset = ll*(1-layerT);
+      }
+      if(t<1) requestAnimationFrame(animate);
+      else {
+        clearInterval(spinInterval);
+        spinner.style.transition='opacity .4s'; spinner.style.opacity='0';
+        setTimeout(()=>spinner.remove(),400);
+        this.finish();
+      }
+    };
+    requestAnimationFrame(animate);
+  },
+  finish(){
+    // 扇骨透出 + 高光 + 柔光
+    this.bones.setAttribute('opacity','.25');
+    // 轮廓描边（让扇形在浅背景上清晰可辨）
+    this.group.appendChild(svgEl('path',{d:this.outlineD, fill:'none', stroke:'rgba(180,150,90,.45)','stroke-width':1.8, 'pointer-events':'none'}));
+    // 高光
+    const hi=svgEl('path',{d:this.outlineD, fill:'url(#hiGrad)', opacity:.6, 'pointer-events':'none'});
+    this.group.appendChild(hi);
+    // 顶层同心细丝纹理（暖白色）
+    for(let i=0;i<3;i++){
+      const sc=0.95 - i*0.18;
+      const d=this.type==='star'? starPath(150*sc,70*sc,true) : heartPath(150*sc);
+      this.group.appendChild(svgEl('path',{d, fill:'none', stroke:'rgba(240,220,170,.55)','stroke-width':.6, opacity:.6, 'pointer-events':'none'}));
+    }
+    STATE.ending = this.type;
+    setState('done',{silent:true});
+    AU.done();
+    celebrate(VB.w/2, VB.h/2, 24);
+    setBubble('✨', this.type==='star'?'五角星蚕丝扇做好啦！点扇子扇扇风～':'爱心蚕丝扇做好啦！点扇子扇扇风～', 'parent：可拖拽/双指缩放/双击复位');
+    // 启用扇子交互
+    this.enableInteraction();
+    $('undoFab').classList.remove('show');
+  },
+  enableInteraction(){
+    let dragging=false, lx=0, ly=0, pinchDist=0, lastTap=0;
+    const g=this.group;
+    const onDown=(e)=>{
+      e.stopPropagation();
+      const now=Date.now();
+      if(now-lastTap<300){ this.reset(); } // 双击复位
+      lastTap=now;
+      if(e.touches && e.touches.length===2){
+        pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      } else {
+        dragging=true; lx=e.clientX??e.touches?.[0]?.clientX; ly=e.clientY??e.touches?.[0]?.clientY;
+      }
+    };
+    const onMove=(e)=>{
+      if(e.touches && e.touches.length===2){
+        const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+        this.scale=clamp(this.scale*(d/pinchDist),0.6,3); pinchDist=d;
+        this.applyTransform();
+      } else if(dragging){
+        const x=e.clientX??e.touches?.[0]?.clientX, y=e.clientY??e.touches?.[0]?.clientY;
+        this.dx+=x-lx; this.dy+=y-ly; lx=x; ly=y;
+        this.applyTransform();
+      }
+    };
+    const onUp=()=>{ dragging=false; };
+    g.style.cursor='grab';
+    g.addEventListener('pointerdown',(e)=>{
+      onDown(e);
+      window.addEventListener('pointermove',onMove);
+      window.addEventListener('pointerup',()=>{ dragging=false; window.removeEventListener('pointermove',onMove); },{once:true});
+    });
+    g.addEventListener('click',(e)=>{ e.stopPropagation(); this.wave(); });
+    // wheel 缩放（先移除旧handler防止累积）
+    if(this._wheelHandler) $('stage').removeEventListener('wheel',this._wheelHandler);
+    this._wheelHandler=(e)=>{
+      if(STATE.cur!=='done' || STATE.ending!==this.type) return;
+      e.preventDefault();
+      this.scale=clamp(this.scale*(e.deltaY<0?1.08:0.92),0.6,3);
+      this.applyTransform();
+    };
+    $('stage').addEventListener('wheel',this._wheelHandler,{passive:false});
+  },
+  applyTransform(){
+    if(this.group) this.group.setAttribute('transform',`translate(${this.cx+this.dx} ${this.cy+this.dy}) scale(${this.scale}) rotate(${this.rot})`);
+  },
+  wave(){
+    AU.fanWave();
+    if(REDUCE){ this.rot=0; this.applyTransform(); return; }
+    this.rot=0;
+    const start=performance.now();
+    const anim=(now)=>{
+      const t=(now-start)/600;
+      if(t<1){
+        this.rot=Math.sin(t*Math.PI*2)*18*(1-t);
+        this.applyTransform();
+        requestAnimationFrame(anim);
+      } else { this.rot=0; this.applyTransform(); }
+    };
+    requestAnimationFrame(anim);
+  },
+  reset(){
+    this.dx=0; this.dy=0; this.scale=1; this.rot=0;
+    this.applyTransform();
+    showToast('已复位');
+  },
+  clear(){
+    if(this.group){ this.group.remove(); this.group=null; }
+    this.silkLayers=[]; this.type=null;
+  }
+};
+
+/* 爱心路径（中心0,0，大小R，尖端朝下） */
+function heartPath(R){
+  const s=R/16;
+  return `M 0 ${5*s} C ${-2*s} ${3*s} ${-8*s} ${-2*s} ${-8*s} ${-4*s} C ${-8*s} ${-8*s} ${-4*s} ${-10*s} 0 ${-6*s} C ${4*s} ${-10*s} ${8*s} ${-8*s} ${8*s} ${-4*s} C ${8*s} ${-2*s} ${2*s} ${3*s} 0 ${10*s} Z`;
+}
+/* 五角星路径（一尖朝下，中心0,0） */
+function starPath(Router, Rinner, oneTipDown=true){
+  const pts=[]; const N=5;
+  const baseAngle = oneTipDown? 90 : -90; // 90=下
+  for(let i=0;i<N*2;i++){
+    const r = i%2===0? Router : Rinner;
+    const a = (baseAngle + i*(180/N))*Math.PI/180;
+    pts.push([Math.cos(a)*r, Math.sin(a)*r]);
+  }
+  return 'M '+pts.map(p=>p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' L ')+' Z';
+}
+
+/* =========================================================
+   14) 选择卡浮层
+   ========================================================= */
+function showChoose(){
+  const ov=$('overlay'); const cards=$('chooseCards');
+  cards.innerHTML='';
+  const items=[
+    {type:'cocoon', name:'白白蚕茧', sub:'破茧成蝶', color:'#f4f1e6'},
+    {type:'fan',    name:'爱心蚕丝扇', sub:'爱心造型', color:'#f6a8c8'},
+    {type:'star',   name:'星星蚕丝扇', sub:'五角星造型', color:'#7fb3d4'},
+  ];
+  items.forEach(it=>{
+    const c=document.createElement('div'); c.className='card';
+    const svg=`<svg class="thumb" viewBox="-90 -90 180 200" xmlns="http://www.w3.org/2000/svg">
+      ${it.type==='cocoon'?
+        `<ellipse cx="0" cy="0" rx="34" ry="48" fill="${it.color}" stroke="rgba(180,170,140,.5)"/><ellipse cx="-8" cy="-18" rx="10" ry="16" fill="rgba(255,255,255,.6)"/><path d="M -6 -48 L -2 -40 L 3 -44 L 6 -48" stroke="#3a2a1a" stroke-width="1.5" fill="none"/>`:
+        `<path d="${it.type==='star'? starPath(70,30,true): heartPath(72)}" fill="${it.color}" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/><rect x="-4" y="${it.type==='star'?70:60}" width="8" height="50" rx="4" fill="url(#woodGrad)"/>`}
+    </svg>`;
+    c.innerHTML = svg + `<div class="name">${it.name}</div><div class="sub">${it.sub}</div>`;
+    c.onclick=()=>{ chooseEnding(it.type); };
+    cards.appendChild(c);
+  });
+  ov.classList.add('show');
+  AU.stage();
+}
+function chooseEnding(type){
+  $('overlay').classList.remove('show');
+  STATE.ending = type;
+  // 清掉丝网和蚕
+  if(Spin.net){ Spin.net.remove(); Spin.net=null; }
+  Worms.clear();
+  setBubble('🧵','选好啦！开始绕丝～','parent：左上角可随时反悔，进度不丢');
+  if(type==='cocoon'){
+    setState('spinCocoon',{silent:true});
+    setTimeout(()=>{
+      softFade();
+      Cocoon.build();
+      setState('donePupa',{silent:true});
+      setBubble('🦋','点蚕茧，看蝴蝶破茧飞出来～','parent：逐茧点播，留白茧带破口');
+    }, 600);
+  } else {
+    setState(type==='fan'?'spinFan':'spinStar',{silent:true});
+    setTimeout(()=>{ softFade(); Fan.build(type); }, 300);
+  }
+}
+
+/* =========================================================
+   15) 阶段进入逻辑
+   ========================================================= */
+function onStageEnter(s){
+  showHint(false);
+  switch(s){
+    case 'closed':
+      setBubble('🌱','点中间的铅笔盒，开始养蚕吧！','parent：点击铅笔盒打开蚕宝宝的家');
+      PencilBox.build();
+      showHint(true);
+      break;
+    case 'opening':
+      break;
+    case 'eggs':
+      Eggs.build();
+      showHint(true);
+      break;
+    case 'hatch':
+      softFade();
+      break;
+    case 'grow':
+      setBubble('🐛','点盒子里任意地方，掉桑叶喂蚕宝宝～','parent：每3次喂食蜕皮1龄，5龄共约15次');
+      showHint(true); updateProgress(); softFade();
+      break;
+    case 'spinReady':
+      Spin.start();
+      break;
+    case 'choose':
+      break;
+    case 'done':
+    case 'donePupa':
+    case 'doneFan':
+    case 'doneStar':
+      renderControls();
+      break;
+  }
+  renderControls();
+}
+
+/* =========================================================
+   16) UI 渲染
+   ========================================================= */
+function renderSteps(){
+  const wrap=$('steps'); wrap.innerHTML='';
+  STAGES.forEach(st=>{
+    const idx=STAGES.indexOf(st);
+    const curIdx=STAGES.findIndex(s=>s.id===STATE.cur || (STATE.cur.startsWith('spin')&&s.id==='spinReady') || (STATE.cur.startsWith('done')&&s.id==='done'));
+    const done = idx<curIdx;
+    const active = idx===curIdx || (st.id==='done' && STATE.cur.startsWith('done')) || (st.id==='spinReady' && STATE.cur==='choose');
+    const b=document.createElement('button'); b.className='step'+(active?' active':'')+(done?' done':'');
+    b.innerHTML=`<span class="dot">${st.icon}</span><span class="label">${st.label}</span>`;
+    b.onclick=()=>jumpTo(st.id);
+    wrap.appendChild(b);
+  });
+}
+function jumpTo(target){
+  // 顶部步骤条回退到更早阶段，清悬浮
+  if(target==='closed'){ resetAll(); return; }
+  if(!canGoBackTo(target)) return;
+  // 回退：清 fx/结局残留
+  clearFxAndEndings();
+  Worms.clear(); Leaves.clear();
+  STATE.ending=null;
+  $('undoFab').classList.remove('show');
+  if(target==='eggs' || target==='hatch'){
+    STATE.instar=1; STATE.feedCount=0;
+    Eggs.build();
+    setState('eggs',{noPush:true, silent:true});
+    showHint(true);
+  } else if(target==='grow'){
+    setState('grow',{noPush:true, silent:true});
+    if(Worms.list.length===0) Worms.spawn(STATE.feedCount>0?12:12);
+    showHint(true);
+  } else if(target==='spinReady'){
+    setState('spinReady',{noPush:true, silent:true});
+    Spin.start();
+  }
+  renderSteps();
+}
+function renderControls(){
+  const c=$('controls'); c.innerHTML='';
+  if(STATE.cur.startsWith('done') || STATE.cur==='donePupa'){
+    const b=document.createElement('button'); b.className='chip'; b.innerHTML='⇄ 换一种结局';
+    b.onclick=switchEnding; c.appendChild(b);
+  }
+  if(STATE.cur!=='closed'){
+    const b=document.createElement('button'); b.className='chip'; b.innerHTML='↺ 重玩';
+    b.onclick=()=>{ if(confirm('要重新养蚕吗？')) resetAll(); }; c.appendChild(b);
+  }
+}
+function switchEnding(){
+  // 清当前结局，重弹选择卡，进度不丢
+  clearFxAndEndings();
+  STATE.ending=null;
+  $('undoFab').classList.remove('show');
+  setState('choose',{silent:true});
+  showChoose();
+}
+function resetAll(){
+  clearFxAndEndings();
+  Worms.clear(); Leaves.clear();
+  clearLayer('home');
+  zoomHome(false); // 复位舞台缩放
+  PencilBox.build(); // 重新显示铅笔盒并重置盒盖状态
+  STATE.cur='closed'; STATE.prev=[]; STATE.feedCount=0; STATE.instar=1; STATE.ending=null;
+  Grow.lastFeed=0; Eggs.warming=false;
+  $('undoFab').classList.remove('show');
+  $('overlay').classList.remove('show');
+  showHint(false);
+  renderSteps(); renderControls();
+  setBubble('🌱','点中间的铅笔盒，开始养蚕吧！','parent：点击铅笔盒打开蚕宝宝的家');
+}
+function setBubble(face, text, parent){
+  $('bubbleFace').textContent=face;
+  $('bubbleText').textContent=text;
+  $('bubble').classList.toggle('parent', !!parent);
+  if(parent) $('bubble').title=parent;
+}
+function showHint(show){
+  const h=$('hintTap');
+  if(!show){ h.style.display='none'; return; }
+  let tx=VB.w/2, ty=VB.h/2;
+  if(STATE.cur==='closed'){ tx=400; ty=250; }
+  else if(STATE.cur==='eggs' && Eggs.cx){ tx=Eggs.cx; ty=Eggs.cy; }
+  else if(STATE.cur==='grow'){ tx=VB.w/2; ty=VB.h/2; }
+  const p=svgToStagePx(tx,ty);
+  h.style.left=p.x+'px'; h.style.top=p.y+'px';
+  h.style.display='block';
+}
+function showToast(msg){
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  $('stage').appendChild(t);
+  setTimeout(()=>t.remove(), 1500);
+}
+
+/* ---------- 视觉增强：涟漪 / 庆祝 / 过场 / 进度 ---------- */
+const REDUCE = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function svgToStagePx(x,y){
+  const stage=$('stage'); const r=stage.getBoundingClientRect();
+  const scale=Math.min(r.width/VB.w, r.height/VB.h);
+  const ox=(r.width-VB.w*scale)/2, oy=(r.height-VB.h*scale)/2;
+  return { x:ox + x*scale, y:oy + y*scale };
+}
+function ripple(sx, sy){
+  if(REDUCE) return;
+  const stage=$('stage'); const p=svgToStagePx(sx,sy);
+  const d=document.createElement('div'); d.className='ripple';
+  d.style.width=d.style.height='14px';
+  d.style.left=p.x+'px'; d.style.top=p.y+'px';
+  stage.appendChild(d);
+  d.animate([
+    {transform:'translate(-50%,-50%) scale(.4)', opacity:.9},
+    {transform:'translate(-50%,-50%) scale(5.5)', opacity:0}
+  ], {duration:620, easing:'ease-out'}).onfinish=()=>d.remove();
+}
+function celebrate(sx, sy, n=18){
+  if(REDUCE) return;
+  const cols=['#e88aa0','#f6c45c','#8ec96a','#7fb3d4','#b88ed4','#ffffff'];
+  for(let i=0;i<n;i++){
+    const c=svgEl('circle',{cx:sx, cy:sy, r:rand(2.5,5), fill:pick(cols), opacity:.95});
+    LAYERS.fx.appendChild(c);
+    const ang=rand(0,Math.PI*2), dist=rand(30,90);
+    const dx=Math.cos(ang)*dist, dy=Math.sin(ang)*dist - rand(10,40);
+    c.animate([
+      {transform:'translate(0,0) scale(1)', opacity:1},
+      {transform:`translate(${dx}px,${dy}px) scale(.3)`, opacity:0}
+    ], {duration:rand(700,1100), easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>c.remove();
+  }
+}
+function softFade(){
+  const f=$('stageFade'); if(!f) return;
+  f.classList.add('show');
+  setTimeout(()=>f.classList.remove('show'), 340);
+}
+function updateProgress(){
+  const p=$('progress');
+  if(STATE.cur==='grow'){
+    p.classList.add('show');
+    const pct=Math.min(100, Math.round(STATE.feedCount/15*100));
+    $('feedFill').style.width=pct+'%';
+    $('progressText').textContent=`🍃 ${STATE.feedCount}/15 · ${STATE.instar}龄`;
+  } else { p.classList.remove('show'); }
+}
+
+/* =========================================================
+   17) 主循环
+   ========================================================= */
+function loop(){
+  if(STATE.cur==='grow' || STATE.cur==='hatch' || STATE.cur==='spinReady' || STATE.cur.startsWith('spin')){
+    Worms.tick(); Leaves.tick();
+  }
+  if(STATE.cur.startsWith('done')) {
+    Butterfly.tick();
+  }
+  requestAnimationFrame(loop);
+}
+
+/* =========================================================
+   18) 事件绑定
+   ========================================================= */
+function bindEvents(){
+  // 场景点击：用 click 事件保证浏览器自动化与触屏/鼠标通用可靠触发
+  const stageEl=$('stage');
+  stageEl.addEventListener('click',(e)=>{
+    AU.init(); AU.resume();
+    if(STATE.cur==='closed'){
+      STATE.cur='opening';
+      ripple(400, 250);
+      PencilBox.open(()=>{ setState('eggs'); });
+    } else if(STATE.cur==='eggs'){
+      const pt=svgPoint(e);
+      if(Math.hypot(pt.x-Eggs.cx, pt.y-Eggs.cy)<140){ ripple(pt.x, pt.y); Eggs.warm(); }
+    } else if(STATE.cur==='grow'){
+      const pt=svgPoint(e);
+      if(pt.x>PLAY.x && pt.x<PLAY.x+PLAY.w && pt.y>PLAY.y && pt.y<PLAY.y+PLAY.h){
+        if(STATE.feedCount>=15) return; // 已达上限不再喂食
+        const now=performance.now();
+        if(now-(Grow.lastFeed||0)<300) return; // 300ms 节流，防一次连点爆表
+        Grow.lastFeed=now;
+        ripple(pt.x, pt.y);
+        Leaves.dropAt(pt.x, pt.y, 3);
+        showHint(false);
+        Grow.feed();
+      }
+    }
+  });
+  // 声音开关
+  $('btnSound').onclick=()=>{
+    STATE.mute=!STATE.mute; AU.on=!STATE.mute;
+    $('btnSound').classList.toggle('off', STATE.mute);
+    $('btnSound').textContent = STATE.mute? '🔇':'🔊';
+    if(!STATE.mute){ AU.init(); AU.resume(); AU.tap(); }
+  };
+  // 重玩
+  $('btnReset').onclick=()=>{ if(confirm('要重新养蚕吗？')) resetAll(); };
+  // 反悔
+  $('undoFab').onclick=()=>Spin.undo();
+  // 键盘
+  window.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape' && $('overlay').classList.contains('show')) $('overlay').classList.remove('show');
+  });
+}
+function svgPoint(e){
+  const pt=scene.createSVGPoint(); pt.x=e.clientX; pt.y=e.clientY;
+  return pt.matrixTransform(scene.getScreenCTM().inverse());
+}
+
+/* =========================================================
+   19) 启动
+   ========================================================= */
+function init(){
+  buildDefs();
+  buildLayers();
+  PencilBox.build();
+  showHint(true);
+  renderSteps();
+  renderControls();
+  bindEvents();
+  loop();
+  // 防止移动端双击缩放
+  document.addEventListener('gesturestart',e=>e.preventDefault());
+  document.addEventListener('dblclick',e=>e.preventDefault());
+}
+init();
+// 调试暴露（const 声明不挂 window，此处显式暴露便于外部访问）
+window.STATE=STATE; window.PencilBox=PencilBox; window.Worms=Worms;
+window.Eggs=Eggs; window.Cocoon=Cocoon; window.Fan=Fan; window.Spin=Spin;
+window.Leaves=Leaves; window.Butterfly=Butterfly; window.AU=AU;
+window.__testClick=()=>document.getElementById('stage').click();
+</script>
+</body>
+</html>
