@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Affirmation</title>
+  <meta name="description" content="A Daily Affirmation Generator with 193 affirmations. It gives a random one for each day.">
+  <meta name="author" content="Eustace Crentsil">
+  <meta name="github" content="eustaceyoc">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 600px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    #date {
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #555;
+    }
+    #quote {
+      font-size: 1.2rem;
+      color: #222;
+      min-height: 60px;
+    }
+    .share-buttons {
+  margin-top: 1.5rem;
+}
+
+.share-buttons button {
+  margin: 0.3rem;
+  background-color: #eee;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.share-buttons button:hover {
+  background-color: #ddd;
+}
+
+    .share-buttons button i {
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Daily Affirmation</h1>
+    <p id="date">Loading date...</p>
+    <p id="quote">Loading affirmation...</p>
+
+    <div class="share-buttons">
+  <button onclick="shareTwitter()">Tweet</button>
+  <button onclick="shareFacebook()">Facebook</button>
+  <button onclick="shareLinkedIn()">LinkedIn</button>
+  <button onclick="shareWhatsApp()">WhatsApp</button>
+  <button onclick="copyForIG()">IG Story</button>
+</div>
+
+  </div>
+
+  <script>
+    // 193 affirmations. 
+    const affirmations = [
+      "I am worthy of love and respect.",
+      "Today, I choose happiness and peace.",
+      "I believe in myself and my abilities.",
+      "I am grateful for the abundance in my life.",
+      "I trust the journey of my life.",
+      "I am resilient and can overcome any challenge.",
+      "I radiate positivity and attract good things.",
+      "I am confident in my decisions.",
+      "I embrace change as a path to growth.",
+      "I release fear and welcome courage.",
+      "I am deserving of success and prosperity.",
+      "I am kind to myself and others.",
+      "I forgive myself and let go of the past.",
+      "I am open to love and meaningful connections.",
+      "I trust my intuition and inner wisdom.",
+      "I am creative and inspired.",
+      "I am strong, capable, and confident.",
+      "I deserve rest, relaxation, and peace.",
+      "I am grateful for today and all it brings.",
+      "I attract joy and positivity into my life.",
+      "I am in control of my thoughts and emotions.",
+      "I honor my needs and listen to my heart.",
+      "I am enough exactly as I am.",
+      "I embrace challenges as opportunities to grow.",
+      "I am proud of myself and my accomplishments.",
+      "I choose to see the good in every situation.",
+      "I am filled with energy and vitality.",
+      "I am patient, persistent, and focused.",
+      "I trust that everything is working out for my highest good.",
+      "I am deserving of happiness and fulfillment.",
+      "I let go of worry and embrace calm.",
+      "I am surrounded by love and support.",
+      "I am courageous and face my fears with grace.",
+      "I attract positive people and experiences into my life.",
+      "I am constantly growing and evolving.",
+      "I am grateful for my body and treat it with respect.",
+      "I am open to new ideas and experiences.",
+      "I am confident in expressing my true self.",
+      "I am mindful and present in every moment.",
+      "I am worthy of all my dreams and goals.",
+      "I trust the timing of my life.",
+      "I release negativity and welcome peace.",
+      "I am abundant in love, health, and wealth.",
+      "I am calm, centered, and balanced.",
+      "I am capable of achieving greatness.",
+      "I embrace joy and laughter every day.",
+      "I am resilient in the face of challenges.",
+      "I am thankful for my talents and gifts.",
+      "I choose to focus on what I can control.",
+      "I am patient and compassionate with myself.",
+      "I am aligned with my purpose and passions.",
+      "I trust myself to make the right decisions.",
+      "I am open to giving and receiving love.",
+      "I am confident, strong, and brave.",
+      "I release self-doubt and embrace self-belief.",
+      "I am worthy of taking time for myself.",
+      "I am surrounded by beauty and inspiration.",
+      "I am grateful for my journey and its lessons.",
+      "I am capable of creating the life I desire.",
+      "I choose positivity and hope today.",
+      "I am kind, gentle, and loving toward myself.",
+      "I am proud of how far I have come.",
+      "I trust in my ability to handle anything.",
+      "I am free from worry and stress.",
+      "I am deserving of respect and kindness.",
+      "I am open to miracles and unexpected blessings.",
+      "I am grounded, safe, and secure.",
+      "I am worthy of taking up space in this world.",
+      "I am constantly learning and improving.",
+      "I am grateful for my mind and its abilities.",
+      "I choose love over fear.",
+      "I am a magnet for positive energy and opportunities.",
+      "I am worthy of financial abundance and stability.",
+      "I am courageous in expressing my true feelings.",
+      "I am aligned with my values and beliefs.",
+      "I am confident in all areas of my life.",
+      "I am thankful for my friends and family.",
+      "I am open to joy, creativity, and inspiration.",
+      "I release judgment and embrace understanding.",
+      "I am capable of achieving balance in life.",
+      "I am grateful for the little things each day.",
+      "I am patient with my growth and progress.",
+      "I am worthy of peace and serenity.",
+      "I am resilient and can handle life’s challenges.",
+      "I am grateful for opportunities to learn and grow.",
+      "I am kind and compassionate to everyone I meet.",
+      "I am confident in expressing my ideas.",
+      "I am deserving of rest and rejuvenation.",
+      "I am connected to the abundance of the universe.",
+      "I am brave in the face of uncertainty.",
+      "I am worthy of meaningful relationships.",
+      "I am open to new beginnings and fresh starts.",
+      "I am focused, motivated, and driven.",
+      "I am grateful for my health and well-being.",
+      "I am proud of the person I am becoming.",
+      "I am surrounded by positive, uplifting energy.",
+      "I am aligned with love, joy, and happiness.",
+      "I am grateful for every moment of my life.",
+      "I am confident in my ability to create change.",
+      "I am patient and trust the process of life.",
+      "I am a source of love and inspiration for others.",
+      "I am strong, resilient, and unstoppable.",
+      "I am worthy of all the good things life has to offer.",
+      "I am open to abundance in all areas of my life.",
+      "I am thankful for my talents and abilities.",
+      "I am calm, peaceful, and relaxed.",
+      "I am capable of achieving my dreams and goals.",
+      "I am filled with love, light, and positivity.",
+      "I am proud of all I have accomplished so far.",
+      "I am grateful for the opportunities today brings.",
+      "I am patient and understanding with myself and others.",
+      "I am worthy of living a life I love.",
+      "I am open to joy, love, and happiness.",
+      "I am confident in my unique gifts and abilities.",
+      "I am grateful for my mind, body, and spirit.",
+      "I am resilient, strong, and courageous.",
+      "I am surrounded by love, happiness, and abundance.",
+      "I am at peace with myself and the world.",
+      "I am capable of achieving great things.",
+      "I am worthy of success, love, and happiness.",
+      "I am grateful for each day and its blessings.",
+      "I am confident, courageous, and unstoppable.",
+      "I am open to receiving all the good the universe offers.",
+      "I am grateful for my growth and progress.",
+      "I am kind, loving, and compassionate.",
+      "I am worthy of living my best life.",
+      "I am filled with positivity, hope, and love.",
+      "I am proud of who I am and who I am becoming.",
+      "I am confident in my decisions and actions.",
+      "I am grateful for my journey and the lessons it brings.",
+      "I am open to love, abundance, and joy.",
+      "I am patient, understanding, and compassionate.",
+      "I am capable of overcoming any obstacle.",
+      "I am worthy of respect, love, and happiness.",
+      "I am filled with energy, creativity, and inspiration.",
+      "I am grateful for the present moment.",
+      "I am strong, brave, and resilient.",
+      "I am confident in expressing myself authentically.",
+      "I am surrounded by beauty, positivity, and love.",
+      "I am thankful for my life, my experiences, and my growth.",
+      "I am capable of creating the life I desire.",
+      "I am worthy of all the blessings coming my way.",
+      "I am calm, peaceful, and centered.",
+      "I am open to miracles, abundance, and joy.",
+      "I am grateful for the love and support around me.",
+      "I am confident, courageous, and empowered.",
+      "I am capable of achieving anything I set my mind to.",
+      "I am worthy of happiness, love, and fulfillment.",
+      "I am grateful for each opportunity to grow and evolve.",
+      "I am strong, capable, and resilient.",
+      "I am filled with love, joy, and positivity.",
+      "I am patient and trusting of life’s process.",
+      "I am confident, courageous, and unstoppable.",
+      "I am worthy of success, love, and abundance.",
+      "I am grateful for today and all it brings.",
+      "I am open to learning, growth, and new experiences.",
+      "I am filled with energy, positivity, and creativity.",
+      "I am confident in my talents and abilities.",
+      "I am worthy of love, joy, and happiness.",
+      "I am surrounded by positive energy and opportunities.",
+      "I am resilient, strong, and determined.",
+      "I am grateful for the people and experiences in my life.",
+      "I am open to abundance in all forms.",
+      "I am patient, kind, and compassionate with myself and others.",
+      "I am capable of manifesting my dreams into reality.",
+      "I am confident, courageous, and motivated.",
+      "I am filled with hope, love, and positivity.",
+      "I am grateful for my journey and personal growth.",
+      "I am worthy of love, success, and happiness.",
+      "I am strong, resilient, and empowered.",
+      "I am open to opportunities and blessings today.",
+      "I am confident in the decisions I make.",
+      "I am filled with love, gratitude, and joy.",
+      "I am capable of handling whatever comes my way.",
+      "I am worthy of living my best life.",
+      "I am grateful for the abundance surrounding me.",
+      "I am patient, calm, and at peace.",
+      "I am confident, courageous, and unstoppable.",
+      "I am worthy of all the good things life has to offer.",
+      "I am grateful for today and every new beginning.",
+      "I am open to love, joy, and positive experiences.",
+      "I am filled with energy, creativity, and inspiration.",
+      "I am confident in my talents, skills, and abilities.",
+      "I am deserving of love, happiness, and success.",
+      "I am surrounded by positive energy and blessings.",
+      "I am grateful for my journey, growth, and experiences.",
+      "I am filled with hope, love, and joy.",
+      "I am confident in my abilities and talents.",
+      "I am deserving of all the good things in life.",
+      "I am strong, resilient, and unstoppable.",
+      "I am open to love, abundance, and positivity.",
+      "I am grateful for each moment and every day.",
+      "I am confident, motivated, and empowered.",
+      "I am worthy of happiness, love, and success."
+    ];
+
+    function getDayOfYear(date) {
+      const start = new Date(date.getFullYear(), 0, 0);
+      const diff = date - start;
+      const oneDay = 1000 * 60 * 60 * 24;
+      return Math.floor(diff / oneDay);
+    }
+
+    function showTodaysAffirmation() {
+      const today = new Date();
+      const dayIndex = getDayOfYear(today) - 1;
+      const affirmation = affirmations[dayIndex % affirmations.length];
+
+      const day = String(today.getDate()).padStart(2, "0");
+      const month = String(today.getMonth() + 1).padStart(2, "0");
+      const year = today.getFullYear();
+
+      document.getElementById("date").textContent = `Date: ${day}/${month}/${year}`;
+      document.getElementById("quote").textContent = affirmation;
+    }
+
+    showTodaysAffirmation();
+
+    // Sharing functions
+    const isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
+    function openPopup(url) {
+      if (isMobile) {
+        window.open(url, "_blank");
+      } else {
+        const width = 600;
+        const height = 500;
+        const left = (screen.width / 2) - (width / 2);
+        const top = (screen.height / 2) - (height / 2);
+        window.open(
+          url,
+          "_blank",
+          `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes,status=yes`
+        );
+      }
+    }
+
+    function shareTwitter() {
+      const text = document.getElementById("quote").textContent;
+      const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      openPopup(url);
+    }
+
+    function shareFacebook() {
+      const text = document.getElementById("quote").textContent;
+      const url = `https://www.facebook.com/sharer/sharer.php?quote=${encodeURIComponent(text)}`;
+      openPopup(url);
+    }
+
+    function shareLinkedIn() {
+      const text = document.getElementById("quote").textContent;
+      const shareUrl = encodeURIComponent("https://yourwebsite.com");
+      const url = `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrl}&summary=${encodeURIComponent(text)}`;
+      openPopup(url);
+    }
+
+    function shareWhatsApp() {
+      const text = document.getElementById("quote").textContent;
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      openPopup(url);
+    }
+
+    function copyForIG() {
+      const text = document.getElementById("quote").textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Affirmation copied! Open Instagram and paste it into your Story or post.");
+      });
+    }
+  </script>
+</body>
+</html>
