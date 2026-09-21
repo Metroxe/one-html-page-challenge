@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A terminal simulator (not real)">
+    <meta name="author" content="Lakshya Singh Chauhan">
+    <meta name="github" content="lakshyaelite">
+    <title>Terminal</title>
+    <style>
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        }
+
+        .text {
+            margin: 0;
+            outline: none;
+            border: 0;
+            background: transparent;
+            color: #f1f1f1;
+            font: inherit;
+            caret-color: #e7e7e7;
+            caret-shape: block; 
+        }
+
+        #screen {
+            height: 100vh;
+            width: 100vw;
+            background-color: black;
+        }
+
+        #command {
+            display: grid;
+            grid-template-columns: auto 1fr;
+        }
+
+        #input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="screen">
+        <p class="text">Welcome to your terminal!</p>
+        <p class="text">Type "help" to see available commands</p>
+        <div id="command">
+            <span class="text" style="padding-right: 10px;"><span style="color: green;">you@web</span> ~ $</span>
+            <input type="text" id="input" class="text">
+        </div>
+    </div>
+    <script>
+        const screen = document.getElementById("screen");
+        const input = document.getElementById("input");
+        const history = [];
+        let historyIndex = 0;
+
+        function addLine(text, className = "text") {
+            const line = document.createElement("p");
+            line.className = className;
+            line.textContent = text;
+            screen.insertBefore(line, document.getElementById("command"));
+        }
+
+        function addPrompt(command) {
+            const line = document.createElement("p");
+            line.className = "text";
+            line.innerHTML = '<span style="color: green;">you@web</span> ~ $ ';
+
+            const value = document.createElement("span");
+            value.textContent = command;
+            line.appendChild(value);
+            screen.insertBefore(line, document.getElementById("command"));
+        }
+
+        function runCommand(value) {
+            const trimmedValue = value.trim();
+            if (!trimmedValue) {
+                return;
+            }
+
+            addPrompt(trimmedValue);
+            history.push(trimmedValue);
+            historyIndex = history.length;
+
+            const [command, ...argumentsList] = trimmedValue.split(/\s+/);
+            const argumentText = argumentsList.join(" ");
+
+            switch (command.toLowerCase()) {
+                case "help":
+                    addLine("Available commands: help, echo, clear, date, whoami");
+                    break;
+                case "echo":
+                    addLine(argumentText);
+                    break;
+                case "clear":
+                    Array.from(screen.children).forEach((child) => {
+                        if (child.id !== "command") {
+                            child.remove();
+                        }
+                    });
+                    break;
+                case "date":
+                    addLine(new Date().toString());
+                    break;
+                case "whoami":
+                    addLine("you");
+                    break;
+                default:
+                    addLine(`${command}: command not found`);
+            }
+        }
+
+        input.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                runCommand(input.value);
+                input.value = "";
+            } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex -= 1;
+                    input.value = history[historyIndex];
+                }
+            } else if (event.key === "ArrowDown") {
+                event.preventDefault();
+                if (historyIndex < history.length - 1) {
+                    historyIndex += 1;
+                    input.value = history[historyIndex];
+                } else {
+                    historyIndex = history.length;
+                    input.value = "";
+                }
+            }
+        });
+
+        input.focus();
+    </script>
+</body>
+</html>
