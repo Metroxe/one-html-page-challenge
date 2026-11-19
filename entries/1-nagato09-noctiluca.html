@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A tiny interactive observatory. Explore a living field of light, discover constellations, and leave your mark.">
+  <meta name="author" content="Gabriel Lucio">
+  <meta name="github" content="gabrielaraujo-eng">
+  <meta name="theme-color" content="#080b12">
+  <title>NOCTILUCA — A living observatory</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080b12;
+      --panel: rgba(18, 24, 35, .72);
+      --line: rgba(190, 211, 238, .13);
+      --muted: #8290a5;
+      --text: #edf3fb;
+      --cyan: #8de8df;
+      --violet: #a99bff;
+      --gold: #f5d49a;
+      --mx: 50%;
+      --my: 50%;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; overflow-x: hidden;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(48, 72, 106, .24), transparent 48%),
+        radial-gradient(ellipse at 85% 75%, rgba(91, 65, 145, .12), transparent 38%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: -.02em;
+    }
+    body::before {
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.16;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.23'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+    .shell { position:relative; z-index:1; width:min(1180px, calc(100% - 48px)); margin:auto; }
+    header { height:86px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; gap:12px; font-size:12px; font-weight:800; letter-spacing:.19em; }
+    .brand-mark { width:29px; height:29px; border:1px solid rgba(141,232,223,.65); border-radius:50%; display:grid; place-items:center; position:relative; }
+    .brand-mark::before { content:""; width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 18px var(--cyan); }
+    .brand-mark::after { content:""; position:absolute; width:39px; height:13px; border:1px solid rgba(169,155,255,.65); border-radius:50%; transform:rotate(-32deg); }
+    .header-right { display:flex; align-items:center; gap:24px; color:var(--muted); font-size:11px; letter-spacing:.12em; text-transform:uppercase; }
+    .live { display:flex; align-items:center; gap:8px; }
+    .live i { width:6px; height:6px; border-radius:50%; background:var(--cyan); box-shadow:0 0 10px var(--cyan); }
+    .hero { padding:76px 0 34px; display:grid; grid-template-columns: .9fr 1.1fr; gap:36px; align-items:center; }
+    .eyebrow { display:flex; align-items:center; gap:10px; color:var(--cyan); font-size:10px; letter-spacing:.22em; text-transform:uppercase; font-weight:800; }
+    .eyebrow::before { content:""; width:27px; height:1px; background:var(--cyan); }
+    h1 { margin:22px 0 18px; font-size:clamp(52px, 8vw, 94px); line-height:.88; letter-spacing:-.085em; font-weight:650; }
+    h1 span { display:block; color:transparent; -webkit-text-stroke:1px rgba(237,243,251,.72); }
+    .intro { max-width:390px; color:#9ba8ba; font-size:14px; line-height:1.8; }
+    .actions { display:flex; align-items:center; gap:12px; margin-top:30px; flex-wrap:wrap; }
+    button { font:inherit; cursor:pointer; }
+    .primary, .secondary { border-radius:999px; padding:13px 19px; font-size:11px; letter-spacing:.09em; text-transform:uppercase; font-weight:800; transition:transform .2s, background .2s, border-color .2s; }
+    .primary { border:1px solid var(--cyan); background:var(--cyan); color:#071112; box-shadow:0 0 28px rgba(141,232,223,.16); }
+    .secondary { border:1px solid var(--line); color:#c4cedc; background:rgba(255,255,255,.025); }
+    .primary:hover, .secondary:hover { transform:translateY(-2px); }
+    .secondary:hover { border-color:rgba(141,232,223,.5); }
+    .visual-wrap { min-height:410px; position:relative; display:grid; place-items:center; }
+    .visual-wrap::before { content:""; position:absolute; width:76%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle, rgba(91,123,167,.18), rgba(91,123,167,.04) 42%, transparent 70%); filter:blur(10px); }
+    #sky { position:absolute; inset:0; width:100%; height:100%; }
+    .orbit-art { position:relative; width:min(340px, 78%); aspect-ratio:1; border:1px solid rgba(141,232,223,.14); border-radius:50%; display:grid; place-items:center; box-shadow:inset 0 0 55px rgba(92,126,170,.07), 0 0 80px rgba(92,126,170,.06); }
+    .orbit-art::before, .orbit-art::after { content:""; position:absolute; border:1px solid rgba(169,155,255,.18); border-radius:50%; inset:13%; transform:rotate(54deg) scaleX(1.35); }
+    .orbit-art::after { inset:25%; transform:rotate(-38deg) scaleX(1.55); border-color:rgba(141,232,223,.18); }
+    .core { width:31%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 38% 34%, #f5ffff 0, #a9f5e8 8%, #74b9c4 24%, #46577c 49%, #171d34 72%); box-shadow:0 0 22px rgba(141,232,223,.42), 0 0 85px rgba(141,232,223,.19), inset -12px -15px 22px rgba(3,7,17,.8); animation:breathe 5s ease-in-out infinite; }
+    .satellite { position:absolute; width:10px; height:10px; border-radius:50%; background:var(--gold); box-shadow:0 0 16px var(--gold); top:18%; left:22%; }
+    .satellite.two { width:6px; height:6px; top:73%; left:78%; background:var(--violet); box-shadow:0 0 14px var(--violet); }
+    @keyframes breathe { 50% { transform:scale(1.055); filter:hue-rotate(10deg); } }
+    .visual-label { position:absolute; bottom:12px; right:2%; color:var(--muted); font:10px ui-monospace, monospace; letter-spacing:.12em; }
+    .section-head { display:flex; align-items:end; justify-content:space-between; gap:20px; margin:24px 0 16px; }
+    .section-head h2 { margin:0; font-size:19px; letter-spacing:-.04em; font-weight:600; }
+    .section-head p { margin:0; color:var(--muted); font:10px ui-monospace, monospace; letter-spacing:.1em; text-transform:uppercase; }
+    .console { display:grid; grid-template-columns:1.35fr .65fr; gap:14px; }
+    .panel { border:1px solid var(--line); background:linear-gradient(145deg, rgba(23,31,45,.78), rgba(12,17,27,.7)); border-radius:17px; overflow:hidden; }
+    .panel-top { padding:17px 19px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); }
+    .panel-title { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#c5d0df; font-weight:800; }
+    .tiny { color:var(--muted); font:10px ui-monospace, monospace; }
+    .field { min-height:215px; position:relative; overflow:hidden; display:grid; place-items:center; cursor:crosshair; }
+    .field-hint { position:absolute; bottom:17px; left:19px; color:#8290a5; font-size:11px; pointer-events:none; }
+    .field-center { width:150px; height:150px; border-radius:50%; border:1px solid rgba(141,232,223,.2); display:grid; place-items:center; position:relative; background:radial-gradient(circle, rgba(141,232,223,.08), transparent 68%); }
+    .field-center::before, .field-center::after { content:""; position:absolute; inset:18px -23px; border:1px solid rgba(169,155,255,.24); border-radius:50%; transform:rotate(34deg); }
+    .field-center::after { transform:rotate(-34deg); border-color:rgba(141,232,223,.2); }
+    .field-center b { font:10px ui-monospace, monospace; letter-spacing:.15em; color:var(--cyan); font-weight:500; z-index:1; }
+    .metrics { display:grid; grid-template-columns:1fr 1fr; }
+    .metric { padding:20px; min-height:108px; border-bottom:1px solid var(--line); }
+    .metric:nth-child(odd) { border-right:1px solid var(--line); }
+    .metric:nth-last-child(-n+2) { border-bottom:0; }
+    .metric small { display:block; color:var(--muted); font-size:9px; letter-spacing:.14em; text-transform:uppercase; }
+    .metric strong { display:block; margin-top:12px; font:26px ui-monospace, monospace; letter-spacing:-.07em; font-weight:400; }
+    .metric strong em { font-style:normal; color:var(--cyan); font-size:12px; }
+    .bottom { margin:14px 0 60px; display:flex; justify-content:space-between; align-items:center; gap:20px; color:var(--muted); font:10px ui-monospace, monospace; letter-spacing:.08em; }
+    .bottom span:last-child { color:#c2ccda; }
+    .toast { position:fixed; left:50%; bottom:25px; transform:translate(-50%, 20px); opacity:0; pointer-events:none; padding:12px 17px; border:1px solid rgba(141,232,223,.35); border-radius:999px; background:rgba(10,17,25,.92); color:var(--cyan); font-size:11px; box-shadow:0 10px 40px #0008; transition:.3s; z-index:5; white-space:nowrap; }
+    .toast.show { opacity:1; transform:translate(-50%,0); }
+    .spark { position:absolute; width:4px; height:4px; border-radius:50%; background:#dffefa; box-shadow:0 0 12px 3px rgba(141,232,223,.65); animation:pop .8s ease-out forwards; pointer-events:none; }
+    @keyframes pop { from { transform:scale(.3); opacity:1; } to { transform:scale(5); opacity:0; } }
+    @media (max-width:760px) {
+      .shell { width:min(100% - 30px, 560px); }
+      header { height:70px; }
+      .header-right { gap:12px; font-size:9px; }
+      .hero { padding:56px 0 12px; grid-template-columns:1fr; gap:4px; }
+      .visual-wrap { min-height:300px; grid-row:1; }
+      .hero-copy { grid-row:2; }
+      h1 { font-size:clamp(58px, 16vw, 84px); margin-top:18px; }
+      .intro { max-width:480px; }
+      .console { grid-template-columns:1fr; }
+      .field { min-height:190px; }
+      .section-head { margin-top:28px; }
+      .bottom { margin-bottom:35px; font-size:9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="brand-mark"></span> NOCTILUCA</div>
+      <div class="header-right"><span>FIELD NOTES&nbsp; / &nbsp;001</span><span class="live"><i></i> SYSTEM ALIVE</span></div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">An interactive observatory</div>
+          <h1>FIND<br><span>THE</span> QUIET.</h1>
+          <p class="intro">Somewhere between the known and the infinite, light is still being born. Take a moment. Explore this little corner of the universe, and leave a new signal behind.</p>
+          <div class="actions">
+            <button class="primary" id="discover">Discover a signal&nbsp; ↗</button>
+            <button class="secondary" id="reset">Reset field</button>
+          </div>
+        </div>
+        <div class="visual-wrap" aria-label="Animated abstract planet surrounded by orbital rings">
+          <canvas id="sky"></canvas>
+          <div class="orbit-art"><div class="core"></div><i class="satellite"></i><i class="satellite two"></i></div>
+          <div class="visual-label">COORDINATES&nbsp; 04° 18′ 27″ N</div>
+        </div>
+      </section>
+
+      <div class="section-head">
+        <h2>The observation deck</h2>
+        <p>Live readings <span style="color:var(--cyan)">●</span> local simulation</p>
+      </div>
+      <section class="console">
+        <div class="panel">
+          <div class="panel-top"><span class="panel-title">Signal field</span><span class="tiny" id="field-status">AWAITING INPUT</span></div>
+          <div class="field" id="field" role="button" tabindex="0" aria-label="Click to add a star to the signal field">
+            <div class="field-center"><b>TOUCH THE<br>UNKNOWN</b></div>
+            <span class="field-hint">↳ Click anywhere in this field to create a star</span>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-top"><span class="panel-title">Mission telemetry</span><span class="tiny">NO. 001</span></div>
+          <div class="metrics">
+            <div class="metric"><small>Signals found</small><strong id="signals">00</strong></div>
+            <div class="metric"><small>Field energy</small><strong id="energy">0<em>%</em></strong></div>
+            <div class="metric"><small>Sector</small><strong>07<em> / A</em></strong></div>
+            <div class="metric"><small>Status</small><strong style="font-size:17px;color:var(--cyan)">STABLE</strong></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bottom"><span>NOCTILUCA © 2026 &nbsp;·&nbsp; BUILT FROM ONE FILE</span><span>NO MAP. NO LIMITS. JUST LIGHT.</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">A new signal has entered the field.</div>
+
+  <script>
+    (() => {
+      const canvas = document.getElementById('sky');
+      const ctx = canvas.getContext('2d');
+      const field = document.getElementById('field');
+      const signalsEl = document.getElementById('signals');
+      const energyEl = document.getElementById('energy');
+      const statusEl = document.getElementById('field-status');
+      const toast = document.getElementById('toast');
+      let stars = [], count = 0, toastTimer, width = 0, height = 0, raf;
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = rect.width; height = rect.height;
+        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        stars = Array.from({length: Math.max(35, Math.floor(width * height / 4200))}, () => ({
+          x: Math.random()*width, y: Math.random()*height,
+          r: Math.random()*1.25+.25, a: Math.random()*.65+.12, p: Math.random()*6.28
+        }));
+      }
+      function draw(t) {
+        ctx.clearRect(0,0,width,height);
+        for (const s of stars) {
+          const glow = s.a * (.72 + Math.sin(t*.0008+s.p)*.28);
+          ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+          ctx.fillStyle = `rgba(207,232,255,${glow})`; ctx.fill();
+        }
+        raf = requestAnimationFrame(draw);
+      }
+      function update() {
+        signalsEl.textContent = String(count).padStart(2,'0');
+        energyEl.innerHTML = Math.min(99, count*7) + '<em>%</em>';
+        statusEl.textContent = count ? 'SIGNAL ACQUIRED' : 'AWAITING INPUT';
+      }
+      function notify(message) {
+        toast.textContent = message; toast.classList.add('show');
+        clearTimeout(toastTimer); toastTimer = setTimeout(()=>toast.classList.remove('show'),1900);
+      }
+      function addStar(x,y) {
+        count++;
+        const rect = field.getBoundingClientRect();
+        const px = x ?? rect.width*(.2+Math.random()*.6);
+        const py = y ?? rect.height*(.2+Math.random()*.55);
+        const spark = document.createElement('i');
+        spark.className = 'spark';
+        spark.style.left = px+'px'; spark.style.top = py+'px';
+        field.appendChild(spark); setTimeout(()=>spark.remove(),850);
+        update(); notify('Signal #' + String(count).padStart(2,'0') + ' discovered.');
+      }
+      document.getElementById('discover').addEventListener('click',()=>addStar());
+      field.addEventListener('click',e=>{
+        const r=field.getBoundingClientRect(); addStar(e.clientX-r.left,e.clientY-r.top);
+      });
+      field.addEventListener('keydown',e=>{
+        if(e.key==='Enter'||e.key===' '){e.preventDefault();addStar();}
+      });
+      document.getElementById('reset').addEventListener('click',()=>{
+        count=0; update(); field.querySelectorAll('.spark').forEach(s=>s.remove());
+        notify('Field reset. A blank sky, full of possibility.');
+      });
+      window.addEventListener('resize',resize,{passive:true});
+      resize(); update(); cancelAnimationFrame(raf); raf=requestAnimationFrame(draw);
+    })();
+  </script>
+</body>
+</html>
